@@ -1,4 +1,5 @@
 %{
+  "bcrypt_elixir": {:hex, :bcrypt_elixir, "1.1.1", "6b5560e47a02196ce5f0ab3f1d8265db79a23868c137e973b27afef928ed8006", [:make, :mix], [{:elixir_make, "~> 0.4", [hex: :elixir_make, repo: "hexpm", optional: false]}], "hexpm"},
   "connection": {:hex, :connection, "1.0.4", "a1cae72211f0eef17705aaededacac3eb30e6625b04a6117c1b2db6ace7d5976", [:mix], [], "hexpm"},
   "cowboy": {:hex, :cowboy, "2.6.0", "dc1ff5354c89e36a3e3ef8d10433396dcff0dcbb1d4223b58c64c2d51a6d88d9", [:rebar3], [{:cowlib, "~> 2.7.0", [hex: :cowlib, repo: "hexpm", optional: false]}, {:ranch, "~> 1.7.0", [hex: :ranch, repo: "hexpm", optional: false]}], "hexpm"},
   "cowlib": {:hex, :cowlib, "2.7.0", "3ef16e77562f9855a2605900cedb15c1462d76fb1be6a32fc3ae91973ee543d2", [:rebar3], [], "hexpm"},
@@ -6,6 +7,7 @@
   "decimal": {:hex, :decimal, "1.6.0", "bfd84d90ff966e1f5d4370bdd3943432d8f65f07d3bab48001aebd7030590dcc", [:mix], [], "hexpm"},
   "ecto": {:hex, :ecto, "3.0.3", "018a3df0956636f84eb3033d807485a7d3dea8474f47b90da5cb8073444c4384", [:mix], [{:decimal, "~> 1.5", [hex: :decimal, repo: "hexpm", optional: false]}, {:jason, "~> 1.0", [hex: :jason, repo: "hexpm", optional: true]}, {:poison, "~> 2.2 or ~> 3.0", [hex: :poison, repo: "hexpm", optional: true]}], "hexpm"},
   "ecto_sql": {:hex, :ecto_sql, "3.0.2", "0e04cbc183b91ea0085c502226befcd237a4ac31c204fd4be8d4db6676b5f10d", [:mix], [{:db_connection, "~> 2.0", [hex: :db_connection, repo: "hexpm", optional: false]}, {:ecto, "~> 3.0.3", [hex: :ecto, repo: "hexpm", optional: false]}, {:mariaex, "~> 0.9.1", [hex: :mariaex, repo: "hexpm", optional: true]}, {:postgrex, "~> 0.14.0", [hex: :postgrex, repo: "hexpm", optional: true]}, {:telemetry, "~> 0.2.0", [hex: :telemetry, repo: "hexpm", optional: false]}], "hexpm"},
+  "elixir_make": {:hex, :elixir_make, "0.4.2", "332c649d08c18bc1ecc73b1befc68c647136de4f340b548844efc796405743bf", [:mix], [], "hexpm"},
   "file_system": {:hex, :file_system, "0.2.6", "fd4dc3af89b9ab1dc8ccbcc214a0e60c41f34be251d9307920748a14bf41f1d3", [:mix], [], "hexpm"},
   "gettext": {:hex, :gettext, "0.16.1", "e2130b25eebcbe02bb343b119a07ae2c7e28bd4b146c4a154da2ffb2b3507af2", [:mix], [], "hexpm"},
   "jason": {:hex, :jason, "1.1.2", "b03dedea67a99223a2eaf9f1264ce37154564de899fd3d8b9a21b1a6fd64afe7", [:mix], [{:decimal, "~> 1.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm"},

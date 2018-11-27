@@ -19,6 +19,12 @@ defmodule WhatChatWeb.Router do
     get "/", PageController, :index
   end
 
+  scope "/users", WhatChatWeb do
+    pipe_through(:api)
+
+    resources "/", UserController, except: [:new, :edit]
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", WhatChatWeb do
   #   pipe_through :api
