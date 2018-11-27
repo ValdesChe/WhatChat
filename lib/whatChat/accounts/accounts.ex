@@ -101,4 +101,27 @@ defmodule WhatChat.Accounts do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
+
+  def authenticate_user(email, password) do
+    from(u in User, where: u.email == ^email)
+    |> Repo.one()
+    |> verify_password(password)
+  end
+
+  @doc """
+    A dummy verify function to help prevent user enumeration.
+
+    This always returns false. The reason for implementing this check is in order to make it more difficult for an attacker to identify users by timing responses.
+  """
+  def verify_password(nil, _something) do
+    Bcrypt.no_user_verify()
+    {:error, "Wrong email or password"}
+  end
+
+  def verify_password(user, password) do
+    case Bcrypt.verify_pass(password, user.password_hash) do
+      true -> {:ok, user}
+      false -> {:error, "Wrong email or password"}
+    end
+  end
 end

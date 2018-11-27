@@ -4,22 +4,24 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>WhatChat · Phoenix Framework</title>
+    <title>WhatChat</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+
+    <%# <%= if @conn.assigns.user do %>
+    <!-- import CSS -->
+      <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+      <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/components.css") %>">
+    <%# <% end %>
+
+
+    <!-- if @conn.assigns.current_user do %>
+      <script>
+         window.userToken = "< Phoenix.Token.sign(Valchat.Endpoint, "key", @conn.assigns.current_user.id) >"
+      </script>
+    < end -->
+    
   </head>
   <body>
-    <header>
-      <section class="container">
-        <nav role="navigation">
-          <ul>
-            <li><a href="https://hexdocs.pm/phoenix/overview.html">Get Started</a></li>
-          </ul>
-        </nav>
-        <a href="http://phoenixframework.org/" class="phx-logo">
-          <img src="<%= Routes.static_path(@conn, "/images/phoenix.png") %>" alt="Phoenix Framework Logo"/>
-        </a>
-      </section>
-    </header>
     <main role="main" class="container">
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>

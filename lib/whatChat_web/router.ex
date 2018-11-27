@@ -25,6 +25,14 @@ defmodule WhatChatWeb.Router do
     resources "/", UserController, except: [:new, :edit]
   end
 
+  scope "/accounts", WhatChatWeb do
+    pipe_through(:api)
+
+    post("/sign_in", SessionController, :create)
+    delete("/sign_out", SessionController, :delete)
+    get("/me", SessionController, :ping)
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", WhatChatWeb do
   #   pipe_through :api

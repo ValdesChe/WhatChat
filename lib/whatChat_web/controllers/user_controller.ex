@@ -6,6 +6,9 @@ defmodule WhatChatWeb.UserController do
 
   action_fallback WhatChatWeb.FallbackController
 
+
+  plug(WhatChatWeb.Plugs.RequireAuth when action not in [:create])
+
   def index(conn, _params) do
     users = Accounts.list_users()
     render(conn, "index.json", users: users)
@@ -29,7 +32,9 @@ defmodule WhatChatWeb.UserController do
     user = Accounts.get_user!(id)
 
     with {:ok, %User{} = user} <- Accounts.update_user(user, user_params) do
-      render(conn, "show.json", user: user)
+      conn
+      |> put_session(:current_user, user)
+      |> render(conn, "show.json", user: user)
     end
   end
 

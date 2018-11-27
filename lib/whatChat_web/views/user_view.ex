@@ -17,4 +17,25 @@ defmodule WhatChatWeb.UserView do
       image: user.image
     }
   end
+
+  def render("sign_in.json", %{user: user}) do
+    %{
+      data: %{
+        user: %{
+          id: user.id,
+          image: user.image,
+          username: user.username,
+          email: user.email
+        }
+      }
+    }
+  end
+
+  def render("sign_out.json", %{message: message}) do
+    %{
+      data: %{
+        detail: message
+      }
+    }
+  end
 end
