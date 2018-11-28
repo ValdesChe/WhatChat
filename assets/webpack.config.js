@@ -4,8 +4,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-
 
 const { VueLoaderPlugin } = require('vue-loader')
 module.exports = (env, options) => ({
@@ -26,10 +24,13 @@ module.exports = (env, options) => ({
     rules: [
       {
         test: /\.vue$/,
-        use: 'vue-loader',
-        options: {
-          extractCSS: true
+        use: {
+          loader: 'vue-loader',
+          options: {
+            extractCSS: true
+          }
         }
+
       },
       {
             test: /\.(scss|sass)$/,
@@ -50,16 +51,13 @@ module.exports = (env, options) => ({
         use: [
           // MiniCssExtractPlugin.loader, 'css-loader'
           process.env.NODE_ENV !== 'production'
-            ? 'vue-style-loader'
-            : MiniCssExtractPlugin.loader,
-          'css-loader'
+            ? 'vue-style-loader' : MiniCssExtractPlugin.loader,'css-loader'
         ]
       }
     ]
   },
   plugins: [
     new VueLoaderPlugin(),
-    new ExtractTextPlugin("style.css"),
     new MiniCssExtractPlugin({ filename: '../css/app.css' }),
     new CopyWebpackPlugin([{ from: 'static/', to: '../' }])
   ]
