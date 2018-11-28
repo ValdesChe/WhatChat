@@ -32,6 +32,7 @@ defmodule WhatChatWeb.SessionController do
   # end
 
   def ping(conn, _params) do
+    IO.inspect conn
     case get_session(conn, :current_user) do
       nil ->
         conn

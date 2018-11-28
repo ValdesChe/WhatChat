@@ -121,7 +121,7 @@ defmodule WhatChat.Accounts do
   def verify_password(user, password) do
     case Bcrypt.verify_pass(password, user.password_hash) do
       true -> {:ok, user}
-      false -> {:error, "Wrong email or password"}
+      false -> {:error, "Wrong bcrypt email or password"}
     end
   end
 end
