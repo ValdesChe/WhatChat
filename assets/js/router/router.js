@@ -23,7 +23,7 @@ const routes = [
      component: Home,
      children: [
        { path: 'conversation:id', name: 'conversation', component: Conversation },
-       { path: '*', redirect: { name: 'default' } }
+       { path: '*', redirect: { name: 'home' } }
      ]
    },
   {
@@ -32,7 +32,7 @@ const routes = [
     component: Asida
   },
 
-  { path: '*', name: 'default', redirect: { name: 'home' } }
+  { path: '*', redirect: { name: 'home' } }
 ]
 
 // 3. Create the router instance and pass the `routes` option

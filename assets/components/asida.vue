@@ -22,11 +22,7 @@
   </el-aside>
 </template>
 
-<style lang="sass">
-
-  $border-color: #DED6CE;
-  $white-color: #FFFFFF;
-  $black-color: #000000;
+<style>
 
 
   .header-profile {
@@ -38,8 +34,8 @@
   }
 
   .el-aside {
-    background: $white-color;
-    border-right: 1px solid $border-color;
+    background: #FFFFFF;
+    border-right: 1px solid #DED6CE;
   }
 
 
@@ -47,7 +43,7 @@
   .logo-container{
     padding: 5px;
     background: #EEEEEE;
-    border-bottom: 1px solid $border-color;
+    border-bottom: 1px solid #DED6CE;
     position: relative;
 
     .logo-icon{
@@ -62,7 +58,7 @@
       border-radius: 50%;
       border:1px inset rgba(0,0,0,.1);
 
-      background: $white-color;
+      background: #FFFFFF;
 
 
     }

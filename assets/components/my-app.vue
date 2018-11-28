@@ -29,12 +29,14 @@
     // }
   }
 </script>
-<style lang="sass">
+<style>
   body {
     margin: 0;
     box-sizing: border-box
-    h1 {
-      text-align: center;
-    }
+
+  }
+
+  h1 {
+    text-align: center;
   }
 </style>
