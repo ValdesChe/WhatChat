@@ -1,6 +1,8 @@
 defmodule WhatChatWeb.SessionController do
   use WhatChatWeb, :controller
 
+  plug(WhatChatWeb.Plugs.RequireAuth when action in [:delete])
+
   def create(conn, %{"email" => email, "password" => password}) do
     case WhatChat.Accounts.authenticate_user(email, password) do
       {:ok, user} ->
