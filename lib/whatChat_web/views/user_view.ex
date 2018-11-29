@@ -3,11 +3,11 @@ defmodule WhatChatWeb.UserView do
   alias WhatChatWeb.UserView
 
   def render("index.json", %{users: users}) do
-    %{data: render_many(users, UserView, "user.json")}
+    %{users: render_many(users, UserView, "user.json")}
   end
 
   def render("show.json", %{user: user}) do
-    %{data: render_one(user, UserView, "user.json")}
+    render_one(user, UserView, "sign_in.json")
   end
 
   def render("user.json", %{user: user}) do
@@ -31,7 +31,7 @@ defmodule WhatChatWeb.UserView do
 
   def render("sign_out.json", %{message: message}) do
     %{
-      data: %{
+      message: %{
         detail: message
       }
     }
