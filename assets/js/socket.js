@@ -3,15 +3,19 @@
 
 // To use Phoenix channels, the first step is to import Socket
 // and connect at the socket path in "lib/my_app/endpoint.ex":
-import { Socket } from "phoenix"
+import { Socket } from "phoenix";
 
-import Vue from 'vue/dist/vue.js'
-import MyApp from "../components/my-app.vue"
+import Vue from 'vue/dist/vue.js';
+//axios
+import Axios from 'axios';
+import VueAxios from 'vue-axios';
+
+
+import MyApp from "../components/my-app.vue";
 
 // ElementUI for design
-import ElementUI from 'element-ui'
-import locale from 'element-ui/lib/locale/lang/en'
-
+import ElementUI from 'element-ui';
+import locale from 'element-ui/lib/locale/lang/en';
 
 Vue.use(ElementUI, { locale });
 
@@ -32,7 +36,12 @@ socket.connect()
 
 Vue.config.productionTip = false
 
+Axios.defaults.headers.common['Access-Control-Allow-Headers'] = 'X-Requested-With,content-type,authorization';
+Axios.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8';
+Axios.defaults.headers.common['withCredentials'] = 'X-Requested-With,content-type,authorization';
+Axios.defaults.headers.common['Access-Control-Allow-Credentials'] = true;
 
+Vue.use(VueAxios, Axios);
 // Create the main component
 // Vue.component('my-app', MyApp)
 
