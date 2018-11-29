@@ -77,17 +77,18 @@
       margin-left: 15px;
       position: relative;
       border-radius: 50%;
-      border:1px inset rgba(0,0,0,.1);
+      border: 1px inset rgba(0,0,0,.1);
       background: #FFFFFF;
     }
 
     .svg-icon {
-      width: 1.8em;
-      height: 1.8em;
-      position: relative;
+      width: 2em;
+      height: 2em;
+      position: absolute;
+      top: auto;
+      bottom: auto;
 
-      margin-left: 2px;
-      line-height: 100%;
+      margin: 0 auto ;
     }
   }
 
