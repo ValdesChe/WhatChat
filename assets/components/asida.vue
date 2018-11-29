@@ -1,4 +1,3 @@
-
 <template>
   <el-aside width="404px">
     <!-- v-loading="loading" -->
@@ -22,7 +21,24 @@
   </el-aside>
 </template>
 
-<style>
+
+<script>
+  export default {
+    name:"Asida",
+    data() {
+
+      return {
+        seach_input: ""
+      }
+    },
+    methods: {
+
+    }
+  };
+</script>
+
+
+<style lang="sass">
 
 
   .header-profile {
@@ -104,29 +120,3 @@
 
   }
 </style>
-
-<script>
-  export default {
-    name:"Asida",
-    data() {
-      const item = {
-        date: '2016-05-02',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      };
-      return {
-        tableData: Array(20).fill(item),
-        loading: true,
-        seach_input: ""
-      }
-    },
-    methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      }
-    }
-  };
-</script>

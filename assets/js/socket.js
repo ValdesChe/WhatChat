@@ -22,8 +22,8 @@ Vue.use(Button);
 
 
 // import Asida from "./../components/asida.vue"
-import router from "./router/router.js"
-import store from "./store/store.js"
+import router from "./router.js"
+import store from "./store.js"
 
 
 

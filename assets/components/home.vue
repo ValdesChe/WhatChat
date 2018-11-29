@@ -6,7 +6,7 @@
   </el-container>
 </template>
 
-<style>
+<style lang="css">
   .el-header {
     background-color: #B3C0D1;
     color: #333;
@@ -19,6 +19,7 @@
 </style>
 
 <script>
+  // import auth from '../auth'
   import Asida from "./asida.vue"
 
   export default {

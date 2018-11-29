@@ -32,13 +32,7 @@ module.exports = (env, options) => ({
         }
 
       },
-      {
-            test: /\.(scss|sass)$/,
-            use: [
-              "css-loader", // translates CSS into CommonJS
-                "sass-loader" // compiles Sass to CSS, using Node Sass by default
-            ]
-        },
+
       {
         test: /\.js$/,
         exclude: /node_modules/,
@@ -47,11 +41,13 @@ module.exports = (env, options) => ({
         }
       },
       {
-        test: /\.css$/,
+        test: /\.(css|scss|sass)$/,
         use: [
           // MiniCssExtractPlugin.loader, 'css-loader'
           process.env.NODE_ENV !== 'production'
-            ? 'vue-style-loader' : MiniCssExtractPlugin.loader,'css-loader'
+            ? 'vue-style-loader'
+            : MiniCssExtractPlugin.loader,
+            'css-loader','sass-loader'
         ]
       }
     ]
