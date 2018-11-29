@@ -47,11 +47,19 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: Login
+    component: Login,
+    beforeEnter:afterAuth
   },
   {
-    path: '/foo',
-    name: 'foo',
+    path: '/logout',
+    name: 'logout',
+    component: Asida
+  },
+
+  {
+    path: '/signup',
+    name: 'signup',
+    beforeEnter:afterAuth,
     component: Asida
   },
 

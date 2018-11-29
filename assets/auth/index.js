@@ -10,24 +10,32 @@ const CURRENT_USER_URL = `${API_URL}/accounts/me`
 
 export default {
   user: {
+    id: window.localStorage.getItem('id_token'),
+    name: window.localStorage.getItem('v_username'),
+    image: window.localStorage.getItem('v_image'),
     authenticated: !!window.localStorage.getItem('id_token')
   },
 
   login (context, creds, redirect) {
     context.axios.post(LOGIN_URL, creds)
-      .then(resp => {
-        // window.localStorage.setItem('id_token', resp.body.jwt)
-        console.log(resp);
-        this.user.authenticated = true
+      .then(function (resp){
+         //console.log(resp.data.user.id);
+         window.localStorage.setItem('id_token', resp.data.user.id);
+         window.localStorage.setItem('v_username', resp.data.user.username);
+         window.localStorage.setItem('v_email', resp.data.user.email);
+         window.localStorage.setItem('v_image', resp.data.user.image);
 
-        if (redirect) {
-          context.$router.push({path: redirect})
-        }
-      }, resp => {
-        console.log("resp Eroor1"+resp);
-        context.errorServer = resp.data.errors.detail
-      }).catch((err) => {
-         console.log("Erro 2 "+err);
+        // this.user.authenticated = true
+
+        window.location.replace(`${API_URL}`);
+        // if (redirect) {
+        //   window.location.replace(`${API_URL}`);
+        //   // context.$router.push({name: 'home'})
+        // }
+
+      }, function (err) {
+         console.log("Error Block Login");
+         context.errorServer = err.response.data.errors.detail
       })
   },
 
