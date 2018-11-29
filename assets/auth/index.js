@@ -19,7 +19,7 @@ export default {
   login (context, creds, redirect) {
     context.axios.post(LOGIN_URL, creds)
       .then(function (resp){
-         //console.log(resp.data.user.id);
+         console.log(resp.data);
          window.localStorage.setItem('id_token', resp.data.user.id);
          window.localStorage.setItem('v_username', resp.data.user.username);
          window.localStorage.setItem('v_email', resp.data.user.email);

@@ -4,11 +4,8 @@
     <div class="logo-container">
       <a href="" class="logo-icon" >
         <img class="svg-icon" :src="image_profile" />
-
       </a>
     </div>
-    <img :src="image_profile" />
-
     <div class="search-container">
       <el-input
         placeholder="      Search or start a new chat"
@@ -40,7 +37,7 @@
     },
     mounted() {
       //do something after mounting vue instance
-      console.log(auth);
+      // console.log(auth);
     }
 
   };
@@ -75,38 +72,23 @@
       width: 2em;
       height: 2em;
 
-
       display: block;
       padding: 7px;
       margin-left: 15px;
       position: relative;
       border-radius: 50%;
       border:1px inset rgba(0,0,0,.1);
-
       background: #FFFFFF;
-
-
     }
 
-    // .svg-icon {
-    //   width: 1.8em;
-    //   height: 1.8em;
-    //   position: relative;
-    //
-    //   margin-left: 2px;
-    //   line-height: 100%;
-    // }
-    //
-    // .svg-icon path,
-    // .svg-icon polygon,
-    // .svg-icon rect {
-    //   fill: #4691f6;
-    // }
-    //
-    // .svg-icon circle {
-    //   stroke: #4691f6;
-    //   stroke-width: 1;
-    // }
+    .svg-icon {
+      width: 1.8em;
+      height: 1.8em;
+      position: relative;
+
+      margin-left: 2px;
+      line-height: 100%;
+    }
   }
 
   .search-container {
