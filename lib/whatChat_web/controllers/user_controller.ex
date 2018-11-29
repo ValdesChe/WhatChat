@@ -23,6 +23,7 @@ defmodule WhatChatWeb.UserController do
     end
   end
 
+  @spec show(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def show(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
     render(conn, "show.json", user: user)
@@ -39,10 +40,21 @@ defmodule WhatChatWeb.UserController do
   end
 
   def delete(conn, %{"id" => id}) do
-    user = Accounts.get_user!(id)
+    %{id: user_id} = get_session(conn, :current_user)
+    IO.inspect conn
+    cond do
+      user_id == String.to_integer(id)  ->
+            user = Accounts.get_user!(user_id)
 
-    with {:ok, %User{}} <- Accounts.delete_user(user) do
-      send_resp(conn, :no_content, "")
+            with {:ok, %User{}} <- Accounts.delete_user(user) do
+              conn
+              |> configure_session(drop: true)
+              |> put_status(:ok)
+              send_resp(conn, :no_content, "")
+            end
+      true ->
+        render(conn, "401.json", message: "Unauthorized")
     end
+
   end
 end
