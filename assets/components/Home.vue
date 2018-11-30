@@ -1,7 +1,7 @@
 
 <template>
   <el-container style="width:100%; height: 500px; border: 1px solid #eee">
-    <Asida></Asida>
+    <Messagerie></Messagerie>
     <router-view name="myzone"></router-view>
   </el-container>
 </template>
@@ -20,12 +20,12 @@
 
 <script>
   // import auth from '../auth'
-  import Asida from "./asida.vue"
+  import Messagerie from "./Messagerie.vue"
 
   export default {
-    name:"home",
+    name:"Home",
     components: {
-      Asida
+      Messagerie
     },
     data() {
       const item = {

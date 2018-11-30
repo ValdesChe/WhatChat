@@ -1,8 +1,8 @@
 import Vue from 'vue/dist/vue.js'
 import VueRouter from 'vue-router'
 
-import Asida from "../components/asida.vue"
-import Home from "../components/home.vue"
+import Messagerie from "../components/Messagerie.vue"
+import Home from "../components/Home.vue"
 import Login from "../components/Login.vue"
 import Conversation from "../components/conversation.vue"
 Vue.use(VueRouter)
@@ -53,14 +53,14 @@ const routes = [
   {
     path: '/logout',
     name: 'logout',
-    component: Asida
+    component: Messagerie
   },
 
   {
     path: '/signup',
     name: 'signup',
     beforeEnter:afterAuth,
-    component: Asida
+    component: Messagerie
   },
 
   { path: '*', redirect: { name: 'home' } }

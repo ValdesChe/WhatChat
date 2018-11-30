@@ -1,5 +1,7 @@
 import Vue from "vue/dist/vue.js"
 import Vuex from "vuex"
+import axios from 'axios';
+
 
 Vue.use(Vuex)
 /***
@@ -58,6 +60,19 @@ const store = new Vuex.Store({
 
     switchConversationLoader({commit, dispatch,  getter , rootGetter}, {payload} ) {
       commit(SWITCH_CONVERSATION_LOADER)
+    },
+
+    loadConversation(context){
+      axios.get("/users")
+        .then(function (resp){
+           console.log(resp.data);
+
+
+        }, function (err) {
+           console.log("Error");
+           console.log(err.response);
+           // context.errorServer = err.response.data.errors.detail
+        })
     }
   }
 })

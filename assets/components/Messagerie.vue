@@ -24,7 +24,7 @@
 
   import auth from "../auth"
   export default {
-    name:"Asida",
+    name:"Messagerie",
     data() {
 
       return {
@@ -38,6 +38,7 @@
     mounted() {
       //do something after mounting vue instance
       // console.log(auth);
+      this.$store.dispatch('loadConversation')
     }
 
   };
