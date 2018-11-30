@@ -5,15 +5,17 @@ defmodule WhatChatWeb.Plugs.RequireAuth do
   def init(_params) do
   end
 
-  def call(conn, _params) do
-    IO.puts "===================="
-    IO.inspect get_session(conn, :current_user)
-    IO.puts "===================="
+  def call(conn, params) do
+    # IO.puts "===================="
+    # IO.inspect params
+    # IO.puts "===================="
+    # IO.inspect get_session(conn, :current_user)
+    # IO.puts "===================="
     if get_session(conn, :current_user) do
-      IO.puts "++++++++++++++++"
+      # IO.puts "++++++++++++++++"
       conn
     else
-      IO.puts "-------------"
+      # IO.puts "-------------"
       conn
       |> put_status(:unauthorized)
       |> render(WhatChatWeb.ErrorView, "401.json", message: "Unauthenticated User")
