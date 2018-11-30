@@ -70,24 +70,27 @@
     position: relative;
 
     .logo-icon{
-      width: 2em;
-      height: 2em;
-
-      display: block;
+      width: 4em;
+      height: 4em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /*display: block;*/
       padding: 7px;
       margin-left: 15px;
       position: relative;
       border-radius: 50%;
       border: 1px inset rgba(0,0,0,.1);
       background: #FFFFFF;
+
     }
 
     .svg-icon {
-      width: 2em;
-      height: 2em;
-      position: absolute;
+      width: 2.9em;
+      height: 2.9em;
+      /*position: absolute;
       top: auto;
-      bottom: auto;
+      bottom: auto;*/
 
       margin: 0 auto ;
     }

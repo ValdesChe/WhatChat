@@ -11,7 +11,8 @@
         <el-input type="email" placeholder="Email" v-model="ruleForm2.email" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input type="password" placeholder="Password" v-model="ruleForm2.password" autocomplete="off"></el-input>
+        <el-input type="password" placeholder="Password" v-model="ruleForm2.password" autocomplete="off"
+            @keyup.enter="submitForm('ruleForm2')"></el-input>
       </el-form-item>
 
       <el-form-item>
