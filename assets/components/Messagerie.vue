@@ -2,11 +2,35 @@
   <div class="messenger">
     <div class="el-asider" style="width:404px">
       <!-- v-loading="loading" -->
-      <div class="logo-container">
-        <a href="" class="logo-icon" >
-          <img class="svg-icon" :src="user.image" />
-        </a>
+      <div class="header-user">
+        <div class="logo-container">
+          <a href="" class="logo-icon" >
+            <img class="svg-icon" :src="user.image" />
+          </a>
+        </div>
+        <div class="options-tools">
+            <ul class="options">
+              <li>
+                <router-link class="opt-link" :to="{ name: 'conversation', params: { id: 1}}">
+                    <svg id="df9d3429-f0ef-48b5-b5eb-f9d27b2deba6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="#727A7E" d="M12.072 1.761a10.05 10.05 0 0 0-9.303 5.65.977.977 0 0 0 1.756.855 8.098 8.098 0 0 1 7.496-4.553.977.977 0 1 0 .051-1.952zM1.926 13.64a10.052 10.052 0 0 0 7.461 7.925.977.977 0 0 0 .471-1.895 8.097 8.097 0 0 1-6.012-6.386.977.977 0 0 0-1.92.356zm13.729 7.454a10.053 10.053 0 0 0 6.201-8.946.976.976 0 1 0-1.951-.081v.014a8.097 8.097 0 0 1-4.997 7.209.977.977 0 0 0 .727 1.813l.02-.009z"></path><path fill="#009588" d="M19 1.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"></path></svg>
+                </router-link>
+              </li>
+              <li>
+                <router-link class="opt-link" :to="{ name: 'conversation', params: { id: 1}}">
+                  <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path opacity=".55" fill="#263238" d="M19.005 3.175H4.674C3.642 3.175 3 3.789 3 4.821V21.02l3.544-3.514h12.461c1.033 0 2.064-1.06 2.064-2.093V4.821c-.001-1.032-1.032-1.646-2.064-1.646zm-4.989 9.869H7.041V11.1h6.975v1.944zm3-4H7.041V7.1h9.975v1.944z"></path></svg>
+                </router-link>
+              </li>
+              <li>
+                <router-link class="opt-link" :to="{ name: 'conversation', params: { id: 1}}">
+                  <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="#263238" fill-opacity=".6" d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z"></path></svg>
+                </router-link>
+              </li>
+
+
+            </ul>
+        </div>
       </div>
+
       <div class="search-container">
         <el-input
           placeholder="      Search or start a new chat"
@@ -54,6 +78,9 @@
       </div>
     </div>
     <div class="el-body">
+      <div class="header-profile">
+
+      </div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit,
          sed do eiusmod tempor incididunt ut labore et dolore magna
@@ -68,8 +95,6 @@
     </div>
   </div>
 </template>
-
-
 <script>
 
   import auth from "../auth"
@@ -99,11 +124,33 @@
     }
 
   };
-
 </script>
 
 
 <style lang="sass" scoped>
+
+
+ul.options {
+    list-style: none;
+    padding: 0;
+    position: absolute;
+    top: 5px;
+    right: 15px;
+
+    li {
+      display: inline-block;
+      padding-left: 12px;  
+    	zoom: 1;
+
+      .opt-link {
+        display: block;
+        font-size: 1.4em;
+        margin: 0 5px;
+        text-decoration: none
+      }
+
+    }
+  }
   .messenger{
     height: 100%;
     width: 100%;
@@ -112,13 +159,21 @@
 
     /* Asider */
     .el-asider {
-      background: #FFFFFF;
+      background: #EEEEEE;
       border-right: 1px solid #DED6CE;
       height: 100%;
       overflow: hidden;
       flex: 404px;
-    }
 
+      .header-user{
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        position: relative;
+
+      }
+
+    }
     /* Main Container */
     .el-body{
       flex: 70%;
@@ -131,17 +186,13 @@
       margin-right: 40px;
 
   }
-  .header-profile {
-    background-color: #B3DED1;
-    color: #000000;
-    width: 100%;
-    height: 70px;
-    line-height: 10px;
+
+  .options-tools{
+    flex: 80%;
   }
   .logo-container{
     padding: 5px;
     background: #EEEEEE;
-    border-bottom: 1px solid #DED6CE;
     position: relative;
 
     .logo-icon{
@@ -194,8 +245,8 @@
     height: 500px;
     position: relative;
     overflow: hidden;
-    overflow-y: scroll;
-
+    /*overflow-y: scroll;
+*/
     a {
       text-decoration: none;
     }
@@ -316,4 +367,15 @@
 
     }
   }
+
+    /* Body Message*/
+    .header-profile {
+      background-color: #EEEEEE;
+      color: #000000;
+
+      border-bottom: 1px solid #DED6CE;
+      width: 100%;
+      height: 60px;
+      line-height: 10px;
+    }
 </style>
