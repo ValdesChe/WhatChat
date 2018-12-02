@@ -15,7 +15,7 @@ defmodule WhatChatWeb.SessionController do
         conn
         |> delete_session(:current_user)
         |> put_status(:unauthorized)
-        |> render(WhatChatWeb.ErrorView, "401.json", message: message)
+        |> render( "401.json", message: message)
     end
   end
 
