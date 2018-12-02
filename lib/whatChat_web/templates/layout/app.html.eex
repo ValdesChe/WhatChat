@@ -18,7 +18,22 @@
          window.userToken = "< Phoenix.Token.sign(Valchat.Endpoint, "key", @conn.assigns.current_user.id) a>"
       </script>
     < end -->
+  <style media="screen">
+     * {
+       box-sizing: border-box;
+       -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+     }
 
+     body{
+       width: 100%;
+       height: 100%;
+       overflow: hidden;
+     }
+
+
+
+  </style>
   </head>
   <body>
     <%= render @view_module, @view_template, assigns %>

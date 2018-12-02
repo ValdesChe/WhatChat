@@ -39,6 +39,9 @@ const store = new Vuex.Store({
 
     getConversationLoader: (state) => {
       return state.conversationLoader
+    },
+    conversations: function (state) {
+      return state.conversations;
     }
 
   },
@@ -50,6 +53,14 @@ const store = new Vuex.Store({
 
     SWITCH_CONVERSATION_LOADER(state) {
       state.conversationLoader = !state.conversationLoader
+    },
+    addMessages: function (state , {conversations}) {
+      let obj = {}
+      conversations.forEach(function (conversation) {
+        obj[conversation.id] = conversation
+      })
+
+      state.conversations = obj
     }
 
   },
@@ -62,11 +73,11 @@ const store = new Vuex.Store({
       commit(SWITCH_CONVERSATION_LOADER)
     },
 
-    loadConversation(context){
+    loadConversations(context){
       axios.get("/users")
         .then(function (resp){
            console.log(resp.data);
-
+           context.commit('addMessages', {conversations: resp.data.users})
 
         }, function (err) {
            console.log("Error");

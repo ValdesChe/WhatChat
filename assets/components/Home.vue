@@ -1,21 +1,20 @@
 
 <template>
-  <el-container style="width:100%; height: 500px; border: 1px solid #eee">
-    <Messagerie></Messagerie>
-    <router-view name="myzone"></router-view>
-  </el-container>
+  <!-- <el-container style=""> -->
+    <Messagerie class="messagerie"></Messagerie>
+  <!-- </el-container> -->
 </template>
 
 <style lang="css">
-  .el-header {
-    background-color: #B3C0D1;
-    color: #333;
-    line-height: 60px;
+  /* .el-container{
+    width:100%; height: 100%;  border: 1px solid #eee
+  } */
+  .messagerie{
+    height: 400px;
+    overflow: hide;
   }
 
-  .el-aside {
-    color: #333;
-  }
+
 </style>
 
 <script>

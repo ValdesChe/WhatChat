@@ -4,9 +4,16 @@
     <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="120px" class="demo-ruleForm">
       <h1>Connectez vous !</h1>
 
+
       <el-form-item>
-          <p v-if="errorServer !=''" class="error-message">{{ errorServer }}</p>
+        <el-alert v-if="errorServer !=''"
+          :title="errorServer"
+          type="error"
+          description="Please trying again..."
+          show-icon>
+        </el-alert>
       </el-form-item>
+
       <el-form-item  prop="email">
         <el-input type="email" placeholder="Email" v-model="ruleForm2.email" autocomplete="off"></el-input>
       </el-form-item>
