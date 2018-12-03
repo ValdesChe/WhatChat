@@ -25,6 +25,7 @@ export default {
          window.localStorage.setItem('v_email', resp.data.user.email);
          window.localStorage.setItem('v_image', resp.data.user.image);
 
+         window.userToken = resp.data.user.id
         // this.user.authenticated = true
 
         window.location.replace(`${API_URL}`);
