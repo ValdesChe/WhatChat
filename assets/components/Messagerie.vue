@@ -97,6 +97,7 @@
 </template>
 <script>
 
+  import {Socket} from 'phoenix'
   import auth from "../auth"
   import {mapGetters} from 'vuex'
 
@@ -120,6 +121,13 @@
     mounted() {
       //do something after mounting vue instance
       // console.log(auth);
+      let socket = new Socket("/socket", { params: { token: window.userToken } })
+      socket.connect()
+      let channel = socket.channel('room:lobby', {})
+      channel.join()
+        .receive('ok', resp => { console.log('Joined successfully', resp) })
+        .receive('error', resp => { console.log('Unable to join', resp) })
+
       this.$store.dispatch('loadConversations')
     }
 
@@ -130,26 +138,26 @@
 <style lang="sass" scoped>
 
 
-ul.options {
-    list-style: none;
-    padding: 0;
-    position: absolute;
-    top: 5px;
-    right: 15px;
+  ul.options {
+      list-style: none;
+      padding: 0;
+      position: absolute;
+      top: 5px;
+      right: 15px;
 
-    li {
-      display: inline-block;
-      padding-left: 12px;  
-    	zoom: 1;
+      li {
+        display: inline-block;
+        padding-left: 12px;
+      	zoom: 1;
 
-      .opt-link {
-        display: block;
-        font-size: 1.4em;
-        margin: 0 5px;
-        text-decoration: none
+        .opt-link {
+          display: block;
+          font-size: 1.4em;
+          margin: 0 5px;
+          text-decoration: none
+        }
+
       }
-
-    }
   }
   .messenger{
     height: 100%;
@@ -245,8 +253,8 @@ ul.options {
     height: 500px;
     position: relative;
     overflow: hidden;
-    /*overflow-y: scroll;
-*/
+    overflow-y: scroll;
+
     a {
       text-decoration: none;
     }

@@ -3,8 +3,6 @@
 
 // To use Phoenix channels, the first step is to import Socket
 // and connect at the socket path in "lib/my_app/endpoint.ex":
-import { Socket } from "phoenix";
-
 import Vue from 'vue/dist/vue.js';
 //axios
 import Axios from 'axios';
@@ -31,9 +29,14 @@ import router from "./router.js"
 import store from "./store.js"
 
 
+//
+// let socket = new Socket("/socket", { params: { token: window.userToken } })
+// socket.connect()
 
-let socket = new Socket("/socket", { params: { token: window.userToken } })
-socket.connect()
+
+
+
+
 
 Vue.config.productionTip = false
 
@@ -48,11 +51,11 @@ Vue.use(VueAxios, Axios);
 
 
 // And create the top-level view model:
-new Vue({
+let vm = new Vue({
   el: '#app',
   router,
   store,
   template: '<MyApp/>',
   components: { MyApp }
 });
-export default socket
+export default vm
