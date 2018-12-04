@@ -386,4 +386,12 @@
       height: 60px;
       line-height: 10px;
     }
+
+    .list-conversation .convervation[data-v-07d4c07c]{
+      width: auto;
+    }
+
+    .list-conversation{
+      height: 100%;
+    }
 </style>
