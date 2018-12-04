@@ -9,7 +9,8 @@ defmodule WhatChatWeb.SessionController do
         conn
         |> put_session(:current_user, user)
         |> put_status(:ok)
-        |> render(WhatChatWeb.UserView, "sign_in.json", user: user)
+		    |> put_view(WhatChatWeb.UserView)
+        |> render("sign_in.json", user: user)
 
       {:error, message} ->
         conn
@@ -34,16 +35,18 @@ defmodule WhatChatWeb.SessionController do
   # end
 
   def ping(conn, _params) do
-    IO.inspect conn
+    # IO.inspect conn
     case get_session(conn, :current_user) do
       nil ->
         conn
         |> put_status(:unauthorized)
-        |> render(WhatChatWeb.ErrorView, "401.json", message: "You are not logged in!")
+		    |> put_view(WhatChatWeb.ErrorView)
+        |> render("401.json", message: "You are not logged in!")
       user ->
         conn
         |> put_status(:ok)
-        |> render(WhatChatWeb.UserView, "show.json", user: user)
+        |> put_view(WhatChatWeb.UserView)
+        |> render("show.json", user: user)
     end
   end
 
@@ -51,6 +54,7 @@ defmodule WhatChatWeb.SessionController do
     conn
     |> configure_session(drop: true)
     |> put_status(:ok)
-    |> render(WhatChatWeb.UserView, "sign_out.json", message: "Bye!")
+    |> put_view(WhatChatWeb.UserView)
+    |> render("sign_out.json", message: "Bye!")
   end
 end

@@ -5,7 +5,7 @@ defmodule WhatChatWeb.Plugs.RequireAuth do
   def init(_params) do
   end
 
-  def call(conn, params) do
+  def call(conn, _params) do
     # IO.puts "===================="
     # IO.inspect params
     # IO.puts "===================="
@@ -18,6 +18,7 @@ defmodule WhatChatWeb.Plugs.RequireAuth do
       # IO.puts "-------------"
       conn
       |> put_status(:unauthorized)
+      |> put_view(WhatChatWeb.ErrorView)
       |> render(WhatChatWeb.ErrorView, "401.json", message: "Unauthenticated User")
       |> halt()
     end
