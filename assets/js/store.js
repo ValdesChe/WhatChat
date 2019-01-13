@@ -18,7 +18,8 @@ Vue.use(Vuex)
             to_id:1
           },
         ]
-      }
+      },
+      ...
 
 *   }
 */
@@ -40,6 +41,19 @@ const store = new Vuex.Store({
     getConversationLoader: (state) => {
       return state.conversationLoader
     },
+
+    getConversationWith: (state) => (id_contact) => {
+      //console.log("getConvers");
+      for (const [key, value] of Object.entries(state.conversations)) {
+        console.log(key, id_contact);
+        if ( key == id_contact )
+          return value
+      }
+
+      return null
+      
+    },
+
     conversations: function (state) {
       return state.conversations;
     }

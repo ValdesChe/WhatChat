@@ -41,7 +41,7 @@ const routes = [
      default: Welcome,
      beforeEnter: requireAuth,
      children: [
-       { path: 'conversation:id', name: 'conversation', component: Conversation },
+       { path: '$\:id\$', name: 'conversation', component: Conversation },
        { path: '/', name: 'home', component: Welcome  },
        { path: '*', redirect: { name: 'home' } }
      ]

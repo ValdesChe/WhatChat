@@ -9,7 +9,7 @@
   /* .el-container{
     width:100%; height: 100%;  border: 1px solid #eee
   } */
-    
+
   .messagerie{
     height: 500px;
     overflow: hide;
@@ -40,7 +40,7 @@
     mounted: function() {
       console.log(window.innerHeight+ "px");
       
-      document.querySelector(".messagerie").style.height =  window.innerHeight-10 + "px"
+      document.querySelector(".messagerie").style.height =  window.innerHeight + "px"
       
     }
 
