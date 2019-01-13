@@ -9,8 +9,9 @@
   /* .el-container{
     width:100%; height: 100%;  border: 1px solid #eee
   } */
+    
   .messagerie{
-    height: 400px;
+    height: 500px;
     overflow: hide;
   }
 
@@ -35,6 +36,13 @@
       return {
         tableData: Array(20).fill(item)
       }
+    },
+    mounted: function() {
+      console.log(window.innerHeight+ "px");
+      
+      document.querySelector(".messagerie").style.height =  window.innerHeight-10 + "px"
+      
     }
+
   };
 </script>

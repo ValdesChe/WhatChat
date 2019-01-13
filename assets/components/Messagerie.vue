@@ -4,9 +4,9 @@
       <!-- v-loading="loading" -->
       <div class="header-user">
         <div class="logo-container">
-          <a href="" class="logo-icon" >
+          <router-link :to="{ name: 'home'}"  href="" class="logo-icon" >
             <img class="svg-icon" :src="user.image" />
-          </a>
+          </router-link>
         </div>
         <div class="options-tools">
             <ul class="options">
@@ -75,24 +75,11 @@
         </el-collapse-transition>
 
         </div>
+        <div style="padding-top:50px"></div>
       </div>
     </div>
-    <div class="el-body">
-      <div class="header-profile">
-
-      </div>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-         sed do eiusmod tempor incididunt ut labore et dolore magna
-         aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-         ullamco laboris nisi ut aliquip ex ea commodo consequat. Du
-         is aute irure dolor in reprehenderit in voluptate velit ess
-         e cillum dolore eu fugiat nulla pariatur. Excepteur sint oc
-         caecat cupidatat non
-         proident, sunt in culpa qui officia deserunt mollit anim i
-         d est laborum.
-      </p>
-    </div>
+    <router-view :key="this.$route.fullPath" default="{name: 'Welcome'}" class="el-body">
+    </router-view>
   </div>
 </template>
 <script>
@@ -135,7 +122,7 @@
 </script>
 
 
-<style lang="sass" scoped>
+<style lang="sass" >
 
 
   ul.options {
@@ -159,6 +146,7 @@
 
       }
   }
+
   .messenger{
     height: 100%;
     width: 100%;
@@ -167,6 +155,8 @@
 
     /* Asider */
     .el-asider {
+
+      flex-direction: column;
       background: #EEEEEE;
       border-right: 1px solid #DED6CE;
       height: 100%;
@@ -184,6 +174,7 @@
     }
     /* Main Container */
     .el-body{
+      flex-direction: column;
       flex: 70%;
       height: 100%;
 
@@ -376,16 +367,7 @@
     }
   }
 
-    /* Body Message*/
-    .header-profile {
-      background-color: #EEEEEE;
-      color: #000000;
-
-      border-bottom: 1px solid #DED6CE;
-      width: 100%;
-      height: 60px;
-      line-height: 10px;
-    }
+  
 
     .list-conversation .convervation[data-v-07d4c07c]{
       width: auto;

@@ -5,6 +5,7 @@ import Messagerie from "../components/Messagerie.vue"
 import Home from "../components/Home.vue"
 import Login from "../components/Login.vue"
 import Conversation from "../components/conversation.vue"
+import Welcome from "../components/utils/welcome.vue"
 Vue.use(VueRouter)
 
 import auth from '../auth'
@@ -36,11 +37,12 @@ const afterAuth = (_to, from, next) => {
 const routes = [
   {
      path: '/',
-     name: 'home',
      component: Home,
+     default: Welcome,
      beforeEnter: requireAuth,
      children: [
        { path: 'conversation:id', name: 'conversation', component: Conversation },
+       { path: '/', name: 'home', component: Welcome  },
        { path: '*', redirect: { name: 'home' } }
      ]
    },
