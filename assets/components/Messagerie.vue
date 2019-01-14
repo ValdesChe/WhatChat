@@ -78,7 +78,7 @@
         <div style="padding-top:50px"></div>
       </div>
     </div>
-    <router-view :key="this.$route.fullPath" default="{name: 'Welcome'}" class="el-body">
+    <router-view :key="this.$route.fullPath"  default="{name: 'Welcome'}" class="el-body">
     </router-view>
   </div>
 </template>
@@ -247,6 +247,8 @@
     position: relative;
     overflow: hidden;
     overflow-y: scroll;
+
+    z-index:1000;
 
     a {
       text-decoration: none;

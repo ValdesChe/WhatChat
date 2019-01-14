@@ -36,16 +36,16 @@ const afterAuth = (_to, from, next) => {
 
 const routes = [
   {
-     path: '/',
-     component: Home,
-     default: Welcome,
-     beforeEnter: requireAuth,
-     children: [
-       { path: '$\:id\$', name: 'conversation', component: Conversation },
-       { path: '/', name: 'home', component: Welcome  },
-       { path: '*', redirect: { name: 'home' } }
-     ]
-   },
+    path: '/',
+    component: Home,
+    default: Welcome,
+    beforeEnter: requireAuth,
+    children: [
+      { path: '$\:id\$', name: 'conversation', component: Conversation },
+      { path: '/', name: 'home', component: Welcome  },
+      { path: '*', redirect: { name: 'home' } }
+    ]
+  },
   {
     path: '/login',
     name: 'login',

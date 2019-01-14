@@ -34,15 +34,52 @@
        </div>
 
        <div class="messages-history">
+           <div class="overlay">
+            
+            </div>
            <p>
                Lorem, ipsum dolor.
                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eligendi, rerum?
            </p>
        </div>
 
-       <div class="messages-sending">
 
-       </div>
+        <div class="messages-sending">
+        <div class="emoji-zone">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 368 368" style="enable-background:new 0 0 368 368;" fill="#949A9C" xml:space="preserve" width="24px" height="24px">
+                <g>
+                    <g>
+                    <g>
+                        <path d="M184,0C82.544,0,0,82.544,0,184s82.544,184,184,184s184-82.544,184-184S285.456,0,184,0z M184,352     c-92.64,0-168-75.36-168-168S91.36,16,184,16s168,75.36,168,168S276.64,352,184,352z" fill="#949A9C"/>
+                        <path d="M144,152c0-13.232-10.768-24-24-24s-24,10.768-24,24s10.768,24,24,24S144,165.232,144,152z M112,152c0-4.408,3.592-8,8-8     s8,3.592,8,8s-3.592,8-8,8S112,156.408,112,152z" fill="#949A9C"/>
+                        <path d="M248,128c-13.232,0-24,10.768-24,24s10.768,24,24,24s24-10.768,24-24S261.232,128,248,128z M248,160     c-4.408,0-8-3.592-8-8s3.592-8,8-8c4.408,0,8,3.592,8,8S252.408,160,248,160z" fill="#949A9C"/>
+                        <path d="M261.336,226.04c-3.296-2.952-8.36-2.664-11.296,0.624C233.352,245.312,209.288,256,184,256     c-25.28,0-49.352-10.688-66.04-29.336c-2.952-3.288-8-3.576-11.296-0.624c-3.296,2.944-3.568,8-0.624,11.296     C125.76,259.368,154.176,272,184,272c29.832,0,58.248-12.64,77.96-34.664C264.904,234.04,264.624,228.984,261.336,226.04z" fill="#949A9C"/>
+                    </g>
+                    </g>
+                </g>
+                
+                <g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
+            
+            </svg>
+        </div>
+        <div class="typing-zone">
+            <input type="text" name="message-input" id="message-input">
+        </div>
+        <div class="voice-zone">
+            <svg version="1.1" id="Capa_1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                viewBox="0 0 58 58" width="24px" height="24px" style="enable-background:new 0 0 58 58;" fill="#949A9C" xml:space="preserve">
+                <g>
+                    <path d="M44,28c-0.552,0-1,0.447-1,1v6c0,7.72-6.28,14-14,14s-14-6.28-14-14v-6c0-0.553-0.448-1-1-1s-1,0.447-1,1v6
+                    c0,8.485,6.644,15.429,15,15.949V56h-5c-0.552,0-1,0.447-1,1s0.448,1,1,1h12c0.552,0,1-0.447,1-1s-0.448-1-1-1h-5v-5.051
+                    c8.356-0.52,15-7.465,15-15.949v-6C45,28.447,44.552,28,44,28z"/>
+                    <path d="M29,46c6.065,0,11-4.935,11-11V11c0-6.065-4.935-11-11-11S18,4.935,18,11v24C18,41.065,22.935,46,29,46z"/>
+                </g>
+                <g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
+            </svg>
+        </div>
+        </div>
+
+
       
       
   </div>
@@ -86,7 +123,98 @@
 
 
         .messages-history{
+            width:100%;
             
+        }
+
+        .messages-history::after {
+            content: "";
+            background: url(https://web.whatsapp.com/img/8a055527b27b887521a9f084497d8879.png);
+            opacity: 0.4;
+
+            top: 60px;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;   
+        }
+
+        .messages-history .overlay::after {
+            content: "";
+            background: #E5DDD5;
+            opacity: 0.7;
+
+            top: 60px;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: 2;   
+        }
+
+        .messages-sending{
+            height:62px;
+            width:100%;
+            
+            padding-top:4px;
+            position:absolute;
+            bottom:0;
+            rigth:0;
+            background-color:#EFEFEF;
+
+            display:flex;
+            flex-direction:row;
+            z-index:1000;
+
+            .emoji-zone{
+               
+                width:50px;
+                padding-left: 5px;
+                svg{
+                    width:50px;
+                    height:50px;
+                    padding:10px;
+                    position:relative;
+                    
+                }
+            }
+
+            .typing-zone{
+                width:60%;
+                input{
+                    
+                    font-weigth:bold;
+                    font-family:"bree", Sans-serif;
+    
+                    padding:5px;
+                    height:43px;
+                    width:100%;
+
+                    background-color: #ffffff;
+
+                    border-color: #fff;
+                    border-radius: 21px;
+                    border-style: solid;
+                    border-width: 1px;
+                    padding: 9px 12px 11px 12px;
+                    margin: 5px 10px;
+                }
+            }
+
+            .voice-zone{
+                
+                width:50px;
+                padding-left: 20px;
+                svg{
+                    width:50px;
+                    height:50px;
+                    padding:10px;
+                    position:relative;
+                    
+                }
+            }
+
         }
     }
     
@@ -109,10 +237,16 @@
         mounted: function () {
             console.log(this.$route.params.id)
             // this.id_user = this.$route.params.id
-
+            const msg_history = document.querySelector(".messages-history")
+            msg_history.style.height = window.innerHeight-100 + "px"
+            
+            //msg_history.style.backgroundImage =  "url(\" https://web.whatsapp.com/img/8a055527b27b887521a9f084497d8879.png \")"
+            //msg_history.style.opacity =  0.2
+            // msg_history.style.backgroundImage =  "url(\"<%= Routes.static_path(@conn , \"/static/images/bg_tchat.png\") %> \")"
+            //msg_history.style.backgroundImage =  "<%= Routes.static_path(@con , \"/images/bg_tchat.png\") %>"
             this.$store.dispatch('loadConversations')
             this.end_user = this.getConversationWith(this.$route.params.id)
-             
+            
         }
     }
 </script>
