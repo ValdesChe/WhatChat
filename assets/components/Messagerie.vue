@@ -42,7 +42,7 @@
         </el-input>
       </div>
       <div class="list-conversation">
-        <div v-for="conversation in conversations" :key="conversation.id" >
+        <div v-for="conversation in conversations" @click="ContactSelected" :key="conversation.id" >
           <el-collapse-transition v-if="conversation.id != 1">
           <router-link class="convervation" :to="{ name: 'conversation', params: { id: conversation.id}}">
             <div class="conversation-image">
@@ -103,7 +103,9 @@
       )
     },
     methods: {
-
+      ContactSelected(){
+        console.log(this)
+      }
     },
     mounted() {
       //do something after mounting vue instance
@@ -123,7 +125,11 @@
 
 
 <style lang="sass" >
-
+  a {
+    text-decoration:none;
+    border:none;
+    outline: 0;
+  }
 
   ul.options {
       list-style: none;
@@ -380,4 +386,8 @@
     .list-conversation{
       height: 100%;
     }
+
+  .list-conversation .router-link-active{
+    background :#EEEEEE;
+  }
 </style>
