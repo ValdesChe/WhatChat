@@ -5,14 +5,14 @@
       <div class="header-user">
         <div class="logo-container">
           <router-link :to="{ name: 'home'}"  href="" class="logo-icon" >
-            <img class="svg-icon" :src="user.image" />
+            <img class="user" :src="user.image" />
           </router-link>
         </div>
         <div class="options-tools">
             <ul class="options">
               <li>
                 <router-link class="opt-link" :to="{ name: 'conversation', params: { id: 1}}">
-                    <svg id="live-status" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="#727A7E" d="M12.072 1.761a10.05 10.05 0 0 0-9.303 5.65.977.977 0 0 0 1.756.855 8.098 8.098 0 0 1 7.496-4.553.977.977 0 1 0 .051-1.952zM1.926 13.64a10.052 10.052 0 0 0 7.461 7.925.977.977 0 0 0 .471-1.895 8.097 8.097 0 0 1-6.012-6.386.977.977 0 0 0-1.92.356zm13.729 7.454a10.053 10.053 0 0 0 6.201-8.946.976.976 0 1 0-1.951-.081v.014a8.097 8.097 0 0 1-4.997 7.209.977.977 0 0 0 .727 1.813l.02-.009z"></path><path fill="#009588" d="M19 1.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"></path></svg>
+                  <svg id="live-status" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="#727A7E" d="M12.072 1.761a10.05 10.05 0 0 0-9.303 5.65.977.977 0 0 0 1.756.855 8.098 8.098 0 0 1 7.496-4.553.977.977 0 1 0 .051-1.952zM1.926 13.64a10.052 10.052 0 0 0 7.461 7.925.977.977 0 0 0 .471-1.895 8.097 8.097 0 0 1-6.012-6.386.977.977 0 0 0-1.92.356zm13.729 7.454a10.053 10.053 0 0 0 6.201-8.946.976.976 0 1 0-1.951-.081v.014a8.097 8.097 0 0 1-4.997 7.209.977.977 0 0 0 .727 1.813l.02-.009z"></path><path fill="#009588" d="M19 1.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"></path></svg>
                 </router-link>
               </li>
               <li>
@@ -21,9 +21,24 @@
                 </router-link>
               </li>
               <li>
-                <router-link class="opt-link" :to="{ name: 'conversation', params: { id: 1}}">
-                  <svg id="options-profile" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 224 224" style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,224v-224h224v224z" fill="none"></path><g fill="#8f9598"><g id="surface1"><path d="M112,42c-7.73828,0 -14,6.26172 -14,14c0,7.73828 6.26172,14 14,14c7.73828,0 14,-6.26172 14,-14c0,-7.73828 -6.26172,-14 -14,-14zM112,98c-7.73828,0 -14,6.26172 -14,14c0,7.73828 6.26172,14 14,14c7.73828,0 14,-6.26172 14,-14c0,-7.73828 -6.26172,-14 -14,-14zM112,154c-7.73828,0 -14,6.26172 -14,14c0,7.73828 6.26172,14 14,14c7.73828,0 14,-6.26172 14,-14c0,-7.73828 -6.26172,-14 -14,-14z"></path></g></g></g></svg>
-                </router-link>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </li>
+              <li>
+                <div class="opt-link inline-dropdown-menu">
+                  <div class="btn-actor">
+                    <svg class="" style="top:-3px; fill:#000000;" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 224 224" ><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,224v-224h224v224z" fill="none"></path><g fill="#8f9598"><g id="surface1"><path d="M112,42c-7.73828,0 -14,6.26172 -14,14c0,7.73828 6.26172,14 14,14c7.73828,0 14,-6.26172 14,-14c0,-7.73828 -6.26172,-14 -14,-14zM112,98c-7.73828,0 -14,6.26172 -14,14c0,7.73828 6.26172,14 14,14c7.73828,0 14,-6.26172 14,-14c0,-7.73828 -6.26172,-14 -14,-14zM112,154c-7.73828,0 -14,6.26172 -14,14c0,7.73828 6.26172,14 14,14c7.73828,0 14,-6.26172 14,-14c0,-7.73828 -6.26172,-14 -14,-14z"></path></g></g></g></svg>
+                  </div>
+                  <div class="menu--options" style="top:35px;right:5px;">
+                    <ul>
+                      <li><a href="">New group</a></li>
+                      <li><a href="">Profile</a></li>
+                      <li><a href="">Archived</a></li> 
+                      <li><a href="">Starred</a></li>
+                      <li><a href="">Settings</a></li>
+                      <li><a href="">Log out</a></li>
+                    </ul>
+                  </div>
+                </div>
               </li>
 
 
@@ -42,13 +57,14 @@
         </el-input>
       </div>
       <div class="list-conversation">
-        <div v-for="conversation in conversations" @click="ContactSelected" :key="conversation.id" >
+        <div v-for="conversation in conversations" @click="ContactSelected" class="one-contact"  :key="conversation.id" >
           <el-collapse-transition v-if="conversation.id != 1">
           <router-link class="convervation" :to="{ name: 'conversation', params: { id: conversation.id}}">
-            <div class="conversation-image">
-              <a href="" class="logo-icon" >
+            <div class="conversation-image" >
+              <img class="user" :src="conversation.image" :alt="conversation.id" />
+              <!-- <a href="" class="logo-icon" >
                 <img class="svg-icon" :src="conversation.image" :alt="conversation.id" />
-              </a>
+              </svg> -->
             </div>
             <div class="conversation-details">
               <div class="first-row">
@@ -58,13 +74,25 @@
                   <div class="conversation--date">
                     <span style="float: right; text-align: right;" class="span--datespan--date">13:45</span>
                   </div>
+                  <div class="inline-dropdown-menu">
+                    <span class="iconic-right btn-actor"  @click.prevent="ShowConvMenu($event)"></span>
+                    <div class="menu--options">
+                      <ul>
+                        <li><a href="">Archive Tchat</a></li>
+                        <li><a href="">Mute</a></li>
+                        <li><a href="">Delete chat</a></li> 
+                        <li><a href="">Pin chat</a></li>
+                        <li><a href="">Mark as unread</a></li>
+                      </ul>
+                    </div>
+                  </div>
               </div>
               <div class="second-row">
                 <div class="lastmessage">
                   <span>  Bonjour {{ user.name }} </span>
                 </div>
-                <div class="ismessage" v-if="conversation.id == 3" >
-                    <el-badge :value="3" class="item"></el-badge>
+                <div class="ismessage" v-if="conversation.id == 3 || conversation.id == 5 || conversation.id == 8" >
+                    <span value="3" class="badge-icon">1</span>
                 </div>
 
               </div>
@@ -75,7 +103,6 @@
         </el-collapse-transition>
 
         </div>
-        <div style="padding-top:50px"></div>
       </div>
     </div>
     <router-view :key="this.$route.fullPath"  default="{name: 'Welcome'}" class="el-body">
@@ -104,8 +131,16 @@
     },
     methods: {
       ContactSelected(){
-        console.log(this)
+        //console.log(this)
+      },
+      ShowConvMenu(does){
+
+        //console.log(does)
+        //const iconClicked = does.explicitOriginalTarget;
+
+        //iconClicked.nextElementSibling.classList.add("active")
       }
+
     },
     mounted() {
       //do something after mounting vue instance
@@ -116,7 +151,48 @@
       channel.join()
         .receive('ok', resp => { console.log('Joined successfully', resp) })
         .receive('error', resp => { console.log('Unable to join', resp) })
+      document.querySelector(".list-conversation").style.height = window.innerHeight - 115 + "px"
+      
+      window.addEventListener('load', () => {
+         // run after everything is in-place
+        const menu = document.querySelectorAll(".inline-dropdown-menu .menu--options");
+        document.querySelector("html").addEventListener("click" , function () {
+          menu.forEach(element => {
+            const btnActor = element.previousElementSibling
+            if(btnActor.classList.contains("actived")){
+              btnActor.classList.remove("actived")
+            }
 
+            if(btnActor.parentNode.parentNode.parentNode.querySelector(".ismessage") != null)
+                btnActor.parentNode.parentNode.parentNode.querySelector(".ismessage").style.transform = "translateX(0)"
+              
+            element.classList.remove("active");
+          });
+        })
+
+        const ddmToogler = document.querySelectorAll(".inline-dropdown-menu .btn-actor");
+        ddmToogler.forEach(elementBtn => {
+            elementBtn.addEventListener("click", function (event) {
+              
+              menu.forEach(elementMenu => {
+                const btnActor = elementMenu.previousElementSibling
+                if(btnActor.classList.contains("actived")){
+                  btnActor.classList.remove("actived")
+                  btnActor.parentNode.parentNode.parentNode.querySelector(".ismessage").style.transform = "translateX(0)"
+                }
+                elementMenu.classList.remove("active");
+              });
+
+              event.stopPropagation();
+              this.classList.add("actived")
+              if(this.parentNode.parentNode.parentNode.querySelector(".ismessage") != null)
+                this.parentNode.parentNode.parentNode.querySelector(".ismessage").style.transform = "translateX(-15px)"
+              
+              elementBtn.nextElementSibling.classList.add("active");              
+            });
+        });
+      })
+      document.querySelector(".messagerie").style.height =  window.innerHeight + "px"
       this.$store.dispatch('loadConversations')
     }
 
@@ -125,31 +201,171 @@
 
 
 <style lang="sass" >
+
+
   a {
     text-decoration:none;
     border:none;
     outline: 0;
   }
 
+  .inline-dropdown-menu{
+    position:absolute;
+    top:0px;
+    right:5px;
+    display:block;
+   
+    .iconic-right{
+      position:absolute;
+      display:block;                 
+      cursor:pointer;
+
+      top: 25px;
+      right: 10px;
+      width: 30px;
+      height: 30px;
+      z-index:1300;
+
+      &.actived {
+        display: block !important;
+
+      }
+
+     
+      &:after{
+        content:' ';
+        position: absolute;
+        right: 5px;
+        top: 3px;
+        width: 10px;
+        height: 10px;
+        border: solid #989A9A;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+    }
+
+    .iconic-right{
+      display:none !important; 
+       &.active{
+        display: block;
+      }
+      
+    }
+
+    .menu--options{
+      display:block;
+      position:absolute;
+      top: 45px;
+      right: 10px;
+      min-width:100px;
+      max-width:300px;
+      min-height:100px;
+      max-height:300px;
+      z-index:2500;
+      white-space: nowrap;
+
+      margin: auto;
+
+      font-size: 14px;
+      text-align: left;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 4px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+      background-clip: padding-box;
+        -webkit-transition: all 0.2s ease;
+        opacity:0;
+        -webkit-transform-origin: right top 0px; 
+        -webkit-transform: scale(0); 
+      
+      & ul {
+        min-width: 100px;
+        padding: 5px 0;
+        margin: 2px 0 0;
+        list-style: none;
+        position:relative;
+        color:black;
+      }
+
+      &.active {
+        opacity:1;
+        -webkit-transform-origin: right top 0px; 
+        -webkit-transform: scale(1); 
+      }
+
+      & li {
+        list-style: none;
+        opacity: 0; 
+        will-change: transform, opacity;
+        transform: translateY(0);
+        list-style: none;
+        padding: 1em 2em 1em 1.5em;
+        transition: all 0.5s;
+        
+        a{
+          width:100%;
+          display: inline-block;
+          text-decoration: none;
+          font-size: 1.1em;
+          color: #444444;
+        }
+        
+        &:hover {
+          background: #F7F9FA;
+          
+          a {
+            text-decoration: none;
+          }
+        }
+      }
+      &  li {
+        -webkit-transition: all 0.3s ease;
+        transform: translateY(-30%);
+      }
+
+      & li{
+        -webkit-transition-delay: (random(11) + 4) * 50 + "ms";
+        -moz-transition-delay: (random(11) + 4) * 50 + "ms";
+        -o-transition-delay: (random(11) + 4) * 50 + "ms";
+        transition-delay: (random(11) + 4) * 50 + "ms";
+      }
+      &.active li {
+        opacity: 1; 
+        transform: translateY(0px);
+      }
+    }
+    
+  }
+
   ul.options {
       list-style: none;
       padding: 0;
       position: absolute;
-      top: 5px;
+      top: 17px;
       right: 15px;
 
-      li {
+      > li {
         display: inline-block;
-        padding-left: 12px;
+        padding-left: 10px;
       	zoom: 1;
+        .btn-actor{
+          display:block;
+          position:absolute;
+          cursor: pointer;
+          top: -7px;
+          right:7px;
 
-        .opt-link {
-          display: block;
-          font-size: 1.4em;
-          margin: 0 5px;
-          text-decoration: none
+          padding: 6px 7px 6px 7px;
+          border-radius:50%;
+          &.actived{
+            background: #D6D6D6;
+          }
         }
-
+        
       }
   }
 
@@ -210,7 +426,6 @@
       margin-left: 15px;
       position: relative;
       border-radius: 50%;
-      border: 1px inset rgba(0,0,0,.1);
       background: #FFFFFF;
 
     }
@@ -247,17 +462,41 @@
       }
   }
 
+
+      .user {
+        display: inline-block;
+        width: 3em;
+        height: 3em;
+        border-radius: 50%;
+        
+        -webkit-box-shadow: -1px 0px 4px -1px rgba(0,0,0,0.25);
+        -moz-box-shadow: -1px 0px 4px -1px rgba(0,0,0,0.25);
+        box-shadow: -1px 0px 4px -1px rgba(0,0,0,0.25);
+
+        object-fit: cover;
+      }
+
+
   .list-conversation{
     display: block;
     height: 500px;
-    position: relative;
+    position: relative;        
     overflow: hidden;
-    overflow-y: scroll;
-
+    overflow-y: scroll;        
+    background:white;
     z-index:1000;
 
     a {
       text-decoration: none;
+    }
+
+
+    .one-contact:nth-last-child(-n+5) {
+      .menu--options{ 
+        top: -185px !important;
+      } 
+
+
     }
 
     /* The link */
@@ -266,13 +505,27 @@
       width: 400px;
       background: white;
       flex-direction: row;
-
+      
     }
+    
+    .convervation:hover .ismessage{
+      transform: translateX(-15px) !important;
+    }
+
+    .convervation:hover .iconic-right{
+      display:block !important; 
+    }
+
     .conversation-image{
       padding: 5px;
       position: relative;
-      flex: 22%;
+      flex: 18%;
+      margin-left:10px;
 
+      *{
+
+        box-sizing:border-box;
+      }
       .logo-icon{
         width: 3.5em;
         height: 3.5em;
@@ -301,7 +554,8 @@
 
     }
     .conversation-details{
-      flex: 78%;
+      position:relative;
+      flex: 80%;
       -webkit-flex-grow: 1;
       flex-grow: 1;
       min-width: 0;
@@ -312,24 +566,26 @@
       -webkit-justify-content: center;
       justify-content: center;
       cursor: pointer;
-
-      border-bottom: 2px solid #F2F2F2;
-
+      border-width: thin;
+      border-bottom: thin solid #F2F2F2;
+      &:hover .iconic-right{
+        display:block;
+      }
+    
       .first-row {
-          -webkit-align-items: center;
-          align-items: center;
-          line-height: normal;
-          display: -webkit-flex;
-          display: flex;
+        -webkit-align-items: center;
+        align-items: center;
+        line-height: normal;
+        display: -webkit-flex;
+        display: flex;
 
-
+       
           .conversation--username{
             text-align: left;
-            color: #333333;
+            color: black;
 
 
-            font-weight: bold;
-            font-size: 19px;
+            font-size: 16px;
             line-height: 19px;
 
 
@@ -337,10 +593,10 @@
           .conversation--date{
             text-align: right;
             color: #8E9090;
-            font-size: 0.9em;
-            padding-right: 7px;
+            font-size: 0.8em;
+            padding-right: 10px;
             position: absolute;
-            right: 0;
+            right: 10px;
           }
 
       }
@@ -357,19 +613,30 @@
             color: #696969;
 
             padding-top: 5px;
-            font-weight: bold;
             font-size: 14px;
             line-height: 19px;
-
-
           }
+
           .ismessage{
             text-align: right;
             color: #8E9090;
-            font-size: 0.9em;
+            font-size: 0.7em;
             padding-right: 7px;
             position: absolute;
-            right: 0;
+            right: 20px;
+            transition:all 0.2s ease-out;
+            -webkit-transition: all 0.2s ease-out;
+
+            .badge-icon{
+              width:10px;
+              height:10px;
+              padding:2px 6px 2px 6px;
+              background:#1CD56D;
+              border-radius:50%;
+              color:white;
+            }
+
+            
           }
 
       }
@@ -389,5 +656,8 @@
 
   .list-conversation .router-link-active{
     background :#EEEEEE;
+    .conversation--username{
+      font-weight:bold;
+    }
   }
 </style>

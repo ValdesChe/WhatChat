@@ -12,7 +12,8 @@
 user = (:crypto.strong_rand_bytes(15) |> Base.url_encode64 |> binary_part(0, 15))
 %{
   email: user <> "@email.com",
-  image: "https://identicapi.herokuapp.com/img/" <> user,
+  #image: "https://identicapi.herokuapp.com/img/" <> user,
+  image: "https://loremflickr.com/400/400/?lock=" <> Integer.to_string(:rand.uniform(100)), 
   password: "secret",
   username: user
 }

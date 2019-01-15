@@ -3,7 +3,7 @@
        <div class="header-profile">
             <div class="logo-container">
                 <router-link :to="{ name: 'home'}"  href="" class="logo-icon" >
-                    <img class="svg-icon" :src="end_user.image" />
+                    <img class="user" :src="end_user.image" />
                 </router-link>
                 <div class="info-conv-user">
                     <span class="conv-username"> {{end_user.username}} </span>
@@ -69,13 +69,67 @@
                             <p>
                                 Yo patron ! Je vais bien merci . Et toi mêmê ça dose ??
                             </p>
-                            <span class="message--time">13:31</span>
+                            <span class="message--time right-side">13:31</span>
+                            <span class="message--readStatus readed"></span>
                         </div>
                         <div class="msg--menu"></div>
                     </div>
 
                     <span class="iconic-right"></span>
                 </div>
+
+                <div class="one-message-container one-message-container--left">
+                    <div class="msg--content message--left">
+                       <div class="message-info">
+                            <p>
+                                Ça fait longtemps hein ....
+                            </p>
+                            <span class="message--time">13:31</span>
+                        </div>
+                        <div class="msg--menu"></div>
+                    </div>
+                    <span class="iconic-left"></span>
+                </div>
+                <div class="one-message-container one-message-container--left">
+                    <div class="msg--content message--left">
+                       <div class="message-info">
+                            <p>
+                                En tout cas ça va bien aussi de mon coté hmdlh
+                            </p>
+                            <span class="message--time">13:31</span>
+                        </div>
+                        <div class="msg--menu"></div>
+                    </div>
+                </div>
+                <div class="one-message-container one-message-container--left"> 
+                    <div class="msg--content message--left">
+                       <div class="message-info">
+                            <p>
+                               Sinon tu do quoi now ?? J espere que je te derange pas ahaahha 
+                            </p>
+                            <span class="message--time">13:31</span>
+                        </div>
+                        <div class="msg--menu "></div>
+                    </div>
+                </div>
+
+
+                 <div class="one-message-container one-message-container--right">
+                    <div class="msg--content message--right">
+                        <div class="message-info">
+                            <p>
+                                Non non t'inquiète boss je suis là au calme à la maison. 
+                                Je m'ennuis même. Tu n'as pas un way por moi.
+                            </p>
+                            <span class="message--time right-side">13:30</span>
+                            <span class="message--readStatus readed"></span>
+                        </div>
+                        <div class="msg--menu"></div>
+                    </div>
+
+                    <span class="iconic-right right-side"></span>
+                </div>
+
 
                 <div class="one-message-container one-message-container--left">
                     <div class="msg--content message--left">
@@ -120,13 +174,30 @@
                                 Non non t'inquiète boss je suis là au calme à la maison. 
                                 Je m'ennuis même. Tu n'as pas un way por moi.
                             </p>
-                            <span class="message--time">13:30</span>
+                            <span class="message--time right-side">13:30</span>
+                            <span class="message--readStatus readed"></span>
                         </div>
                         <div class="msg--menu"></div>
                     </div>
 
                     <span class="iconic-right"></span>
                 </div>
+
+                 <div class="one-message-container one-message-container--right">
+                    <div class="msg--content message--right">
+                        <div class="message-info">
+                            <p>
+                                Non non t'inquiète boss je suis là au calme à la maison. 
+                                Je m'ennuis même. Tu n'as pas un way por moi.
+                            </p>
+                            <span class="message--time right-side">13:30</span>
+                            <span class="message--readStatus"></span>
+                        </div>
+                        <div class="msg--menu"></div>
+                    </div>
+                </div>
+
+
 
             </div>
        </div>
@@ -277,6 +348,54 @@
                             
                             float:right;
                             color:#978F97;
+
+                            &.right-side{
+                                right: 28px !important;
+                            }
+                            
+                        }
+                        
+
+                        span.message--readStatus{
+                          /*   position:absolute;
+                            bottom: 3px;
+                            right:7px;
+                            width: 5px;
+                            height: 10px;
+                            border: solid grey;
+                            border-width: 0 1px 1px 0;
+                            -webkit-transform: rotate(40deg);
+                            -ms-transform: rotate(40deg);
+                            transform: rotate(40deg);
+ */
+                            &:before,&:after{
+                                content:' ';
+                                position:absolute;
+                                bottom: 6px;
+                                height: 10px;
+                                border: solid grey;
+                                border-width: 0 1px 1px 0;
+                                -webkit-transform: rotate(40deg);
+                                -ms-transform: rotate(40deg);
+                                transform: rotate(40deg);
+                            }
+                            &:before{
+                                bottom: 5px;
+                                right:10px;
+                                width: 2px;
+                            }
+
+                            &:after{
+                                right:15px;
+                                width: 5px;
+                            }
+
+                            &.readed{
+                                &:before,&:after{
+                                    border-bottom:1px solid #4FC3F7;
+                                    border-right:1px solid #4FC3F7;
+                                }
+                            }
                         }
                     }
 
@@ -476,6 +595,8 @@
 
 
 <script>
+
+  import addEvent from './utils/resizeCapture'
   import {mapGetters} from 'vuex'
   export default {
         data() {
@@ -488,20 +609,41 @@
             ...mapGetters(['getConversationWith'])
         },
         mounted: function () {
-            console.log(this.$route.params.id)
             // this.id_user = this.$route.params.id
+
+            document.querySelector(".messagerie").style.height =  window.innerHeight + "px"
             const msg_history = document.querySelector(".messages-history")
+            
             msg_history.style.height = window.innerHeight-110 + "px"
             
             //msg_history.style.backgroundImage =  "url(\" https://web.whatsapp.com/img/8a055527b27b887521a9f084497d8879.png \")"
             //msg_history.style.opacity =  0.2
             // msg_history.style.backgroundImage =  "url(\"<%= Routes.static_path(@conn , \"/static/images/bg_tchat.png\") %> \")"
             //msg_history.style.backgroundImage =  "<%= Routes.static_path(@con , \"/images/bg_tchat.png\") %>"
-            this.$store.dispatch('loadConversations')
+            
+            
             this.end_user = this.getConversationWith(this.$route.params.id)
+            
+            if(this.$route.params.id == null || this.end_user === null ){                
+                this.$router.push({ name: 'home' })
+                return
+            }
+            window.addEventListener('load', () => {
+                document.querySelector(".messagerie").style.height =  window.innerHeight + "px"
+                document.querySelector(".my-app").style.height =  window.innerHeight + "px"
+
+                document.querySelector(".el-asider").style.height =  window.innerHeight  + "px"
+            })
+
+            addEvent(window, "resize", function(event) {
+                document.querySelector(".messages-history").style.height =  window.innerHeight - 110 + "px"
+                document.querySelector(".el-asider").style.height =  window.innerHeight  + "px"
+            });
+          
+            this.$store.dispatch('loadConversations')
+          
+            
             
         }
     }
 </script>
-<style lang="css" >
-</style>
