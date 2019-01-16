@@ -9,7 +9,7 @@ import Axios from 'axios';
 import VueAxios from 'vue-axios';
 
 
-import MyApp from "../components/my-app.vue";
+import App from "../components/App.vue";
 
 // ElementUI for design
 import ElementUI from 'element-ui';
@@ -55,7 +55,7 @@ let vm = new Vue({
   el: '#app',
   router,
   store,
-  template: '<MyApp/>',
-  components: { MyApp }
+  template: '<App/>',
+  components: { App }
 });
 export default vm

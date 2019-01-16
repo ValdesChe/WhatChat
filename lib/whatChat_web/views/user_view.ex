@@ -14,7 +14,10 @@ defmodule WhatChatWeb.UserView do
     %{
       id: user.id,
       username: user.username,
-      image: user.image
+      image: user.image,
+      email: user.email,
+      token:  Phoenix.Token.sign(WhatChatWeb.Endpoint, "key", user.id)
+
     }
   end
 
@@ -24,7 +27,8 @@ defmodule WhatChatWeb.UserView do
           id: user.id,
           image: user.image,
           username: user.username,
-          email: user.email
+          email: user.email,
+          token:  Phoenix.Token.sign(WhatChatWeb.Endpoint, "key", user.id)
         }
     }
   end

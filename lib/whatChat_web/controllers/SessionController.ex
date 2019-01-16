@@ -6,6 +6,7 @@ defmodule WhatChatWeb.SessionController do
   def create(conn, %{"email" => email, "password" => password}) do
     case WhatChat.Accounts.authenticate_user(email, password) do
       {:ok, user} ->
+
         conn
         |> put_session(:current_user, user)
         |> put_status(:ok)

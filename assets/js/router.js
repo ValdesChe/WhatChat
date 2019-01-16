@@ -37,8 +37,7 @@ const afterAuth = (_to, from, next) => {
 const routes = [
   {
     path: '/',
-    component: Home,
-    default: Welcome,
+    component: Messagerie,
     beforeEnter: requireAuth,
     children: [
       { path: '$\:id\$', name: 'conversation', component: Conversation },

@@ -611,10 +611,7 @@
         mounted: function () {
             // this.id_user = this.$route.params.id
 
-            document.querySelector(".messagerie").style.height =  window.innerHeight + "px"
-            const msg_history = document.querySelector(".messages-history")
             
-            msg_history.style.height = window.innerHeight-110 + "px"
             
             //msg_history.style.backgroundImage =  "url(\" https://web.whatsapp.com/img/8a055527b27b887521a9f084497d8879.png \")"
             //msg_history.style.opacity =  0.2
@@ -629,21 +626,26 @@
                 return
             }
             window.addEventListener('load', () => {
-                document.querySelector(".messagerie").style.height =  window.innerHeight + "px"
+                console.log("Loaded Conversation")
+                document.querySelector(".messenger").style.height =  window.innerHeight + "px"
+                document.querySelector(".messages-history").style.height =  window.innerHeight - 110 + "px"
                 document.querySelector(".my-app").style.height =  window.innerHeight + "px"
-
                 document.querySelector(".el-asider").style.height =  window.innerHeight  + "px"
-            })
+                document.querySelector(".list-conversation").style.height =  window.innerHeight- 115  + "px"
+            });
 
             addEvent(window, "resize", function(event) {
                 document.querySelector(".messages-history").style.height =  window.innerHeight - 110 + "px"
-                document.querySelector(".el-asider").style.height =  window.innerHeight  + "px"
+                // document.querySelector(".el-asider").style.height =  window.innerHeight  + "px"
+
+                // document.querySelector(".list-conversation").style.height =  window.innerHeight- 115  + "px"
+            
             });
+
+            document.querySelector(".messages-history").style.height =  window.innerHeight - 110 + "px"
+                
           
-            this.$store.dispatch('loadConversations')
           
-            
-            
         }
     }
 </script>

@@ -21,7 +21,8 @@
                 </router-link>
               </li>
               <li>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+                {{user.name}}
               </li>
               <li>
                 <div class="opt-link inline-dropdown-menu">
@@ -89,10 +90,10 @@
               </div>
               <div class="second-row">
                 <div class="lastmessage">
-                  <span>  Bonjour {{ user.name }} </span>
+                  <span>  {{ conversation.email }} </span>
                 </div>
                 <div class="ismessage" v-if="conversation.id == 3 || conversation.id == 5 || conversation.id == 8" >
-                    <span value="3" class="badge-icon">1</span>
+                    <span value="3" class="badge-icon">9</span>
                 </div>
 
               </div>
@@ -143,46 +144,81 @@
 
     },
     mounted() {
-      //do something after mounting vue instance
-      // console.log(auth);
-      let socket = new Socket("/socket", { params: { token: window.userToken } })
-      socket.connect()
-      let channel = socket.channel('room:lobby', {})
-      channel.join()
-        .receive('ok', resp => { console.log('Joined successfully', resp) })
-        .receive('error', resp => { console.log('Unable to join', resp) })
-      document.querySelector(".list-conversation").style.height = window.innerHeight - 115 + "px"
-      
       window.addEventListener('load', () => {
-         // run after everything is in-place
-        const menu = document.querySelectorAll(".inline-dropdown-menu .menu--options");
-        document.querySelector("html").addEventListener("click" , function () {
-          menu.forEach(element => {
-            const btnActor = element.previousElementSibling
-            if(btnActor.classList.contains("actived")){
-              btnActor.classList.remove("actived")
-            }
-
-            if(btnActor.parentNode.parentNode.parentNode.querySelector(".ismessage") != null)
-                btnActor.parentNode.parentNode.parentNode.querySelector(".ismessage").style.transform = "translateX(0)"
-              
-            element.classList.remove("active");
+        document.querySelector(".messenger").style.height =  window.innerHeight + "px"
+        document.querySelector(".my-app").style.height =  window.innerHeight + "px"
+        document.querySelector(".el-asider").style.height =  window.innerHeight  + "px"
+        document.querySelector(".list-conversation").style.height =  window.innerHeight- 115  + "px"
+          const socket = new Socket('/socket', {
+              params: {
+                  token: localStorage.getItem('token')
+              }
           });
-        })
 
-        const ddmToogler = document.querySelectorAll(".inline-dropdown-menu .btn-actor");
-        ddmToogler.forEach(elementBtn => {
+          socket.connect();
+
+          // var channel = socket.channel("rooms:lobby", {})
+          // const channel = socket.channel(`users:${localStorage.getItem('id_token')}`);
+          const channel = socket.channel(`users:join`);
+          channel.on('users:joined', function(resp) {
+
+          })
+          if (channel.state != 'joined') {
+              channel.join().receive('ok', () => {
+                  console.log("Channel Joined Ok");
+                  channel.push('users:declare', {
+                      userInfo: auth.user
+                  })
+
+
+
+                  this.$store.dispatch('SOCKET_CONNECTED', {
+                      currentUser: auth.user,
+                      socket: null,
+                      channel: null,
+                  });
+
+              });
+
+
+          } else {
+              this.$router.push("{name: 'logout'}")
+              console.log("Something went wrong");
+              return;
+          }
+
+          const menu = document.querySelectorAll(".inline-dropdown-menu .menu--options");
+          document.querySelector("html").addEventListener("click" , function () {
+            menu.forEach(element => {
+              const btnActor = element.previousElementSibling
+              if(btnActor.classList.contains("actived")){
+                btnActor.classList.remove("actived")
+              }
+
+              if(btnActor.parentNode.parentNode.parentNode.querySelector(".ismessage") != null)
+                  btnActor.parentNode.parentNode.parentNode.querySelector(".ismessage").style.transform = "translateX(0)"
+                
+              element.classList.remove("active");
+            });
+          })
+
+          const ddmToogler = document.querySelectorAll(".inline-dropdown-menu .btn-actor");
+          ddmToogler.forEach(elementBtn => {  
             elementBtn.addEventListener("click", function (event) {
               
-              menu.forEach(elementMenu => {
+              /* menu.forEach(elementMenu => {
                 const btnActor = elementMenu.previousElementSibling
                 if(btnActor.classList.contains("actived")){
                   btnActor.classList.remove("actived")
-                  btnActor.parentNode.parentNode.parentNode.querySelector(".ismessage").style.transform = "translateX(0)"
                 }
+
+                if(btnActor.parentNode.parentNode.parentNode.querySelector(".ismessage") != null)
+                  btnActor.parentNode.parentNode.parentNode.querySelector(".ismessage").style.transform = "translateX(0)"
+                
                 elementMenu.classList.remove("active");
               });
-
+ */
+              document.querySelector("html").click();
               event.stopPropagation();
               this.classList.add("actived")
               if(this.parentNode.parentNode.parentNode.querySelector(".ismessage") != null)
@@ -190,9 +226,8 @@
               
               elementBtn.nextElementSibling.classList.add("active");              
             });
-        });
+          });
       })
-      document.querySelector(".messagerie").style.height =  window.innerHeight + "px"
       this.$store.dispatch('loadConversations')
     }
 

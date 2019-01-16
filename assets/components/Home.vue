@@ -1,4 +1,5 @@
 
+
 <template>
   <!-- <el-container style=""> -->
     <Messagerie class="messagerie"></Messagerie>
@@ -71,43 +72,58 @@
 
 <script>
   // import auth from '../auth'
+  
+    import {Socket} from 'phoenix'
+    import auth from '../auth'
+    import addEvent from './utils/resizeCapture'
+    import Messagerie from "./Messagerie.vue"
 
-  import addEvent from './utils/resizeCapture'
-  import Messagerie from "./Messagerie.vue"
-
-  export default {
-    name:"Home",
-    components: {
-      Messagerie
-    },
-    data() {
-      const item = {
-        date: '2016-05-02',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      };
-      return {
-        tableData: Array(20).fill(item)
-      }
-    },
-    mounted: function() {
-      window.addEventListener('load', () => {
-        document.querySelector(".messagerie").style.height =  window.innerHeight + "px"
-        document.querySelector(".my-app").style.height =  window.innerHeight + "px"
-
-        document.querySelector(".el-asider").style.height =  window.innerHeight  + "px"
-      })
-      
-
-      addEvent(window, "resize", function(event) {
-        console.log("Sod");
+    export default {
+        name:"Home",
+        components: {
+            Messagerie
+        },
         
-        document.querySelector(".messagerie").style.height =  window.innerHeight + "px"
-        document.querySelector(".my-app").style.height =  window.innerHeight + "px"
-        document.querySelector(".el-asider").style.height =  window.innerHeight + "px"
-      });
-      
-    }
+        mounted: function() {
 
-  };
+            window.addEventListener('load', () => {
+                const socket = new Socket('/socket', {
+                params: { token: localStorage.getItem('token') } 
+                });
+                
+                socket.connect();
+
+                // var channel = socket.channel("rooms:lobby", {})
+                // const channel = socket.channel(`users:${localStorage.getItem('id_token')}`);
+                const channel = socket.channel(`users:join`);
+                channel.on('users:joined',function (resp) {
+                    console.log("dasdasdji")
+                    console.log(resp)
+                })
+                if (channel.state != 'joined') {
+                    channel.join().receive('ok', () => {
+                        console.log("Channel Joined Ok");
+                        channel.push('users:declare', {userInfo: auth.user})
+
+
+                        
+                        this.$store.dispatch('SOCKET_CONNECTED',{
+                            currentUser: auth.user,
+                            socket: null,
+                            channel: null,
+                        });
+                        
+                    });
+                   
+
+                }
+
+                else{
+                    this.$router.push("{name: 'logout'}")
+                    console.log("Something went wrong");
+                    return;
+                }
+            }) 
+        }
+   };
 </script>

@@ -12,12 +12,7 @@
       <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <%# <% end %>
 
-
-    <!-- if @conn.assigns.current_user do %>
-      <script>
-         window.userToken = "< Phoenix.Token.sign(Valchat.Endpoint, "key", @conn.assigns.current_user.id) a>"
-      </script>
-    < end -->
+  
   <style media="screen">
      * {
        box-sizing: border-box;

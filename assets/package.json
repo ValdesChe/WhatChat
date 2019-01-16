@@ -6,6 +6,9 @@
     "watch": "webpack --mode development --watch",
     "lint": "eslint --ext .js,.vue src"
   },
+  "browser": {
+    "vue": "vue/dist/vue.common"
+  },
   "dependencies": {
     "axios": "^0.18.0",
     "element-ui": "^2.4.11",

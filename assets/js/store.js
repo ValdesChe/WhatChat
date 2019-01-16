@@ -27,13 +27,63 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   strict:true,
   state: {
+    currentUser: null,
+    socket: null,
+    channel: null,
+
+    currentConversation: {},
+    participants: [
+      {
+        email: "loic.nguefack@enate.fr",
+        id: 11,
+        image: "https://loremflickr.com/400/400/?lock=88",
+        username: "Nguefack Loic",
+      },
+      {
+        email: "alextuofo@rednate.fr",
+        id: 177,
+        image: "https://loremflickr.com/400/400/?lock=958",
+        username: "Alexandre Tuofo",
+      }
+      ,{
+        email: "socrater.hacking@cedinger.com",
+        id: 179,
+        image: "https://loremflickr.com/400/400/?lock=58",
+        username: "Socrate Tuofo",
+      }
+      ,{
+        email: "bonus.info@elyseedate.fr",
+        id: 178,
+        image: "https://loremflickr.com/400/400/?lock=86",
+        username: "Bonus Tfo",
+      }
+    ],
+
+    conversations: {},
+
+
     contactLoader: false,
     conversationLoader: false,
 
-    conversations: {}
   },
 
   getters:{
+    getCurrentUser: (state) => {
+      return state.currentUser
+    },
+
+    getSocket: (state) => {
+      return state.socket
+    },
+
+    getChannel: (state) => {
+      return state.channel
+    },
+
+    getParticipants: (state) => {
+      return state.participants
+    },
+
     getContactLoader: (state) => {
       return state.contactLoader
     },
@@ -75,18 +125,74 @@ const store = new Vuex.Store({
       })
 
       state.conversations = obj
-    }
+    },
 
+    // Add a participant
+    SET_PARTICIPANT: function (state, {participant} ) {
+      const index = state.participants.findIndex((element) =>{
+        return element.id === participant.id
+      });
+      
+      if(index == -1)
+        state.participants.push(...participant)
+    },
+    
+    // edit a participant
+    EDIT_PARTICIPANT: function (state, {participant} ) {
+      state.participants = state.participants.filter((element) => {
+        if (element.id === participant.id) {
+          element = participant
+        }
+        return true
+      })
+    },
+    // Delete one participant
+    REMOVE_PARTICIPANT: function (state, {participant} ) {
+      state.participants = state.participants.filter((element) => {
+        return (element.id !== participant.id) 
+      })
+    },
+
+    SET_MY_SOCKET: function (state, {socket} ) {
+      state.socket = socket
+    },
+
+    SET_CURRENT_USER: function(state, {user} ) {
+      state.currentUser = user
+    },
   },
   actions: {
     switchContactLoader({commit, dispatch,  getter , rootGetter}, {payload} ) {
-      commit(SWITCH_CONTACT_LOADER)
+      commit('SWITCH_CONTACT_LOADER')
     },
-
+    
     switchConversationLoader({commit, dispatch,  getter , rootGetter}, {payload} ) {
-      commit(SWITCH_CONVERSATION_LOADER)
+      commit('SWITCH_CONVERSATION_LOADER')
     },
 
+    SOCKET_CONNECTED(context , action) {
+      // socket: action.socket, channel: action.channel, currentUser: action.currentUser
+      // console.log(context)
+      context.commit('SET_MY_SOCKET', {socket: action.socket})
+      context.commit('SET_CURRENT_USER', {user: action.currentUser})
+    },
+
+    setParticipant(context, participants) {
+      context.commit('SET_PARTICIPANT', {participant: participants})
+    },
+
+    removeParticipant(context, id_contact) {
+      context.commit('REMOVE_PARTICIPANT', {
+        participant: id_contact
+      })
+    },
+    
+    editParticipant(context, id_contact) {
+      context.commit('EDIT_PARTICIPANT', {
+        participant: id_contact
+      })
+    },
+    
     loadConversations(context){
       axios.get("/users")
         .then(function (resp){
