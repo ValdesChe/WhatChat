@@ -5,7 +5,7 @@
       <div class="header-user">
         <div class="logo-container">
           <router-link :to="{ name: 'home'}"  href="" class="logo-icon" >
-            <img class="user" :src="user.image" />
+            <img class="user" :src="getCurrentUser ? getCurrentUser.image:''" />
           </router-link>
         </div>
         <div class="options-tools">
@@ -22,7 +22,7 @@
               </li>
               <li>
                 <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
-                {{user.name}}
+                {{getCurrentUser ? getCurrentUser.name:''}}
               </li>
               <li>
                 <div class="opt-link inline-dropdown-menu">
@@ -122,12 +122,15 @@
 
       return {
         seach_input: '',
-        user: auth.user
+       
       }
     },
     computed:{
+      conversations () {
+        return this.$store.getters.getParticipants('all')
+      },  
       ...mapGetters(
-        ['conversations']
+        ['getCurrentUser']
       )
     },
     methods: {
@@ -144,6 +147,11 @@
 
     },
     mounted() {
+      this.$store.dispatch('SOCKET_CONNECTED', {
+        currentUser: auth.user,
+        socket: null,
+        channel: null,
+      });
       window.addEventListener('load', () => {
         document.querySelector(".messenger").style.height =  window.innerHeight + "px"
         document.querySelector(".my-app").style.height =  window.innerHeight + "px"
@@ -160,8 +168,14 @@
           // var channel = socket.channel("rooms:lobby", {})
           // const channel = socket.channel(`users:${localStorage.getItem('id_token')}`);
           const channel = socket.channel(`users:join`);
-          channel.on('users:joined', function(resp) {
-
+          channel.on('users:joined', (resp) => {
+            // If it's not me
+            if(resp.NewUserInfo.id != auth.user.id){
+              console.log(resp);
+              this.$store.dispatch('addParticipant', {participant: resp.NewUserInfo});
+              
+            }
+              
           })
           if (channel.state != 'joined') {
               channel.join().receive('ok', () => {
@@ -169,15 +183,6 @@
                   channel.push('users:declare', {
                       userInfo: auth.user
                   })
-
-
-
-                  this.$store.dispatch('SOCKET_CONNECTED', {
-                      currentUser: auth.user,
-                      socket: null,
-                      channel: null,
-                  });
-
               });
 
 
@@ -228,7 +233,7 @@
             });
           });
       })
-      this.$store.dispatch('loadConversations')
+      // this.$store.dispatch('loadConversations')
     }
 
   };

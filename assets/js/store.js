@@ -80,7 +80,32 @@ const store = new Vuex.Store({
       return state.channel
     },
 
-    getParticipants: (state) => {
+    getParticipants: (state) => (filterName , filterValue ) => {
+      switch (filterName) {
+        case 'all':
+          return state.participants
+        break;
+
+        case 'ordered':
+          switch (filterValue) {
+            case 'asc':
+              return state.participants.sort((participantA , participantB) => {
+                 return participantA.username > participantB.username
+              })
+            break;
+            case 'desc':
+              return state.participants.sort((participantA, participantB) => {
+                return participantA.username.toLowerCase() < participantB.username.toLowerCase()
+              })
+            break
+            default :
+              
+          }
+        break;
+        
+        default:
+          return state.participants
+      }
       return state.participants
     },
 
@@ -129,12 +154,15 @@ const store = new Vuex.Store({
 
     // Add a participant
     SET_PARTICIPANT: function (state, {participant} ) {
-      const index = state.participants.findIndex((element) =>{
-        return element.id === participant.id
-      });
       
-      if(index == -1)
-        state.participants.push(...participant)
+      const index = state.participants.findIndex((element) =>{
+        return element.id == participant.participant.id
+      });
+      if(index === -1){
+        console.log(participant.participant);
+        state.participants.push(participant.participant)
+      }
+        
     },
     
     // edit a participant
@@ -177,8 +205,8 @@ const store = new Vuex.Store({
       context.commit('SET_CURRENT_USER', {user: action.currentUser})
     },
 
-    setParticipant(context, participants) {
-      context.commit('SET_PARTICIPANT', {participant: participants})
+    addParticipant(context, participant) {
+      context.commit('SET_PARTICIPANT', {participant: participant})
     },
 
     removeParticipant(context, id_contact) {

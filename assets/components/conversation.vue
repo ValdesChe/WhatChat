@@ -245,6 +245,62 @@
      
 </template>
 
+<script>
+
+  import addEvent from './utils/resizeCapture'
+  import {mapGetters} from 'vuex'
+  export default {
+        data() {
+            return {
+                end_user : {}        
+            }  
+        },
+        computed: {
+            // un accesseur (getter) calculé
+            ...mapGetters(['getConversationWith'])
+        },
+        mounted: function () {
+            // this.id_user = this.$route.params.id
+
+            
+            
+            //msg_history.style.backgroundImage =  "url(\" https://web.whatsapp.com/img/8a055527b27b887521a9f084497d8879.png \")"
+            //msg_history.style.opacity =  0.2
+            // msg_history.style.backgroundImage =  "url(\"<%= Routes.static_path(@conn , \"/static/images/bg_tchat.png\") %> \")"
+            //msg_history.style.backgroundImage =  "<%= Routes.static_path(@con , \"/images/bg_tchat.png\") %>"
+            
+            
+            this.end_user = this.getConversationWith(this.$route.params.id)
+            
+            if(this.$route.params.id == null || this.end_user === null ){                
+                this.$router.push({ name: 'home' })
+                return
+            }
+            window.addEventListener('load', () => {
+                console.log("Loaded Conversation")
+                document.querySelector(".messenger").style.height =  window.innerHeight + "px"
+                document.querySelector(".messages-history").style.height =  window.innerHeight - 110 + "px"
+                document.querySelector(".my-app").style.height =  window.innerHeight + "px"
+                document.querySelector(".el-asider").style.height =  window.innerHeight  + "px"
+                document.querySelector(".list-conversation").style.height =  window.innerHeight- 115  + "px"
+            });
+
+            addEvent(window, "resize", function(event) {
+                document.querySelector(".messages-history").style.height =  window.innerHeight - 110 + "px"
+                // document.querySelector(".el-asider").style.height =  window.innerHeight  + "px"
+
+                // document.querySelector(".list-conversation").style.height =  window.innerHeight- 115  + "px"
+            
+            });
+
+            document.querySelector(".messages-history").style.height =  window.innerHeight - 110 + "px"
+                
+          
+          
+        }
+    }
+</script>
+
 <style lang="sass" scoped>
     .conversation-container{
         display:flex;
@@ -593,59 +649,3 @@
 
 </style>
 
-
-<script>
-
-  import addEvent from './utils/resizeCapture'
-  import {mapGetters} from 'vuex'
-  export default {
-        data() {
-            return {
-                end_user : {}        
-            }  
-        },
-        computed: {
-            // un accesseur (getter) calculé
-            ...mapGetters(['getConversationWith'])
-        },
-        mounted: function () {
-            // this.id_user = this.$route.params.id
-
-            
-            
-            //msg_history.style.backgroundImage =  "url(\" https://web.whatsapp.com/img/8a055527b27b887521a9f084497d8879.png \")"
-            //msg_history.style.opacity =  0.2
-            // msg_history.style.backgroundImage =  "url(\"<%= Routes.static_path(@conn , \"/static/images/bg_tchat.png\") %> \")"
-            //msg_history.style.backgroundImage =  "<%= Routes.static_path(@con , \"/images/bg_tchat.png\") %>"
-            
-            
-            this.end_user = this.getConversationWith(this.$route.params.id)
-            
-            if(this.$route.params.id == null || this.end_user === null ){                
-                this.$router.push({ name: 'home' })
-                return
-            }
-            window.addEventListener('load', () => {
-                console.log("Loaded Conversation")
-                document.querySelector(".messenger").style.height =  window.innerHeight + "px"
-                document.querySelector(".messages-history").style.height =  window.innerHeight - 110 + "px"
-                document.querySelector(".my-app").style.height =  window.innerHeight + "px"
-                document.querySelector(".el-asider").style.height =  window.innerHeight  + "px"
-                document.querySelector(".list-conversation").style.height =  window.innerHeight- 115  + "px"
-            });
-
-            addEvent(window, "resize", function(event) {
-                document.querySelector(".messages-history").style.height =  window.innerHeight - 110 + "px"
-                // document.querySelector(".el-asider").style.height =  window.innerHeight  + "px"
-
-                // document.querySelector(".list-conversation").style.height =  window.innerHeight- 115  + "px"
-            
-            });
-
-            document.querySelector(".messages-history").style.height =  window.innerHeight - 110 + "px"
-                
-          
-          
-        }
-    }
-</script>

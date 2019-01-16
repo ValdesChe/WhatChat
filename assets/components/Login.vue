@@ -92,7 +92,7 @@ import auth from '../auth'
           if (valid) {
             //alert('submit!');
             auth.login(this , this.ruleForm2).then((resp) =>{
-              // console.log(resp.data);
+              console.log(resp.data);
               window.localStorage.setItem('id_token', resp.data.user.id);
               window.localStorage.setItem('v_username', resp.data.user.username);
               window.localStorage.setItem('v_email', resp.data.user.email);
