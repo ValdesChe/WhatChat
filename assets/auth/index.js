@@ -1,10 +1,12 @@
+/* eslint-disable no-unused-vars */
 
 const { SCHEME, HOSTNAME } =
   process.env.NODE_ENV === 'production'
-  ? { SCHEME: 'http', HOSTNAME: window.location.hostname }
-  : {SCHEME: 'http', HOSTNAME: 'localhost:4000'}
+    ? { SCHEME: 'http', HOSTNAME: window.location.hostname }
+    : { SCHEME: 'http', HOSTNAME: 'localhost:4000' }
 
 const API_URL = `${SCHEME}://${HOSTNAME}`
+// eslint-disable-next-line no-unused-vars
 const REGISTRATION_URL = `${API_URL}/accounts/sign_in`
 const LOGIN_URL = `${API_URL}/accounts/sign_in`
 const SIGNOUT_URL = `${API_URL}/accounts/sign_out`
@@ -15,6 +17,7 @@ export default {
     id: window.localStorage.getItem('id_token'),
     name: window.localStorage.getItem('v_username'),
     image: window.localStorage.getItem('v_image'),
+    email: window.localStorage.getItem('v_email'),
     authenticated: !!window.localStorage.getItem('id_token')
   },
 
@@ -22,21 +25,20 @@ export default {
     return context.axios.post(LOGIN_URL, creds)
   },
 
-
   signOut: (context, creds, redirect) => {
     context.axios.post(SIGNOUT_URL)
-    .then( (data) => {
-        window.localStorage.removeItem('id_token');
-        window.localStorage.removeItem('v_username');
-        window.localStorage.removeItem('v_email');
-        window.localStorage.removeItem('v_image');
-        window.localStorage.removeItem('token');
-        context.dispatch( 'USER_SIGNED_OUT');
+      .then((data) => {
+        window.localStorage.removeItem('id_token')
+        window.localStorage.removeItem('v_username')
+        window.localStorage.removeItem('v_email')
+        window.localStorage.removeItem('v_image')
+        window.localStorage.removeItem('token')
+        context.dispatch('USER_SIGNED_OUT')
 
-        coontext.$router.push("{name: 'login'}");
+        context.$router.push("{name: 'login'}")
       })
       .catch(function (error) {
-
-      });
-    },
+        console.log(error)
+      })
+  }
 }

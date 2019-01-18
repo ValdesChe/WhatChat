@@ -1,13 +1,13 @@
 <template>
-  <div class="conversation-container">
-       <div class="header-profile">
+  <div class="conversation-container" v-if="currentConversation">
+       <div class="header-profile" >
             <div class="logo-container">
                 <router-link :to="{ name: 'home'}"  href="" class="logo-icon" >
-                    <img class="user" :src="end_user.image" />
+                    <img class="user" :src="currentConversation.image" />
                 </router-link>
                 <div class="info-conv-user">
-                    <span class="conv-username"> {{end_user.username}} </span>
-                    <span class="conv-last-seen"> last seen today 21:0{{end_user.id}} </span>
+                    <span class="conv-username"> {{currentConversation.username}} </span>
+                    <span class="conv-last-seen"> last seen today 21:0{{currentConversation.id}} </span>
                 </div>
             </div>
             <div class="options-tools">
@@ -252,12 +252,12 @@
   export default {
         data() {
             return {
-                end_user : {}        
+                      
             }  
         },
         computed: {
             // un accesseur (getter) calculé
-            ...mapGetters(['getConversationWith'])
+            ...mapGetters(['currentConversation'])
         },
         mounted: function () {
             // this.id_user = this.$route.params.id
@@ -270,9 +270,9 @@
             //msg_history.style.backgroundImage =  "<%= Routes.static_path(@con , \"/images/bg_tchat.png\") %>"
             
             
-            this.end_user = this.getConversationWith(this.$route.params.id)
+            // this.end_user = this.getConversationWith(this.$route.params.id)
             
-            if(this.$route.params.id == null || this.end_user === null ){                
+            if(this.$route.params.id == null || this.$store.state.currentConversation == null){                
                 this.$router.push({ name: 'home' })
                 return
             }

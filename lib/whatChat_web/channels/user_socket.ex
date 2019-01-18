@@ -20,7 +20,11 @@ defmodule WhatChatWeb.UserSocket do
   def connect( %{"token" => token } , socket) do
     case Phoenix.Token.verify(socket, "key", token) do
       {:ok, user_id} ->
-        {:ok, assign(socket, :user_id, user_id)}
+        user = WhatChat.Accounts.get_user!(user_id)
+        {:ok, 
+          assign(socket, :user_id, user_id) 
+          |> assign( :user, user )
+        }
 
       {:error, _reason} ->
         :error

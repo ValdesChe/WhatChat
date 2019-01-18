@@ -58,7 +58,7 @@
         </el-input>
       </div>
       <div class="list-conversation">
-        <div v-for="conversation in conversations" @click="ContactSelected" class="one-contact"  :key="conversation.id" >
+        <div v-for="conversation in conversations" @click="ContactSelected(conversation)" class="one-contact"  :key="conversation.id" >
           <el-collapse-transition v-if="conversation.id != 1">
           <router-link class="convervation" :to="{ name: 'conversation', params: { id: conversation.id}}">
             <div class="conversation-image" >
@@ -112,10 +112,19 @@
 </template>
 <script>
 
-  import {Socket} from 'phoenix'
+  import {Socket , Presence} from 'phoenix'
   import auth from "../auth"
   import {mapGetters} from 'vuex'
+  import optionListener from './utils/optionMenuListener';
+  import Vue from 'vue'
 
+  window.Presence = Presence
+
+  const syncPresentUsers = (dispatch, presences) => {
+    const participants = [];
+    Presence.list(presences).map( p => {participants.push(p.metas[0])})
+    dispatch('addParticipants', participants);
+  };
   export default {
     name:"Messagerie",
     data() {
@@ -134,11 +143,10 @@
       )
     },
     methods: {
-      ContactSelected(){
-        //console.log(this)
+      ContactSelected(convSelect){
+        this.$store.dispatch("setOpenedConv", convSelect)
       },
       ShowConvMenu(does){
-
         //console.log(does)
         //const iconClicked = does.explicitOriginalTarget;
 
@@ -152,86 +160,72 @@
         socket: null,
         channel: null,
       });
+      let presences = {};
       window.addEventListener('load', () => {
+
+        optionListener.menuListener() 
         document.querySelector(".messenger").style.height =  window.innerHeight + "px"
         document.querySelector(".my-app").style.height =  window.innerHeight + "px"
         document.querySelector(".el-asider").style.height =  window.innerHeight  + "px"
-        document.querySelector(".list-conversation").style.height =  window.innerHeight- 115  + "px"
-          const socket = new Socket('/socket', {
-              params: {
-                  token: localStorage.getItem('token')
-              }
-          });
+        const listContact = document.querySelector(".list-conversation")
+        listContact.style.height =  window.innerHeight- 115  + "px"
 
-          socket.connect();
-
-          // var channel = socket.channel("rooms:lobby", {})
-          // const channel = socket.channel(`users:${localStorage.getItem('id_token')}`);
-          const channel = socket.channel(`users:join`);
-          channel.on('users:joined', (resp) => {
-            // If it's not me
-            if(resp.NewUserInfo.id != auth.user.id){
-              console.log(resp);
-              this.$store.dispatch('addParticipant', {participant: resp.NewUserInfo});
-              
-            }
-              
-          })
-          if (channel.state != 'joined') {
-              channel.join().receive('ok', () => {
-                  console.log("Channel Joined Ok");
-                  channel.push('users:declare', {
-                      userInfo: auth.user
-                  })
-              });
-
-
-          } else {
-              this.$router.push("{name: 'logout'}")
-              console.log("Something went wrong");
-              return;
+        const socket = new Socket('/socket', {
+          params: {
+            token: localStorage.getItem('token')
           }
+        });
 
-          const menu = document.querySelectorAll(".inline-dropdown-menu .menu--options");
-          document.querySelector("html").addEventListener("click" , function () {
-            menu.forEach(element => {
-              const btnActor = element.previousElementSibling
-              if(btnActor.classList.contains("actived")){
-                btnActor.classList.remove("actived")
-              }
+        socket.connect();
 
-              if(btnActor.parentNode.parentNode.parentNode.querySelector(".ismessage") != null)
-                  btnActor.parentNode.parentNode.parentNode.querySelector(".ismessage").style.transform = "translateX(0)"
-                
-              element.classList.remove("active");
-            });
-          })
-
-          const ddmToogler = document.querySelectorAll(".inline-dropdown-menu .btn-actor");
-          ddmToogler.forEach(elementBtn => {  
-            elementBtn.addEventListener("click", function (event) {
+        // var channel = socket.channel("rooms:lobby", {})
+        // const channel = socket.channel(`users:${localStorage.getItem('id_token')}`);
+        const channel = socket.channel(`users:join`);
+        /* channel.on('users:joined', (resp) => {
+            // If it's not me
+          if(resp.NewUserInfo.id != auth.user.id){
+            this.$store.dispatch('addParticipant', {participant: resp.NewUserInfo});
+          }
               
-              /* menu.forEach(elementMenu => {
-                const btnActor = elementMenu.previousElementSibling
-                if(btnActor.classList.contains("actived")){
-                  btnActor.classList.remove("actived")
-                }
+        }) */
 
-                if(btnActor.parentNode.parentNode.parentNode.querySelector(".ismessage") != null)
-                  btnActor.parentNode.parentNode.parentNode.querySelector(".ismessage").style.transform = "translateX(0)"
-                
-                elementMenu.classList.remove("active");
-              });
- */
-              document.querySelector("html").click();
-              event.stopPropagation();
-              this.classList.add("actived")
-              if(this.parentNode.parentNode.parentNode.querySelector(".ismessage") != null)
-                this.parentNode.parentNode.parentNode.querySelector(".ismessage").style.transform = "translateX(-15px)"
-              
-              elementBtn.nextElementSibling.classList.add("active");              
-            });
+        channel.on("presence_diff", (response) => {
+          presences = Presence.syncDiff(presences, response);
+          console.log("Diff Called");
+          //syncPresentUsers(dispatch, presences);
+        })
+
+        channel.on("presence_state", (response) => {
+          console.log("State Called");
+          presences = Presence.syncState(presences, response);
+          // console.log(presences);
+          
+          syncPresentUsers(this.$store.dispatch, presences);
+          optionListener.menuListener()
+        })
+
+        channel.on("user:joined", (response) => {
+          console.log("User Joined Received")
+         /*  dispatch({
+            type: Constants.CURRENT_CHALLENGE_STATE,
+            challenge_state: response.challenge_state
+          }); */
+        }) 
+        if (channel.state != 'joined') {
+          channel.join().receive('ok', () => {
+            // console.log("Channel Joined Ok");
+            channel.push('users:declare', {
+              userInfo: auth.user
+            })
           });
+
+        } else {
+          this.$router.push("{name: 'logout'}")
+          console.log("Something went wrong");
+          return;
+        }
+
+        
       })
       // this.$store.dispatch('loadConversations')
     }
@@ -530,14 +524,14 @@
       text-decoration: none;
     }
 
-
+  /*
+  Applied only when there are more than 6 contact
     .one-contact:nth-last-child(-n+5) {
       .menu--options{ 
         top: -185px !important;
       } 
-
-
     }
+    */
 
     /* The link */
     .convervation{

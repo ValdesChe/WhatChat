@@ -2,7 +2,6 @@ import Vue from 'vue/dist/vue.js'
 import VueRouter from 'vue-router'
 
 import Messagerie from "../components/Messagerie.vue"
-import Home from "../components/Home.vue"
 import Login from "../components/Login.vue"
 import Conversation from "../components/conversation.vue"
 import Welcome from "../components/utils/welcome.vue"
@@ -31,7 +30,6 @@ const afterAuth = (_to, from, next) => {
     next()
   }
 }
-
 
 
 const routes = [
