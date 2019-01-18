@@ -18,7 +18,7 @@ defmodule WhatChatWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect( %{"token" => token } , socket) do
-    case Phoenix.Token.verify(socket, "key", token) do
+    case Phoenix.Token.verify(socket, "key", token,  max_age: 86400) do
       {:ok, user_id} ->
         user = WhatChat.Accounts.get_user!(user_id)
         {:ok, 

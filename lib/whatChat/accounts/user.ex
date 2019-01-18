@@ -1,6 +1,8 @@
 defmodule WhatChat.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias WhatChat.Discussions.Conversation
+  alias WhatChat.Discussions.ConversationUser
 
 
   schema "users" do
@@ -10,6 +12,7 @@ defmodule WhatChat.Accounts.User do
     field :password_hash, :string
     field :username, :string
 
+    many_to_many(:conversations, Conversation, join_through: "conversation_user" )
     timestamps()
   end
 

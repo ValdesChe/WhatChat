@@ -5,9 +5,13 @@ defmodule WhatChat.Discussions.ConversationUser do
 
   schema "conversation_user" do
     field :read_at, :naive_datetime
-    field :user_id, :id
-    field :conversation_id, :id
+    
+    # field :user_id, :id
+    # field :conversation_id, :id
 
+
+    belongs_to(:user, WhatChat.Accounts.User)
+    belongs_to(:conversation, WhatChat.Discussions.Conversation)
     timestamps()
   end
 

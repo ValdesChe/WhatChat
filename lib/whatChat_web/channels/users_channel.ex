@@ -3,10 +3,19 @@ defmodule WhatChatWeb.UsersChannel do
   use Phoenix.Channel
   alias WhatChatWeb.Utils.Monitors.{Monitor}
   alias WhatChatWeb.ChatPresence
+  alias WhatChat.Accounts
+  alias WhatChat.Discussions.Conversation
+  alias WhatChat.Repo
 
   def join("users:join", _params, socket) do
-   
-    # IO.inspect(socket)
+    user_id = socket.assigns.user_id
+    my_discussions = 
+      user_id
+      |> Accounts.get_user! 
+      |> Repo.preload(conversations: [:messages])
+      
+    IO.puts("---------***********----------")
+    IO.inspect(my_discussions)
     send(self(), :after_join)
 
     # broadcast!(socket, "users:#{socket.assigns.topic.id}:new", %{comment: comment})

@@ -125,6 +125,7 @@
       const participant = p.metas[0]
       if(auth.user.id != participant.id){
         
+        const channel = socket.channel(`chat:${auth}:`);
         participants.push(participant)
       }
     })
