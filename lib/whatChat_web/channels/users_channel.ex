@@ -5,8 +5,8 @@ defmodule WhatChatWeb.UsersChannel do
   alias WhatChatWeb.ChatPresence
 
   def join("users:join", _params, socket) do
-    IO.puts("*****************///////-----------")
-    IO.inspect(socket)
+   
+    # IO.inspect(socket)
     send(self(), :after_join)
 
     # broadcast!(socket, "users:#{socket.assigns.topic.id}:new", %{comment: comment})
@@ -16,8 +16,15 @@ defmodule WhatChatWeb.UsersChannel do
 
   def handle_info(:after_join, socket) do
     ChatPresence.track_user_join(socket, current_user(socket))
-    push socket, "presence_state", ChatPresence.list(socket)
+    presences = ChatPresence.list(socket)
+    IO.puts("*****************///////-----------")
+    IO.inspect(presences)
+    IO.puts("*****************///////-----------")
+    push socket, "presence_state", presences
+    #broadcast! socket, "user:joined", presences
+
     {:noreply, socket}
+
   end
 
 

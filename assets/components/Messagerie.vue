@@ -116,22 +116,24 @@
   import auth from "../auth"
   import {mapGetters} from 'vuex'
   import optionListener from './utils/optionMenuListener';
-  import Vue from 'vue'
-
+  
   window.Presence = Presence
 
   const syncPresentUsers = (dispatch, presences) => {
     const participants = [];
-    Presence.list(presences).map( p => {participants.push(p.metas[0])})
+    Presence.list(presences).map( p => {
+      if(auth.user.id != p.metas[0].id)
+        participants.push(p.metas[0])
+    })
     dispatch('addParticipants', participants);
-  };
+  }
+  
   export default {
     name:"Messagerie",
     data() {
 
       return {
         seach_input: '',
-       
       }
     },
     computed:{
@@ -142,16 +144,27 @@
         ['getCurrentUser']
       )
     },
+    watch: {
+      /* 'conversations': function(val, oldVal) {
+        console.log("Conversations List has been updated")
+        this.$nextTick(function() {
+          console.log(this.$el);
+          
+          // scrollTop = this.$el.scrollHeight;
+        });
+      } */
+    },
+    updated: function() {
+       optionListener.menuListener()
+    },
     methods: {
       ContactSelected(convSelect){
         this.$store.dispatch("setOpenedConv", convSelect)
       },
       ShowConvMenu(does){
-        //console.log(does)
-        //const iconClicked = does.explicitOriginalTarget;
-
-        //iconClicked.nextElementSibling.classList.add("active")
-      }
+        // optionListener.menuListener()
+      },
+      
 
     },
     mounted() {
@@ -192,7 +205,8 @@
         channel.on("presence_diff", (response) => {
           presences = Presence.syncDiff(presences, response);
           console.log("Diff Called");
-          //syncPresentUsers(dispatch, presences);
+          console.log(presences);
+          syncPresentUsers(this.$store.dispatch, presences);
         })
 
         channel.on("presence_state", (response) => {
@@ -206,10 +220,8 @@
 
         channel.on("user:joined", (response) => {
           console.log("User Joined Received")
-         /*  dispatch({
-            type: Constants.CURRENT_CHALLENGE_STATE,
-            challenge_state: response.challenge_state
-          }); */
+          console.log(response);
+          syncPresentUsers(this.$store.dispatch, presences);
         }) 
         if (channel.state != 'joined') {
           channel.join().receive('ok', () => {
@@ -456,25 +468,12 @@
       align-items: center;
       justify-content: center;
       /*display: block;*/
-      padding: 7px;
       margin-left: 15px;
       position: relative;
       border-radius: 50%;
       background: #FFFFFF;
 
     }
-
-    .svg-icon {
-      width: 2em;
-      height: 2em;
-      /*position: absolute;
-      top: auto;
-      bottom: auto;*/
-
-      margin: 0 auto ;
-    }
-
-
 
   }
   .search-container {
@@ -498,9 +497,10 @@
 
 
       .user {
+        position:relative;
         display: inline-block;
-        width: 3em;
-        height: 3em;
+        width: 100%;
+        height: 100%;
         border-radius: 50%;
         
         -webkit-box-shadow: -1px 0px 4px -1px rgba(0,0,0,0.25);
@@ -551,11 +551,15 @@
     }
 
     .conversation-image{
+     
       padding: 5px;
       position: relative;
       flex: 18%;
       margin-left:10px;
-
+      > img {
+        width: 3.2em;
+        height: 3.2em;
+      }
       *{
 
         box-sizing:border-box;
@@ -577,11 +581,11 @@
       }
 
       .svg-icon {
-        width: 2.5em;
-        height: 2.5em;
-        /* position: absolute;
+        width: 2em;
+        height: 2em;
+        position: absolute;
         top: auto;
-        bottom: auto; */
+        bottom: auto;
 
         margin: 0 auto ;
       }

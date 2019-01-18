@@ -56,6 +56,7 @@ let vm = new Vue({
   router,
   store,
   template: '<App/>',
-  components: { App }
+  components: { App },
+ 
 });
 export default vm
