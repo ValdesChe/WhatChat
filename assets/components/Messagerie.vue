@@ -119,13 +119,16 @@
   
   window.Presence = Presence
 
-  const syncPresentUsers = (dispatch, presences) => {
+  const syncPresentUsers = (context, socket , presences) => {
     const participants = [];
     Presence.list(presences).map( p => {
-      if(auth.user.id != p.metas[0].id)
-        participants.push(p.metas[0])
+      const participant = p.metas[0]
+      if(auth.user.id != participant.id){
+        
+        participants.push(participant)
+      }
     })
-    dispatch('addParticipants', participants);
+    context.$store.dispatch('addParticipants', participants);
   }
   
   export default {
@@ -206,7 +209,7 @@
           presences = Presence.syncDiff(presences, response);
           console.log("Diff Called");
           console.log(presences);
-          syncPresentUsers(this.$store.dispatch, presences);
+          syncPresentUsers(this, socket , presences);
         })
 
         channel.on("presence_state", (response) => {
@@ -214,7 +217,7 @@
           presences = Presence.syncState(presences, response);
           // console.log(presences);
           
-          syncPresentUsers(this.$store.dispatch, presences);
+          syncPresentUsers(this, socket , presences);
           optionListener.menuListener()
         })
 

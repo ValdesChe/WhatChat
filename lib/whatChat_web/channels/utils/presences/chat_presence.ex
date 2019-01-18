@@ -4,7 +4,16 @@ defmodule WhatChatWeb.ChatPresence do
   alias WhatChatWeb.{ChatPresence}
   def track_user_join(socket, user) do
     ChatPresence.track(socket, user.id, %{
-      typing: false,
+      #typing: false,
+      #unread: 2,
+      #count: 100,
+      #messages: [
+      #  %{
+      #    id: 1,
+      #    from_id: user.id
+      #    to_
+      #  }
+      #]
       image: user.image,
       username: user.username,
       email: user.email,
@@ -15,7 +24,7 @@ defmodule WhatChatWeb.ChatPresence do
   # Updating user info
   def track_user_update(socket, id_user, user) do
     ChatPresence.update(socket, user.id, %{
-      typing: user.typing,
+      # typing: user.typing,
       image: user.image,
       username: user.username,
       email: user.email,
