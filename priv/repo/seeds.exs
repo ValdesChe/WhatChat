@@ -43,3 +43,9 @@ Enum.map([%{email: "loic.nguefack@enate.fr", id: 11, image: "https://loremflickr
   |> WhatChat.Accounts.create_user 
 
 end)
+%{
+  email: "test@test.fr",
+  image: "https://loremflickr.com/400/400/baby?lock=8",
+  password: "secret",
+  username: "Test Er"
+}|> WhatChat.Accounts.create_user 
