@@ -4,7 +4,18 @@ defmodule WhatChat.Accounts.User do
   alias WhatChat.Discussions.Conversation
   alias WhatChat.Discussions.ConversationUser
 
-
+  defimpl Jason.Encoder, for: WhatChat.Accounts.User do
+    def encode(value, opts) do
+      IO.puts("daljad**********--------")
+      IO.inspect(value)
+      if(Ecto.assoc_loaded?(value.conversations)) do
+        Jason.Encode.map(Map.take(value, [:id, :email, :username , :image, :inserted_at, :updated_at, :conversations]), opts)
+      else
+        Jason.Encode.map(Map.take(value, [:id, :email, :username , :image, :inserted_at, :updated_at]), opts)
+      end
+    end
+  end
+  # @derive {Jason.Encoder, only: [:id, :email, :username , :image, :inserted_at, :updated_at, :conversations]}
   schema "users" do
     field :email, :string
     field :image, :string

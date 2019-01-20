@@ -3,13 +3,13 @@ defmodule WhatChat.Discussions.Message do
   import Ecto.Changeset
   alias WhatChat.Discussions.Conversation
 
+  @derive {Jason.Encoder, only: [:id, :content, :is_deleted, :from_id, :conversation_id]}
   schema "messages" do
     field :content, :string
     field :is_deleted, :boolean, default: false
     field :from_id, :id
-    field :conversation_id, :id
     
-    belongs_to :conversations, Conversation
+    belongs_to :conversations, Conversation, foreign_key: :conversation_id
 
     timestamps()
   end

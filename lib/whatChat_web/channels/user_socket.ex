@@ -21,6 +21,8 @@ defmodule WhatChatWeb.UserSocket do
     case Phoenix.Token.verify(socket, "key", token,  max_age: 86400) do
       {:ok, user_id} ->
         user = WhatChat.Accounts.get_user!(user_id)
+        |> WhatChat.Repo.preload(:conversations)
+
         {:ok, 
           assign(socket, :user_id, user_id) 
           |> assign( :user, user )

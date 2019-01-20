@@ -6,6 +6,30 @@ defmodule WhatChat.Discussions.Conversation do
   alias WhatChat.Discussions.ConversationUser
   alias WhatChat.Discussions.Message
 
+  defimpl Jason.Encoder, for: WhatChat.Discussions.Conversation do
+    def encode(value, opts) do
+      IO.puts("JASAON COnversation **********--------")
+      IO.inspect(value)
+
+      cond  do
+        (Ecto.assoc_loaded?(value.messages) && Ecto.assoc_loaded?(value.users) )->
+          Jason.Encode.map(Map.take(value, [:id, :is_group, :name, :profile, :users, :messages, :inserted_at, :updated_at]), opts)
+        
+        (!Ecto.assoc_loaded?(value.messages) && Ecto.assoc_loaded?(value.users)) ->
+          Jason.Encode.map(Map.take(value, [:id, :is_group, :name, :profile, :messages, :inserted_at, :updated_at]), opts)
+         
+        (Ecto.assoc_loaded?(value.messages) && !Ecto.assoc_loaded?(value.users)) ->
+          Jason.Encode.map(Map.take(value, [:id, :is_group, :name, :profile, :users, :inserted_at, :updated_at]), opts)
+        
+        (!Ecto.assoc_loaded?(value.messages) && !Ecto.assoc_loaded?(value.users)) ->
+          Jason.Encode.map(Map.take(value, [:id, :name, :profile, :inserted_at, :updated_at]), opts)
+        
+      end
+
+    end
+  end
+
+  # @derive {Jason.Encoder, only: [:id, :name, :profile, :users, :messages, :inserted_at, :updated_at]}
   schema "conversations" do
     field :name, :string
     field :profile, :string
