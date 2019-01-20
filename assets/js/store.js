@@ -6,6 +6,7 @@ Vue.use(Vuex)
 import 'babel-polyfill'
 
 import {Socket , Presence} from 'phoenix'
+import moment from 'moment'
 /***
 *   {
 *     1:{
@@ -53,7 +54,7 @@ const store = new Vuex.Store({
 
     OnlineUsers:[],
 
-    conversations: {},
+    conversations: [],
 
     contactLoader: false,
     conversationLoader: false
@@ -151,7 +152,14 @@ const store = new Vuex.Store({
     },
 
     currentConversation(state){
-      return state.currentConversation
+      let indexConv = -1
+      indexConv = state.conversations.findIndex(conversation => {
+        return conversation.id === state.currentConversation;
+      })
+      if (indexConv != -1) {
+        return state.conversations[indexConv]
+      }
+      return null 
     },
 
     getContactLoader: (state) => {
@@ -187,6 +195,59 @@ const store = new Vuex.Store({
       // state.AllContacts = obj
     },
     // Add new discussion
+    ADD_DISCUSSION: function (state, { discussion }) {
+      console.log("MUTATOR ADD_DISCUss")
+      console.log(discussion)
+      const index = state.conversations.findIndex((element) => {
+        return element.id == discussion.id
+      })
+
+      // If not existing discussion 
+      // Then we add 
+      if (index === -1) {
+        discussion.count = discussion.messages.length
+        const latestMessage = {
+          content: "Default message",
+          inserted_at: moment(discussion.inserted_at)
+        }
+
+        // If there are mesages in discussion
+        if(discussion.messages.length > 0){
+
+          const messages = discussion.messages.forEach(message =>{
+            
+            message.inserted_at = moment(message.inserted_at)
+            console.log(message.inserted_at)
+          })
+          
+          // Messages are sorted by date
+          messages.sort( (message1, message2) => {
+            return moment.min(message1.inserted_at , message2.inserted_at ) === message1.inserted_at  ? true :false 
+          })
+
+          // We get the last posted message of the discussion
+          latestMessage = messages[0]
+        }
+        // Else : no msg
+        discussion.latestMessage = latestMessage
+
+        const discussionPosition = -1;
+        state.conversations.forEach((conv , index) => {
+          if (moment.min(conv.latestMessage, discussion.latestMessage) === discussion.latestMessage) {
+            discussionPosition = index
+            return
+          }
+        })
+
+        if (discussionPosition !== -1) {
+          state.conversations.splice(index, 0 , discussion)
+        } else {
+          state.conversations.push(discussion)
+        }
+
+      }
+    },
+
     SET_DISCUSSION: function (state, { participant }) {
       const index = state.participants.findIndex((element) => {
         return element.id == participant.participant.id
@@ -216,7 +277,7 @@ const store = new Vuex.Store({
     },
     // Current Conversing With
     SET_OPENED_DISCUSSION (state, {discussions_id}){
-      console.log(discussions_id);
+      // console.log(discussions_id);
       state.currentConversation = discussions_id
     }
   },
@@ -252,13 +313,15 @@ const store = new Vuex.Store({
       channel.on("presence_diff", (response) => {
         presences = Presence.syncDiff(presences, response);
         console.log("Diff Called");
+        console.log(presences);
+        
         syncPresentUsers(this, presences);
       })
 
       channel.on("presence_state", (response)=>{
         console.log("State Called");
         presences = Presence.syncState(presences, response);
-        // console.log(presences);
+        console.log(presences);
         
         syncPresentUsers(this, presences);
         optionListener.menuListener()
@@ -272,7 +335,18 @@ const store = new Vuex.Store({
       if (channel.state != 'joined') {
         channel.join().receive('ok', (response) => {
           window.socket = socket
-          console.log(response);
+          // Getting my discussions
+          console.log(response.discussions);
+          response.discussions.forEach(element => {
+            const channelDiscussion = socket.channel(`conversation:${element.id}`)
+
+            channelDiscussion.on("new_message", response =>{
+              console.log(response)
+            })
+            context.dispatch('addDiscussion', element)
+          });
+          
+          
         });
 
       } else {
@@ -305,9 +379,9 @@ const store = new Vuex.Store({
     },
 
     // CurrentConversation | Chat opened 
-    setOpenedConversations: async function  (context, discussions_id ) {
-      
-      context.commit('SET_OPENED_DISCUSSION', {discussions_id})
+    setOpenedConversation: async function  (context, discussions_id ) {
+       
+      await context.commit('SET_OPENED_DISCUSSION', {discussions_id})
     },
 
     loadAllContacts: async function  (context) {

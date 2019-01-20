@@ -59,21 +59,21 @@
       </div>
       <div class="list-conversation">
         <div v-if="conversations.length > 0" >
-          <el-collapse-transition  v-for="conversation in conversations" @click="ContactSelected(conversation)" class="one-contact"  :key="conversation.id" >
-          <router-link class="convervation" :to="{ name: 'conversation', params: { id: conversation.id}}">
+          <div  v-for="conversation in conversations"  class="one-contact"  @click.prevent="ConversationSelected(conversation.id)" :key="conversation.id" >
+          <router-link  class="convervation" :to="{ name: 'conversation', params: { id: conversation.id}}">
             <div class="conversation-image" >
-              <img class="user" :src="conversation.image" :alt="conversation.id" />
+              <img class="user" :src="conversation.is_group ? conversation.profile : getToUserProfile(conversation.users).image " :alt="conversation.id" />
               <!-- <a href="" class="logo-icon" >
                 <img class="svg-icon" :src="conversation.image" :alt="conversation.id" />
               </svg> -->
             </div>
             <div class="conversation-details">
               <div class="first-row">
-                  <div class="conversation--username">
-                    <span>  {{ conversation.username }} </span>
+                  <div class="conversation--username" :title="conversation.is_group ? conversation.name : getToUserProfile(conversation.users).username ">
+                    <span>  {{ conversation.is_group ? conversation.name : getToUserProfile(conversation.users).username  }} </span>
                   </div>
                   <div class="conversation--date">
-                    <span style="float: right; text-align: right;" class="span--datespan--date">13:45</span>
+                    <span style="float: right; text-align: right;" class="span--datespan--date">{{ "" + ago(conversation.latestMessage.inserted_at).toString() }}</span>
                   </div>
                   <div class="inline-dropdown-menu">
                     <span class="iconic-right btn-actor"  @click.prevent="ShowConvMenu($event)"></span>
@@ -89,11 +89,11 @@
                   </div>
               </div>
               <div class="second-row">
-                <div class="lastmessage">
-                  <span>  {{ conversation.email }} </span>
+                <div class="lastmessage" :title="conversation.latestMessage.content">
+                  <span>  {{ conversation.latestMessage.content }} </span>
                 </div>
-                <div class="ismessage" v-if="conversation.id == 3 || conversation.id == 5 || conversation.id == 8" >
-                    <span value="3" class="badge-icon">9</span>
+                <div class="ismessage" v-if="conversation.id == 2 || conversation.id == 5 || conversation.id == 8" >
+                    <span value="3" class="badge-icon">1</span>
                 </div>
 
               </div>
@@ -101,7 +101,7 @@
             </div>
           </router-link>
 
-        </el-collapse-transition>
+        </div>
         </div>
         <div v-else class="no_contact">
           <a href="#"  class="start_btn overlayOpener" targetedoverlay=".search_conv_message" >Start a discussion</a>
@@ -235,6 +235,8 @@
   import {mapGetters} from 'vuex'
   import optionListener from './utils/optionMenuListener';
   
+  import moment from 'moment'
+
   export default {
     name:"Messagerie",
     data() {
@@ -244,27 +246,51 @@
       }
     },
     computed:{
-      conversations () {
-        return  this.$store.getters.getOnlineUsers('all')
-      },  
+      
       allContacts(){
         return this.$store.getters.filteredAllContacts('ordered','asc')
       },
       ...mapGetters(
-        ['getCurrentUser']
+        ['getCurrentUser', 'conversations']
       )
     },
     watch: {
      
     },
     updated: function() {
-       optionListener.menuListener()
+      console.log("Update")
+      optionListener.menuListener()
+      optionListener.overlayListener()
     },
     methods: {
-      ContactSelected(convSelect){
-        console.log(convSelect);
+      ago(lastMessageDate){
+        const diff1 = moment().diff(new Date(lastMessageDate.format('l')), 'days')
+        if(diff1 < 7){
+          if (diff1 == 0){
+            return lastMessageDate.hours() + ':' + lastMessageDate.minutes()
+          }
+          else if(diff1 == 1){
+            return 'Yesterday'
+          }
+          else{
+            return moment().isoWeekday(lastMessageDate.weekday()-1)
+          }
         
-        // this.$store.dispatch("setOpenedConv", convSelect)
+        }
+        else{
+          return lastMessageDate.format("DD/MM/YYYY")
+        }
+      },
+      getToUserProfile(users){
+        
+        return users.filter(us => {
+          return us.id !== auth.user.id
+        })[0]
+
+      },
+      ConversationSelected(conversation_id){
+        console.log("Call Conversation setter");
+        this.$store.dispatch("setOpenedConversation", conversation_id)
       },
       ShowConvMenu(does){
         // optionListener.menuListener()
@@ -283,68 +309,6 @@
         currentUser: auth.user
       });
 
-      window.addEventListener('load', () => {
-        optionListener.menuListener() 
-        document.querySelector(".messenger").style.height =  window.innerHeight + "px"
-        document.querySelector(".my-app").style.height =  window.innerHeight + "px"
-        document.querySelector(".el-asider").style.height =  window.innerHeight  + "px"
-        const listContact = document.querySelectorAll(".list-conversation")
-        
-        listContact.forEach(list => {
-          const parent = list.parentNode
-          
-          if(parent.classList.contains("overlay_box")){
-            list.style.height = window.innerHeight - list.offsetTop  + "px"
-          }
-          else{
-            list.style.height =  window.innerHeight- 115  + "px"
-          }
-          
-        })
-
-
-        // const overlay_box = document.querySelector(".overlay_box")
-        const back_btn = document.querySelector(".back-btn")
-        const overlayOpeners = document.querySelectorAll(".overlayOpener")
-
-      /*   back_btn.addEventListener("click", function () {
-          overlay_box.classList.remove("activated")
-        })
-         */
-        overlayOpeners.forEach(opener => {
-          opener.addEventListener("click", function () {
-            // eg: targetedOverlay = "#elt" || ".box" 
-            const targetedOverlay = this.getAttribute("targetedoverlay")
-           
-            if(targetedOverlay != null){
-              const overlay_box = document.querySelector(targetedOverlay)
-
-              if (overlay_box) {
-                const backBtn = overlay_box.querySelector(".back-btn")
-                if (backBtn) {
-                  backBtn.addEventListener("click", function () {
-                    overlay_box.classList.remove("activated")
-                  })
-                  
-                  overlay_box.classList.add("activated")
-                } else {
-                  console.warn("The target overlay element didn't have close ");
-                }
-               
-              } else {
-                console.warn("The target overlay element not found");
-              }
-            }
-            else{
-              console.warn("Missing target element attribute on the listener !");
-              console.log(this);
-            }
-            
-          })
-        });
-
-
-      })
       // this.$store.dispatch('loadConversations')
     }
 

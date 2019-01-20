@@ -14,7 +14,7 @@ const CURRENT_USER_URL = `${API_URL}/accounts/me`
 
 export default {
   user: {
-    id: window.localStorage.getItem('id_token'),
+    id: Number.parseInt(window.localStorage.getItem('id_token')),
     name: window.localStorage.getItem('v_username'),
     image: window.localStorage.getItem('v_image'),
     email: window.localStorage.getItem('v_email'),

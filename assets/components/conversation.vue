@@ -3,19 +3,19 @@
        <div class="header-profile" >
             <div class="logo-container">
                 <router-link :to="{ name: 'home'}"  href="" class="logo-icon" >
-                    <img class="user" :src="currentConversation.image" />
+                    <img class="user" :src="currentConversation.is_group ? currentConversation.profile : getToUserProfile(currentConversation.users).image" />
                 </router-link>
                 <div class="info-conv-user">
-                    <span class="conv-username"> {{currentConversation.username}} </span>
+                    <span class="conv-username"> {{ currentConversation.is_group ? currentConversation.name : getToUserProfile(currentConversation.users).username }} </span>
                     <span class="conv-last-seen"> last seen today 21:0{{currentConversation.id}} </span>
                 </div>
             </div>
             <div class="options-tools">
                 <ul class="options">
                     <li>
-                        <router-link class="opt-link" :to="{ name: 'conversation', params: { id: 1}}">
-                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 224 224" style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,224v-224h224v224z" fill="none"></path><g fill="#8a9093"><path d="M84,18.66667c-35.97205,0 -65.33333,29.36128 -65.33333,65.33333c0,35.97206 29.36128,65.33333 65.33333,65.33333c16.31465,0 31.22008,-6.08511 42.69271,-16.04167l3.97396,3.97396v12.06771l56,56l18.66667,-18.66667l-56,-56h-12.06771l-3.97396,-3.97396c9.95656,-11.47263 16.04167,-26.37806 16.04167,-42.69271c0,-35.97205 -29.36128,-65.33333 -65.33333,-65.33333zM84,37.33333c25.88383,0 46.66667,20.78283 46.66667,46.66667c0,25.88383 -20.78283,46.66667 -46.66667,46.66667c-25.88384,0 -46.66667,-20.78283 -46.66667,-46.66667c0,-25.88384 20.78283,-46.66667 46.66667,-46.66667z"></path></g></g></svg>
-                        </router-link>
+                        <div class="opt-link start_btn overlayOpener" targetedoverlay=".search_conv_message"  >
+                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 224 224" style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,224v-224h224v224z" fill="none"></path><g fill="#8a9093"><path d="M84,18.66667c-35.97205,0 -65.33333,29.36128 -65.33333,65.33333c0,35.97206 29.36128,65.33333 65.33333,65.33333c16.31465,0 31.22008,-6.08511 42.69271,-16.04167l3.97396,3.97396v12.06771l56,56l18.66667,-18.66667l-56,-56h-12.06771l-3.97396,-3.97396c9.95656,-11.47263 16.04167,-26.37806 16.04167,-42.69271c0,-35.97205 -29.36128,-65.33333 -65.33333,-65.33333zM84,37.33333c25.88383,0 46.66667,20.78283 46.66667,46.66667c0,25.88383 -20.78283,46.66667 -46.66667,46.66667c-25.88384,0 -46.66667,-20.78283 -46.66667,-46.66667c0,-25.88384 20.78283,-46.66667 46.66667,-46.66667z"></path></g></g></svg>
+                        </div>
                     </li>
                     <li>
                         <router-link class="opt-link" :to="{ name: 'conversation', params: { id: 1}}">
@@ -36,7 +36,12 @@
        <div class="messages-history">
            <div class="overlay"></div>
             <div class="messages-container">
-                <div class="one-message-container one-message-container--left ">
+                <!-- :class="message.from_id === getCurrentUser.id ? 'one-message-container one-message-container--left' : 'one-message-container one-message-container--right'" -->
+                <div 
+                v-for="message in currentConversation.messages"
+                :key="message.id" 
+                :class="message.from_id === getCurrentUser.id ? 'one-message-container one-message-container--left' : 'one-message-container one-message-container--right'"
+                 >
                     <div class="msg--content message--left">
                         <div class="message-info">
                             <p>
@@ -49,7 +54,7 @@
                     </div>
                     <span class="iconic-left"></span>
                     
-                </div>
+                </div><!-- 
                 <div class="one-message-container one-message-container--left">
                     <div class="msg--content message--left">
                         <div class="message-info">
@@ -195,14 +200,12 @@
                         </div>
                         <div class="msg--menu"></div>
                     </div>
-                </div>
+                </div> -->
 
 
 
             </div>
        </div>
-
-
         <div class="messages-sending">
             <div class="emoji-zone">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 368 368" style="enable-background:new 0 0 368 368;" fill="#949A9C" xml:space="preserve" width="24px" height="24px">
@@ -236,18 +239,16 @@
                     <g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
                 </svg>
             </div>
-        </div>
-
-
-      
-      
+        </div>      
   </div>
      
 </template>
 
 <script>
-
+  
+  import auth from "../auth"
   import addEvent from './utils/resizeCapture'
+
   import {mapGetters} from 'vuex'
   export default {
         data() {
@@ -255,9 +256,16 @@
                       
             }  
         },
+        methods: {
+            getToUserProfile(users){
+                return users.filter(us => {
+                    return us.id !== auth.user.id
+                })[0]
+            },
+        },
         computed: {
             // un accesseur (getter) calculé
-            ...mapGetters(['currentConversation'])
+            ...mapGetters(['currentConversation', 'getCurrentUser'])
         },
         mounted: function () {
             // this.id_user = this.$route.params.id
@@ -279,6 +287,7 @@
             window.addEventListener('load', () => {
                 console.log("Loaded Conversation")
                 document.querySelector(".messenger").style.height =  window.innerHeight + "px"
+                document.querySelector(".messages-container").style.height =  window.innerHeight - 110 + "px"
                 document.querySelector(".messages-history").style.height =  window.innerHeight - 110 + "px"
                 document.querySelector(".my-app").style.height =  window.innerHeight + "px"
                 document.querySelector(".el-asider").style.height =  window.innerHeight  + "px"
@@ -293,9 +302,9 @@
             
             });
 
+          
             document.querySelector(".messages-history").style.height =  window.innerHeight - 110 + "px"
                 
-          
           
         }
     }
@@ -339,13 +348,45 @@
 
         .messages-history{
             width:100%;
-            overflow:scroll;
+
+            position:relative;
+
+            &::after {
+                content: "";
+                background: url(https://web.whatsapp.com/img/8a055527b27b887521a9f084497d8879.png);
+                opacity: 0.1;
+
+                top: 0px;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                position: absolute;
+                z-index: 3;   
+            }
+
+            & .overlay::after {
+                content: "";
+                /* background: #E5DDD5; */
+                background: #E5DDD5;
+                opacity: 0.7;
+
+                top: 0px;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                position: absolute;
+                z-index: 2;   
+                
+            }
             .messages-container{
                 position:relative;
                 padding:5px;
                 display:flex;
+                height: 100%;
                 flex-direction:column;
                 z-index:1000;
+
+                overflow:scroll;
             }
 
             .one-message-container--left  + .one-message-container--right  , 
@@ -423,7 +464,7 @@
                             -webkit-transform: rotate(40deg);
                             -ms-transform: rotate(40deg);
                             transform: rotate(40deg);
- */
+                            */
                             &:before,&:after{
                                 content:' ';
                                 position:absolute;
@@ -554,31 +595,7 @@
           
         }
 
-        .messages-history::after {
-            content: "";
-            background: url(https://web.whatsapp.com/img/8a055527b27b887521a9f084497d8879.png);
-            opacity: 0.1;
-
-            top: 60px;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            position: absolute;
-            z-index: 3;   
-        }
-
-        .messages-history .overlay::after {
-            content: "";
-            background: #E5DDD5;
-            opacity: 0.7;
-
-            top: 60px;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            position: absolute;
-            z-index: 2;   
-        }
+        
 
         .messages-sending{
             height:62px;

@@ -2,7 +2,7 @@ defmodule WhatChatWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-   channel "room:*", WhatChatWeb.RoomChannel
+   channel "conversation:*", WhatChatWeb.ConversationChannel
 
    channel "users:*", WhatChatWeb.UsersChannel
 
