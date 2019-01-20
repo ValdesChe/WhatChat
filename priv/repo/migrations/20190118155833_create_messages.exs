@@ -5,8 +5,8 @@ defmodule WhatChat.Repo.Migrations.CreateMessages do
     create table(:messages) do
       add :content, :string
       add :is_deleted, :boolean, default: false, null: false
-      add :from_id, references(:users, on_delete: :nothing)
-      add :conversation_id, references(:conversations, on_delete: :nothing)
+      add :from_id, references(:users, on_delete: :delete_all)
+      add :conversation_id, references(:conversations, on_delete: :delete_all)
 
       timestamps()
     end

@@ -4,10 +4,8 @@ defmodule WhatChat.Repo.Migrations.CreateConversationUser do
   def change do
     create table(:conversation_user) do
       add :read_at, :naive_datetime
-      add :user_id, references(:users, on_delete: :nothing)
-      add :conversation_id, references(:conversations, on_delete: :nothing)
-
-      timestamps()
+      add :user_id, references(:users, on_delete: :delete_all)
+      add :conversation_id, references(:conversations, on_delete: :delete_all)
     end
 
     create index(:conversation_user, [:user_id])

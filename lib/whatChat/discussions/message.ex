@@ -7,7 +7,8 @@ defmodule WhatChat.Discussions.Message do
     field :content, :string
     field :is_deleted, :boolean, default: false
     field :from_id, :id
-    # field :conversation_id, :id
+    field :conversation_id, :id
+    
     belongs_to :conversations, Conversation
 
     timestamps()

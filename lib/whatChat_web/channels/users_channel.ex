@@ -47,6 +47,20 @@ defmodule WhatChatWeb.UsersChannel do
   def handle_in("users:newConversation", %{"contact_id" => contact_id} , socket) do
     # broadcast!(socket, "users:joined" , %{NewUserInfo: userInfo })
     
+    user1 = contact_id
+    |> Accounts.get_user!
+    
+    user2 = socket.assigns.user.id
+    |> Accounts.get_user!
+
+    conversation = %{
+      name: socket.assigns.user.username <> "--" <> user1.username,
+      profile: "https://loremflickr.com/400/400/profile?lock=" <> user1.id 
+    }
+    |> WhatChat.Discussions.create_conversation 
+    
+    
+    
     {:reply, :ok, socket}
   end
 

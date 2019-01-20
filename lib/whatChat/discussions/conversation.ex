@@ -12,6 +12,7 @@ defmodule WhatChat.Discussions.Conversation do
 
     many_to_many(:users, User, join_through: "conversation_user")
     has_many(:messages, Message)
+    # has_many(:conversation_user, ConversationUser)
 
     timestamps()
   end

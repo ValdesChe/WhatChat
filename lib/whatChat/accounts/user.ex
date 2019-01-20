@@ -12,7 +12,8 @@ defmodule WhatChat.Accounts.User do
     field :password_hash, :string
     field :username, :string
 
-    many_to_many(:conversations, Conversation, join_through: "conversation_user" )
+    many_to_many(:conversations, Conversation, join_through: "conversation_user")
+    # has_many(:conversation_user, ConversationUser)
     timestamps()
   end
 
