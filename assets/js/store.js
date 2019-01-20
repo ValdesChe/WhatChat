@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import optionListener from './../components/utils/optionMenuListener';
 Vue.use(Vuex)
+import getIndexes from './helpers/getIndexes';
+
 import 'babel-polyfill'
 
 import {Socket , Presence} from 'phoenix'
@@ -39,6 +41,7 @@ const syncPresentUsers = (context, presences) => {
   })
   context.dispatch('loadOnlineUsers', participants);
 }
+
 
 
 const store = new Vuex.Store({
@@ -196,15 +199,12 @@ const store = new Vuex.Store({
     },
     // Add new discussion
     ADD_DISCUSSION: function (state, { discussion }) {
-      console.log("MUTATOR ADD_DISCUss")
-      console.log(discussion)
-      const index = state.conversations.findIndex((element) => {
-        return element.id == discussion.id
-      })
-
+      console.log("MUTATOR ADD_DISCUSSION")
+      const index = getIndexes.getElementIndex(state.conversations, discussion.id)
       // If not existing discussion 
       // Then we add 
       if (index === -1) {
+        discussion.typing_user = null
         discussion.count = discussion.messages.length
         const latestMessage = {
           content: "Default message",
@@ -279,6 +279,25 @@ const store = new Vuex.Store({
     SET_OPENED_DISCUSSION (state, {discussions_id}){
       // console.log(discussions_id);
       state.currentConversation = discussions_id
+    },
+
+    // Adding typing user flag
+    ADD_TYPING_USER(state, { discussion_id, user_id }){
+
+      const discussionPosition = getIndexes.getElementIndex(state.conversations, discussion_id)
+      const userPosition = getIndexes.getElementIndex(state.OnlineUsers, user_id)
+      if(discussionPosition !== -1 && userPosition !== -1){
+        state.conversations[discussionPosition].typing_user = state.OnlineUsers[userPosition].username + " is typing..."
+      }
+    },
+    // Adding typing user flag
+    REMOVE_TYPING_USER(state, { discussion_id, user_id }){
+
+      const discussionPosition = getIndexes.getElementIndex(state.conversations, discussion_id)
+      const userPosition = getIndexes.getElementIndex(state.OnlineUsers, user_id)
+      if(discussionPosition !== -1 && userPosition !== -1){
+        state.conversations[discussionPosition].typing_user = null
+      }
     }
   },
   actions: {
@@ -327,23 +346,45 @@ const store = new Vuex.Store({
         optionListener.menuListener()
       })
 
-      channel.on("user:joined", (response) => {
-        console.log("User Joined Received")
-        syncPresentUsers(this, presences);
-      }) 
+
+
 
       if (channel.state != 'joined') {
         channel.join().receive('ok', (response) => {
           window.socket = socket
           // Getting my discussions
           console.log(response.discussions);
-          response.discussions.forEach(element => {
-            const channelDiscussion = socket.channel(`conversation:${element.id}`)
+          window.channelDiscussion = {}
+          response.discussions.forEach(discussion => {
+            const channelDiscussion = socket.channel(`conversation:${discussion.id}`)
+            if (channelDiscussion.state != 'joined') {
+              channelDiscussion.join().receive('ok', (response) => {
+                channelDiscussion.on("new_message", response =>{
+                  console.log(response)
+                })
+    
+                channelDiscussion.on("conversation:hey_someone_is_typing", response =>{
+                  
+                  if(response.user_id !== context.getters.getCurrentUser.id)
+                    context.commit("ADD_TYPING_USER",
+                     { discussion_id: discussion.id, user_id: response.user_id });
+                
+                })
+    
+                channelDiscussion.on("conversation:hey_someone_remove_typing", response =>{
+                 
+                  if(response.user_id !== context.getters.getCurrentUser.id)
+                    context.commit("REMOVE_TYPING_USER",
+                     { discussion_id: discussion.id, user_id: response.user_id });
+                
+                })
+    
+              });
+              // console.log(channelDiscussion)
+              window.channelDiscussion[discussion.id] = channelDiscussion
+            }
 
-            channelDiscussion.on("new_message", response =>{
-              console.log(response)
-            })
-            context.dispatch('addDiscussion', element)
+            context.dispatch('addDiscussion', discussion)
           });
           
           
@@ -354,7 +395,7 @@ const store = new Vuex.Store({
         console.log("Something went wrong");
         return;
       }
-
+      
 
     },
     

@@ -44,6 +44,7 @@ Axios.defaults.headers.common['Access-Control-Allow-Headers'] = 'X-Requested-Wit
 Axios.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8';
 Axios.defaults.headers.common['withCredentials'] = 'X-Requested-With,content-type,authorization';
 Axios.defaults.headers.common['Access-Control-Allow-Credentials'] = true;
+Axios.defaults.headers.common['Access-Control-Allow-Origin'] = "*";
 
 Vue.use(VueAxios, Axios);
 // Create the main component

@@ -89,12 +89,17 @@
                   </div>
               </div>
               <div class="second-row">
-                <div class="lastmessage" :title="conversation.latestMessage.content">
+                <transition name="fade">
+                <div v-if="!conversation.typing_user" class="lastmessage" :title="conversation.latestMessage.content">
                   <span>  {{ conversation.latestMessage.content }} </span>
+                </div>
+                <div v-else class="is_typing" :title="conversation.typing_user">
+                  <span>{{conversation.typing_user}}</span>
                 </div>
                 <div class="ismessage" v-if="conversation.id == 2 || conversation.id == 5 || conversation.id == 8" >
                     <span value="3" class="badge-icon">1</span>
                 </div>
+                </transition>
 
               </div>
 
@@ -110,7 +115,7 @@
     </div>
     <router-view :key="this.$route.fullPath"  default="{name: 'Welcome'}" class="el-body">
     </router-view>
-     <div class="overlay_box right search_conv_message">
+    <div class="overlay_box right search_conv_message">
       <div class="header--box-search" >
           <span class="overlay_box--name">Search Messages</span>
           <span class="back-btn">
@@ -317,6 +322,12 @@
 
 
 <style lang="sass" >
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
   .emoji_icon{
     position: relative;
     padding-top: 5px;
@@ -886,6 +897,15 @@
           .lastmessage{
             text-align: left;
             color: #696969;
+
+            padding-top: 5px;
+            font-size: 14px;
+            line-height: 19px;
+          }
+
+          .is_typing{
+            text-align: left;
+            color: #1CD56D;
 
             padding-top: 5px;
             font-size: 14px;

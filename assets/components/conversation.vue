@@ -225,7 +225,7 @@
                 </svg>
             </div>
             <div class="typing-zone">
-                <input type="text" name="message-input" placeholder="Type a message" id="message-input">
+                <input type="text" name="message-input" ref="typing" @focus="sendStartTyping" @blur="sendStopTyping" placeholder="Type a message" id="message-input">
             </div>
             <div class="voice-zone">
                 <svg version="1.1" id="Capa_1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -246,7 +246,6 @@
 
 <script>
   
-  import auth from "../auth"
   import addEvent from './utils/resizeCapture'
 
   import {mapGetters} from 'vuex'
@@ -259,9 +258,16 @@
         methods: {
             getToUserProfile(users){
                 return users.filter(us => {
-                    return us.id !== auth.user.id
+                    return us.id !== this.currentConversation.id
                 })[0]
             },
+            sendStartTyping(){
+                console.log("Typing started");
+                window.channelDiscussion[this.currentConversation.id].push("conversation:user_is_typing", {user_typing_id: this.currentConversation.id});   
+            },
+            sendStopTyping(){
+                window.channelDiscussion[this.currentConversation.id].push("conversation:user_stop_typing", {user_typing_id: this.currentConversation.id});   
+            }
         },
         computed: {
             // un accesseur (getter) calculé
