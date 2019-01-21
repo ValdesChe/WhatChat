@@ -298,8 +298,8 @@ export default {
                     content: this.message_typed
                 }
             )
+            window.channelDiscussion[this.currentConversation.id].push("conversation:send_new_message", {content: this.message_typed});   
             this.message_typed = ''
-            // window.channelDiscussion[this.currentConversation.id].push("conversation:new_message", {content: this.message_typed});   
         },
 
     },

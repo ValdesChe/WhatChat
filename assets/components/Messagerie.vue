@@ -90,15 +90,17 @@
               </div>
               <div class="second-row">
                 <transition name="fade">
-                <div v-if="!conversation.typing_user" class="lastmessage" :title="conversation.latestMessage.content">
-                  <span>  {{ conversation.latestMessage.content }} </span>
-                </div>
-                <div v-else class="is_typing" :title="conversation.typing_user">
-                  <span>{{conversation.typing_user}}</span>
-                </div>
-                <div class="ismessage" v-if="conversation.id == 2 || conversation.id == 5 || conversation.id == 8" >
-                    <span value="3" class="badge-icon">1</span>
-                </div>
+                  <div v-if="!conversation.typing_user" class="lastmessage" :title="conversation.latestMessage.content">
+                    <span>  {{ conversation.latestMessage.content }} </span>
+                  </div>
+                  <div v-else class="is_typing" :title="conversation.typing_user">
+                    <span>{{conversation.typing_user}}</span>
+                  </div>
+                </transition>
+                <transition name="fade">
+                  <div class="ismessage" v-show="conversation.unread > 0" >
+                      <span value="3" class="badge-icon">{{ conversation.unread }}</span>
+                  </div>
                 </transition>
 
               </div>

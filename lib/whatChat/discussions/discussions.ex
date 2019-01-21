@@ -134,6 +134,27 @@ defmodule WhatChat.Discussions do
   def get_conversation_user!(id), do: Repo.get!(ConversationUser, id)
 
   @doc """
+  Gets a single conversation_user.
+  By conversation_id and user_id
+  Raises `nil` if the Conversation user does not exist.
+
+  ## Examples
+
+      iex> get_conversation_user_by_conversation_and_user_ids!(1 , 1)
+      %ConversationUser{}
+
+      iex> get_conversation_user!(45, 6)
+      nil
+
+  """
+  def get_conversation_user_by_conversation_and_user_ids!(conversation_id, user_id) do
+    
+    from(
+        u in WhatChat.Discussions.ConversationUser, 
+        where: u.conversation_id == ^conversation_id and u.user_id == ^user_id)
+    |> Repo.one
+  end
+  @doc """
   Creates a conversation_user.
 
   ## Examples

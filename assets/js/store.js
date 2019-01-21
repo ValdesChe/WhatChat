@@ -206,27 +206,29 @@ const store = new Vuex.Store({
       if (index === -1) {
         discussion.typing_user = null
         discussion.count = discussion.messages.length
-        const latestMessage = {
+        let latestMessage = {
           content: "Default message",
           inserted_at: moment(discussion.inserted_at)
         }
-
+        
+        // Setting count unread message to 0 by default
+        discussion.unread = 0
         // If there are mesages in discussion
         if(discussion.messages.length > 0){
-
-          const messages = discussion.messages.forEach(message =>{
-            
+          console.log("Discussion messages found")
+          
+          discussion.messages.forEach(message =>{
             message.inserted_at = moment(message.inserted_at)
-            console.log(message.inserted_at)
           })
           
           // Messages are sorted by date
-          messages.sort( (message1, message2) => {
-            return moment.min(message1.inserted_at , message2.inserted_at ) === message1.inserted_at  ? true :false 
+          discussion.messages.sort( (message1, message2) => {
+            // return moment.min(message1.inserted_at , message2.inserted_at ) === message1.inserted_at  ? true :false 
+            return new Date(message1.inserted_at) - new Date(message2.inserted_at)
           })
 
           // We get the last posted message of the discussion
-          latestMessage = messages[0]
+          latestMessage = discussion.messages[discussion.count-1]
         }
         // Else : no msg
         discussion.latestMessage = latestMessage
@@ -253,7 +255,6 @@ const store = new Vuex.Store({
         return element.id == participant.participant.id
       })
       if (index === -1) {
-        console.log(participant.participant)
         state.participants.push(participant.participant)
       }
     },
@@ -293,8 +294,13 @@ const store = new Vuex.Store({
 
       const discussionPosition = getIndexes.getElementIndex(state.conversations, discussion_id)
       if(discussionPosition !== -1){
-
+        
         const discussion = state.conversations[discussionPosition]
+        console.log("Discussion trouvéee juste avant l' insertion msg");
+        if(state.currentConversation !== message.discussion_id){
+          discussion.unread++;
+        }
+        message.inserted_at = moment(message.inserted_at)
         console.log(message);
         
         discussion.count++
@@ -338,12 +344,12 @@ const store = new Vuex.Store({
       // socket: action.socket, channel: action.channel, currentUser: action.currentUser
       // console.log(context)
       // context.commit('SET_MY_SOCKET', { socket: action.socket })
-      context.commit('SET_CURRENT_USER', { user: action.currentUser })
+      await context.commit('SET_CURRENT_USER', { user: action.currentUser })
 
 
       let presences = {};
 
-      const socket = new Socket('/socket', {
+      const socket = await new Socket('/socket', {
         params: {
           token: localStorage.getItem('token')
         }
@@ -357,16 +363,11 @@ const store = new Vuex.Store({
      
       channel.on("presence_diff", (response) => {
         presences = Presence.syncDiff(presences, response);
-        console.log("Diff Called");
-        console.log(presences);
-        
         syncPresentUsers(this, presences);
       })
 
       channel.on("presence_state", (response)=>{
-        console.log("State Called");
         presences = Presence.syncState(presences, response);
-        console.log(presences);
         
         syncPresentUsers(this, presences);
         optionListener.menuListener()
@@ -379,20 +380,37 @@ const store = new Vuex.Store({
         channel.join().receive('ok', (response) => {
           window.socket = socket
           // Getting my discussions
-          console.log(response.discussions);
           window.channelDiscussion = {}
-          response.discussions.forEach(discussion => {
-            const channelDiscussion = socket.channel(`conversation:${discussion.id}`)
+          response.discussions.forEach(async function(discussion){
+
+            await context.dispatch('addDiscussion', discussion)
+            const channelDiscussion = await socket.channel(`conversation:${discussion.id}`)
             if (channelDiscussion.state != 'joined') {
-              channelDiscussion.join().receive('ok', (response) => {
-                channelDiscussion.on("new_message", response =>{
-                  console.log(response)
+              channelDiscussion.join().receive('ok', async (response) => {
+                // The user receive a new message
+                channelDiscussion.on("conversation:alert:new_messages", async response =>{
+
+                  if(response.message.from_id !== context.getters.getCurrentUser.id){
+                    let message = response.message
+                    console.log("JAI RECU un NEW MESSAGE");
+                 
+                    await context.commit("ADD_MESSAGE_TO_DISCUSSION",
+                    { discussion_id: message.conversation_id, message: message  });
+
+                    if(context.getters.currentConversation === message.conversation_id ){
+                      // channelDiscussion.push("conversation:mark_read_messages")
+                    }
+
+                  }
+                  
+
+
                 })
     
-                channelDiscussion.on("conversation:hey_someone_is_typing", response =>{
+                channelDiscussion.on("conversation:hey_someone_is_typing", async response =>{
                   
                   if(response.user_id !== context.getters.getCurrentUser.id)
-                    context.commit("ADD_TYPING_USER",
+                    await context.commit("ADD_TYPING_USER",
                      { discussion_id: discussion.id, user_id: response.user_id });
                 
                 })
@@ -402,7 +420,6 @@ const store = new Vuex.Store({
                   if(response.user_id !== context.getters.getCurrentUser.id)
                     context.commit("REMOVE_TYPING_USER",
                      { discussion_id: discussion.id, user_id: response.user_id });
-                
                 })
     
               });
@@ -410,7 +427,6 @@ const store = new Vuex.Store({
               window.channelDiscussion[discussion.id] = channelDiscussion
             }
 
-            context.dispatch('addDiscussion', discussion)
           });
           
           
@@ -479,7 +495,6 @@ const store = new Vuex.Store({
     loadAllContacts: async function  (context) {
       axios.get('/users')
         .then(function (resp) {
-          console.log(resp.data)
           context.commit('addAllContacts', { AllContacts: resp.data.users })
         }, function (err) {
           console.log('Error')

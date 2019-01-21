@@ -1,14 +1,11 @@
 require IEx;
 defmodule WhatChatWeb.UsersChannel do
   use Phoenix.Channel
-  alias WhatChatWeb.Utils.Monitors.{Monitor}
   alias WhatChatWeb.ChatPresence
-  alias WhatChat.Accounts
-  alias WhatChat.Discussions.Conversation
   alias WhatChat.Repo
 
   def join("users:join", _params, socket) do
-    user_id = socket.assigns.user_id
+    _user_id = socket.assigns.user_id
     discussions = 
       socket.assigns.user
       |> Repo.preload(conversations: [:users, :messages])
@@ -17,7 +14,7 @@ defmodule WhatChatWeb.UsersChannel do
       counter = 0
       Enum.map( conversation.users, fn user -> 
         counter = counter + 1
-        user = Map.delete(user, :conversations)
+        _user = Map.delete(user, :conversations)
         |> Map.delete(:password)
         |> Map.delete(:password_hash)
         |> Map.delete(:updated_at)

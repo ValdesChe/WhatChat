@@ -3,7 +3,8 @@ defmodule WhatChat.Discussions.Message do
   import Ecto.Changeset
   alias WhatChat.Discussions.Conversation
 
-  @derive {Jason.Encoder, only: [:id, :content, :is_deleted, :from_id, :conversation_id]}
+
+  @derive {Jason.Encoder, only: [:id, :content, :is_deleted, :from_id, :conversation_id, :inserted_at, :updated_at]}
   schema "messages" do
     field :content, :string
     field :is_deleted, :boolean, default: false
@@ -17,7 +18,7 @@ defmodule WhatChat.Discussions.Message do
   @doc false
   def changeset(message, attrs) do
     message
-    |> cast(attrs, [:content, :is_deleted, :conversation_id])
-    |> validate_required([:content, :is_deleted])
+    |> cast(attrs, [:content, :is_deleted, :from_id, :conversation_id])
+    |> validate_required([:content, :from_id])
   end
 end
