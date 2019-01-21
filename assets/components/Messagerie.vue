@@ -5,7 +5,7 @@
       <div class="header-user">
         <div class="logo-container">
           <router-link :to="{ name: 'home'}"  href="" class="logo-icon" >
-            <img class="user" :src="getCurrentUser ? getCurrentUser.image:''" />
+            <img class="user" :src="this.getCurrentUser ? this.getCurrentUser.image:''" />
           </router-link>
         </div>
         <div class="options-tools">
@@ -263,13 +263,13 @@
      
     },
     updated: function() {
-      console.log("Update")
       optionListener.menuListener()
       optionListener.overlayListener()
     },
     methods: {
       ago(lastMessageDate){
         const diff1 = moment().diff(new Date(lastMessageDate.format('l')), 'days')
+        
         if(diff1 < 7){
           if (diff1 == 0){
             return lastMessageDate.hours() + ':' + lastMessageDate.minutes()
@@ -278,7 +278,8 @@
             return 'Yesterday'
           }
           else{
-            return moment().isoWeekday(lastMessageDate.weekday()-1)
+            const day = lastMessageDate.weekday()
+            return moment().startOf('isoWeek')._locale._weekdays[day]
           }
         
         }
@@ -335,7 +336,49 @@
     display: inline-block;
     
   }
-
+  // Message Status
+  span.message--readStatus{
+    /* position:absolute;
+     bottom: 3px;
+     right:7px;
+     width: 5px;
+     height: 10px;
+     border: solid grey;
+     border-width: 0 1px 1px 0;
+     -webkit-transform: rotate(40deg);
+     -ms-transform: rotate(40deg);
+     transform: rotate(40deg);
+    */
+     &:before,&:after{
+      content:' ';
+      position:absolute;
+      bottom: 6px;
+      height: 10px;
+      border: solid grey;
+      border-width: 0 1px 1px 0;
+      -webkit-transform: rotate(40deg);
+      -o-transform: rotate(40deg);
+      -ms-transform: rotate(40deg);
+      -moz-transform: rotate(40deg);
+      transform: rotate(40deg);
+    }
+    &:before{
+      bottom: 5px;
+      right:10px;
+      width: 2px;
+    }
+    &:after{
+      right:15px;
+      width: 5px;
+    }
+    &.readed{
+      &:before,&:after{
+        border-bottom:1px solid #4FC3F7;
+        border-right:1px solid #4FC3F7;
+      }
+    }
+  }
+ 
   a {
     text-decoration:none;
     border:none;

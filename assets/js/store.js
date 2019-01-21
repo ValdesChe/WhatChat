@@ -281,6 +281,32 @@ const store = new Vuex.Store({
       state.currentConversation = discussions_id
     },
 
+    // Adding message to discussion 
+    ADD_MESSAGE_TO_DISCUSSION
+    (
+      state,  
+      {
+        discussion_id,
+        message
+      }
+    ){
+
+      const discussionPosition = getIndexes.getElementIndex(state.conversations, discussion_id)
+      if(discussionPosition !== -1){
+
+        const discussion = state.conversations[discussionPosition]
+        console.log(message);
+        
+        discussion.count++
+        message.id = discussion.count
+        discussion.latestMessage = Object.assign({}, message)
+        
+        discussion.messages.push(message) 
+      }
+
+    },
+
+
     // Adding typing user flag
     ADD_TYPING_USER(state, { discussion_id, user_id }){
 
@@ -423,6 +449,31 @@ const store = new Vuex.Store({
     setOpenedConversation: async function  (context, discussions_id ) {
        
       await context.commit('SET_OPENED_DISCUSSION', {discussions_id})
+    },
+
+    addMessageToDiscussion: async function(
+      context,  
+      {
+        discussion_id,
+        from_id,
+        content,
+      }){
+        const message = {
+          id: null,
+          from_id: from_id,
+          conversation_id: discussion_id,
+          content: content,
+          created_at: moment(),
+          inserted_at: moment()
+        }
+        await context.commit(
+          'ADD_MESSAGE_TO_DISCUSSION',
+          {
+            discussion_id,
+            message
+          })
+            
+        
     },
 
     loadAllContacts: async function  (context) {
