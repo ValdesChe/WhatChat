@@ -19,7 +19,7 @@ defmodule WhatChatWeb.Plugs.RequireAuth do
       conn
       |> put_status(:unauthorized)
       |> put_view(WhatChatWeb.ErrorView)
-      |> render(WhatChatWeb.ErrorView, "401.json", message: "Unauthenticated User")
+      |> render("401.json", message: "Unauthenticated User")
       |> halt()
     end
   end

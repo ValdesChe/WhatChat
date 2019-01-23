@@ -374,9 +374,8 @@ const store = new Vuex.Store({
       })
 
 
-
-
       if (channel.state != 'joined') {
+        
         channel.join().receive('ok', (response) => {
           window.socket = socket
           // Getting my discussions
@@ -430,6 +429,8 @@ const store = new Vuex.Store({
           });
           
           
+        }).receive('error', (response) => {
+          console.log("Error USERSOCKET")
         });
 
       } else {
@@ -493,15 +494,14 @@ const store = new Vuex.Store({
     },
 
     loadAllContacts: async function  (context) {
-      axios.get('/users')
-        .then(function (resp) {
-          context.commit('addAllContacts', { AllContacts: resp.data.users })
-        }, function (err) {
-          console.log('Error')
-          console.log(err.response)
-          
-        })
+      return await axios.get('/users')  
     },
+
+    addAllContacts: async function(context, { AllContacts}) {
+      context.commit('addAllContacts', { AllContacts: AllContacts })  
+    },
+
+    
   }
 })
 

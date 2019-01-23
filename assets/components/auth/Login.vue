@@ -36,7 +36,7 @@
   </el-row>
 </template>
 <script>
-import auth from '../auth'
+  import auth from './../../auth'
   export default {
     data() {
       var checkEmail = (rule, value, callback) => {

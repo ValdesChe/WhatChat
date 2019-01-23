@@ -2,7 +2,8 @@ import Vue from 'vue/dist/vue.js'
 import VueRouter from 'vue-router'
 
 import Messagerie from "../components/Messagerie.vue"
-import Login from "../components/Login.vue"
+import Login from "../components/auth/Login.vue"
+import Logout from "../components/auth/Logout.vue"
 import Conversation from "../components/conversation.vue"
 import Welcome from "../components/utils/welcome.vue"
 Vue.use(VueRouter)
@@ -52,7 +53,8 @@ const routes = [
   {
     path: '/logout',
     name: 'logout',
-    component: Messagerie
+    component: Logout,
+    // beforeEnter: afterAuth
   },
 
   {
