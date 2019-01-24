@@ -223,19 +223,22 @@ const store = new Vuex.Store({
           discussion.messages.forEach(message =>{
             message.inserted_at = moment(message.inserted_at)
             message.readers = {}
+            message.count_readers = 0
             discussion.users.forEach(user =>{
               if(user.id != state.currentUser.id){
                 if(user.read_at){
                   const reading_date = new Date(user.read_at)
 
-                  if(new Date(message.inserted_at) - reading_date < 0)
+                  if(new Date(message.inserted_at) - reading_date < 0){
                     message.readers[user.id] = {reader_id: user.id , reading_time: user.read_at }
+                    message.count_readers += 1
+                  }
                   else{
-                    discussion.count +=0;
+                    discussion.unread +=0;
                   }
                 }
                 else{
-                  discussion.count +=0;
+                  discussion.unread +=0;
                 }
               }
             })
@@ -435,7 +438,11 @@ const store = new Vuex.Store({
                 })
     
                 channelDiscussion.on("conversation:hey_someone_read_messages", async response =>{
+                  console.log("Someone read");
                   console.log(response)
+
+                  
+                  
                 })
     
                 channelDiscussion.on("conversation:hey_someone_is_typing", async response =>{
