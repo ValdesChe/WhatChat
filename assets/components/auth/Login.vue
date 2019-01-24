@@ -2,8 +2,8 @@
 
   <el-row :gutter="10" >
     <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="120px" class="demo-ruleForm">
-      <h1>Connectez vous !</h1>
-
+      <h1 style="padding-top:25px; font-size:25px; text-align:center">Welcome to WhatChat  ! </h1>
+      
 
       <el-form-item>
         <el-alert v-if="errorServer !=''"
@@ -27,12 +27,14 @@
         <el-button @click="resetForm('ruleForm2')">Reset</el-button>
 
         <p class="message">
-          Not registered? valdor@tuto.com
+          Not registered? 
           <router-link to="signup">Create an account</router-link>
         </p>
       </el-form-item>
 
     </el-form>
+    <h1 style="padding-top:25px; font-size:25px; text-align:center">By [ V@ldor Che ]  && [F@ymir] ! </h1>
+
   </el-row>
 </template>
 <script>

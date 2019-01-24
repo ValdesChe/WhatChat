@@ -23,7 +23,7 @@ defmodule WhatChatWeb.ConversationChannel do
     discussion = socket
     |> current_discussion_id
     |> Discussions.get_conversation!
-    IO.puts("****************//////// SEND MESSAGE //////***************")
+    # IO.puts("****************//////// SEND MESSAGE //////***************")
     #IO.inspect(discussion)
     conversation_pivot_user = current_discussion_id(socket)
     |> Discussions.get_conversation_user_by_conversation_and_user_ids!(current_user_id(socket)) 
@@ -51,10 +51,14 @@ defmodule WhatChatWeb.ConversationChannel do
   
   # mark a conversation as read by a user
   # TODO: In the future, Mark a single message as read
-  def handle_in("conversation:mark_read_messages", _params, socket) do 
-    conversation_pivot_user = current_discussion_id(socket)
-    |> Discussions.get_conversation_user_by_conversation_and_user_ids!(current_user_id(socket)) 
+  def handle_in("conversation:mark_read_messages", %{"discussion_id" => discussion_id}, socket) do 
+    IO.puts("****************//////// MARK AS READ //////***************")
+    
+    current_user_id = current_user_id(socket)
+    conversation_pivot_user = discussion_id
+    |> Discussions.get_conversation_user_by_conversation_and_user_ids!(current_user_id) 
 
+    IO.inspect(conversation_pivot_user)
     case conversation_pivot_user do
       nil ->
         {:noreply, socket}
@@ -67,8 +71,9 @@ defmodule WhatChatWeb.ConversationChannel do
             {:error, conversation_user_updated}
               {:reply, {:error, %{errors: conversation_user_updated}}, socket}
           end
+        else
+          {:noreply, socket}
         end
-        {:noreply, socket}
     end
   end
 

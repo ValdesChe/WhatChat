@@ -3,7 +3,6 @@ defmodule WhatChat.Discussions.Conversation do
   import Ecto.Changeset
 
   alias WhatChat.Accounts.User
-  alias WhatChat.Discussions.ConversationUser
   alias WhatChat.Discussions.Message
 
   defimpl Jason.Encoder, for: WhatChat.Discussions.Conversation do
@@ -45,6 +44,5 @@ defmodule WhatChat.Discussions.Conversation do
   def changeset(conversation, attrs) do
     conversation
     |> cast(attrs, [:name, :profile])
-    |> validate_required([:name, :profile])
   end
 end

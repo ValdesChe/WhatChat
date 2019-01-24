@@ -50,151 +50,6 @@
                 <span :class="current.id ==  message.from_id ? 'iconic-right' : 'iconic-left'"></span>
 
             </div>
-            <!-- 
-                <div class="one-message-container one-message-container--left">
-                    <div class="msg--content message--left">
-                        <div class="message-info">
-                            <p>
-                                Comment tu vas mon grand ??
-                            </p>
-                            <span class="message--time">13:30</span>
-                        </div>
-                        <div class="msg--menu"></div>
-
-                    </div>
-                    
-                </div>
-                <div class="one-message-container one-message-container--right">
-                    <div class="msg--content message--right">
-                        <div class="message-info">
-                            <p>
-                                Yo patron ! Je vais bien merci . Et toi mêmê ça dose ??
-                            </p>
-                            <span class="message--time right-side">13:31</span>
-                            <span class="message--readStatus readed"></span>
-                        </div>
-                        <div class="msg--menu"></div>
-                    </div>
-
-                    <span class="iconic-right"></span>
-                </div>
-
-                <div class="one-message-container one-message-container--left">
-                    <div class="msg--content message--left">
-                       <div class="message-info">
-                            <p>
-                                Ça fait longtemps hein ....
-                            </p>
-                            <span class="message--time">13:31</span>
-                        </div>
-                        <div class="msg--menu"></div>
-                    </div>
-                    <span class="iconic-left"></span>
-                </div>
-                <div class="one-message-container one-message-container--left">
-                    <div class="msg--content message--left">
-                       <div class="message-info">
-                            <p>
-                                En tout cas ça va bien aussi de mon coté hmdlh
-                            </p>
-                            <span class="message--time">13:31</span>
-                        </div>
-                        <div class="msg--menu"></div>
-                    </div>
-                </div>
-                <div class="one-message-container one-message-container--left"> 
-                    <div class="msg--content message--left">
-                       <div class="message-info">
-                            <p>
-                               Sinon tu do quoi now ?? J espere que je te derange pas ahaahha 
-                            </p>
-                            <span class="message--time">13:31</span>
-                        </div>
-                        <div class="msg--menu "></div>
-                    </div>
-                </div>
-
-                 <div class="one-message-container one-message-container--right">
-                    <div class="msg--content message--right">
-                        <div class="message-info">
-                            <p>
-                                Non non t'inquiète boss je suis là au calme à la maison. 
-                                Je m'ennuis même. Tu n'as pas un way por moi.
-                            </p>
-                            <span class="message--time right-side">13:30</span>
-                            <span class="message--readStatus readed"></span>
-                        </div>
-                        <div class="msg--menu"></div>
-                    </div>
-
-                    <span class="iconic-right right-side"></span>
-                </div>
-
-                <div class="one-message-container one-message-container--left">
-                    <div class="msg--content message--left">
-                       <div class="message-info">
-                            <p>
-                                Ça fait longtemps hein ....
-                            </p>
-                            <span class="message--time">13:31</span>
-                        </div>
-                        <div class="msg--menu"></div>
-                    </div>
-                    <span class="iconic-left"></span>
-                </div>
-                <div class="one-message-container one-message-container--left">
-                    <div class="msg--content message--left">
-                       <div class="message-info">
-                            <p>
-                                En tout cas ça va bien aussi de mon coté hmdlh
-                            </p>
-                            <span class="message--time">13:31</span>
-                        </div>
-                        <div class="msg--menu"></div>
-                    </div>
-                </div>
-                <div class="one-message-container one-message-container--left"> 
-                    <div class="msg--content message--left">
-                       <div class="message-info">
-                            <p>
-                               Sinon tu do quoi now ?? J espere que je te derange pas ahaahha 
-                            </p>
-                            <span class="message--time">13:31</span>
-                        </div>
-                        <div class="msg--menu"></div>
-                    </div>
-                </div>
-
-                 <div class="one-message-container one-message-container--right">
-                    <div class="msg--content message--right">
-                        <div class="message-info">
-                            <p>
-                                Non non t'inquiète boss je suis là au calme à la maison. 
-                                Je m'ennuis même. Tu n'as pas un way por moi.
-                            </p>
-                            <span class="message--time right-side">13:30</span>
-                            <span class="message--readStatus readed"></span>
-                        </div>
-                        <div class="msg--menu"></div>
-                    </div>
-
-                    <span class="iconic-right"></span>
-                </div>
-
-                 <div class="one-message-container one-message-container--right">
-                    <div class="msg--content message--right">
-                        <div class="message-info">
-                            <p>
-                                Non non t'inquiète boss je suis là au calme à la maison. 
-                                Je m'ennuis même. Tu n'as pas un way por moi.
-                            </p>
-                            <span class="message--time right-side">13:30</span>
-                            <span class="message--readStatus"></span>
-                        </div>
-                        <div class="msg--menu"></div>
-                    </div>
-                </div> -->
-
         </div>
     </div>
     <div class="messages-sending">
@@ -256,9 +111,18 @@ export default {
         }
     },
     methods: {
+        scrollMessenger(){
+            let listMsg = this.$el.querySelector(".messages-container");
+            let lastMessage = listMsg.lastChild;
+           
+           this.$nextTick( () => {
+               listMsg.scrollTop = listMsg.scrollHeight
+           })
+        },
         getToUserProfile(users) {
             return users.filter(us => {
-                return us.id !== this.currentConversation.id
+                console.log
+                return us.id !== this.getCurrentUser.id
             })[0]
         },
         sendStartTyping() {
@@ -291,6 +155,7 @@ export default {
         },
         sendMessage() {
             console.log("Enter pressed");
+            window.channelDiscussion[this.currentConversation.id].push("conversation:send_new_message", {content: this.message_typed});   
             this.$store.dispatch(
                 "addMessageToDiscussion", {
                     discussion_id: this.currentConversation.id,
@@ -298,10 +163,18 @@ export default {
                     content: this.message_typed
                 }
             )
-            window.channelDiscussion[this.currentConversation.id].push("conversation:send_new_message", {content: this.message_typed});   
+            this.scrollMessenger()
             this.message_typed = ''
         },
 
+    },
+
+    updated() {
+      
+        if(this.currentConversation.unread > 0){
+            this.scrollMessenger()
+            this.$store.dispatch("markConversationAsReaded", {discussion_id: this.currentConversation.id})
+        }
     },
     computed: {
         // un accesseur (getter) calculé
@@ -316,15 +189,7 @@ export default {
         ...mapGetters(['currentConversation', 'getCurrentUser'])
     },
     mounted: function () {
-        // this.id_user = this.$route.params.id
-
-        //msg_history.style.backgroundImage =  "url(\" https://web.whatsapp.com/img/8a055527b27b887521a9f084497d8879.png \")"
-        //msg_history.style.opacity =  0.2
-        // msg_history.style.backgroundImage =  "url(\"<%= Routes.static_path(@conn , \"/static/images/bg_tchat.png\") %> \")"
-        //msg_history.style.backgroundImage =  "<%= Routes.static_path(@con , \"/images/bg_tchat.png\") %>"
-
-        // this.end_user = this.getConversationWith(this.$route.params.id)
-
+        
         if (this.$route.params.id == null || this.$store.state.currentConversation == null) {
             this.$router.push({
                 name: 'home'
@@ -350,7 +215,12 @@ export default {
         });
 
         document.querySelector(".messages-history").style.height = window.innerHeight - 110 + "px"
-
+        this.scrollMessenger()
+        if (this.currentConversation.unread > 0){
+            console.log("Flop message lol Conver.vue");
+            
+            this.$store.dispatch("markConversationAsReaded", {discussions_id: this.currentConversation.id})
+        }
     }
 }
 </script>
@@ -392,7 +262,6 @@ export default {
 
     .messages-history {
         width: 100%;
-
         position: relative;
 
         &::after {
@@ -428,10 +297,12 @@ export default {
             padding: 5px;
             display: flex;
             height: 100%;
+
+            overflow-x:hidden;
+            overflow-y: scroll;
+            max-height: calc(100vh - 120px);
             flex-direction: column;
             z-index: 1000;
-
-            overflow: scroll;
         }
 
         .one-message-container--left+.one-message-container--right,

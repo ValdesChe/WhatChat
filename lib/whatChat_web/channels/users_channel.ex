@@ -3,6 +3,39 @@ defmodule WhatChatWeb.UsersChannel do
   use Phoenix.Channel
   alias WhatChatWeb.ChatPresence
   alias WhatChat.Repo
+  alias WhatChat.Discussions
+
+  defp count_user do
+    nil
+  end
+
+  defp filterd_user_info(
+    %{id: id, email: email, username: username, image: image, inserted_at: inserted_at},
+    discussion_id
+    ) do
+      conversation_pivot_user = discussion_id
+      |> Discussions.get_conversation_user_by_conversation_and_user_ids!(id) 
+
+      %{ id: id, email: email, username: username, image: image, inserted_at: inserted_at, read_at: conversation_pivot_user.read_at}
+    end
+
+    defp put_is_group(conversation) do
+      is_group = conversation.profile !== nil
+      conversation
+      |> Map.put(:is_group, is_group)
+    end
+    
+
+    defp parse_it(conversation) do
+      users = Enum.map(
+        conversation.users,
+        fn user -> filterd_user_info(user, conversation.id) end)
+
+      conversation
+      |> put_is_group
+      |> Map.put(:users, users)
+    end
+    
 
   def join("users:join", _params, socket) do
     _user_id = socket.assigns.user_id
@@ -10,30 +43,12 @@ defmodule WhatChatWeb.UsersChannel do
       socket.assigns.user
       |> Repo.preload(conversations: [:users, :messages])
     
-    some = Enum.map(discussions.conversations, fn conversation -> 
-      counter = 0
-      Enum.map( conversation.users, fn user -> 
-        counter = counter + 1
-        _user = Map.delete(user, :conversations)
-        |> Map.delete(:password)
-        |> Map.delete(:password_hash)
-        |> Map.delete(:updated_at)
-        |> Map.delete(:inserted_at)
-        # |> Map.delete(:email)
+      IO.inspect(discussions)
+    some = Enum.map(
+      discussions.conversations,
+      fn conversation -> parse_it(conversation) end)
 
-      end)
 
-      if(counter > 2) do
-        Map.put_new(conversation, :is_group, true)
-      else
-        Map.put_new(conversation, :is_group, false)
-      end
-
-    end)
-      
-    IO.puts("---------***** DISCUSSIONS ******----------")
-    IO.inspect(discussions)
-    IO.inspect(some)
     send(self(), :after_join)
 
 
@@ -45,9 +60,7 @@ defmodule WhatChatWeb.UsersChannel do
   def handle_info(:after_join, socket) do
     ChatPresence.track_user_join(socket, current_user(socket))
     presences = ChatPresence.list(socket)
-    IO.puts("***************** /////// PRESENCES  ///////// *********************")
-    IO.inspect(presences)
-    IO.puts("*****************///////-----------")
+    
     push socket, "presence_state", presences
     #broadcast! socket, "user:joined", presences
 
@@ -63,10 +76,7 @@ defmodule WhatChatWeb.UsersChannel do
 
   # The user want to add a new discussion/ conversation with someone
   def handle_in("users:newConversation", %{"contact_id" => contact_id} , socket) do
-    # broadcast!(socket, "users:joined" , %{NewUserInfo: userInfo })
-    
-    
-    
+   
     {:reply, :ok, socket}
   end
 

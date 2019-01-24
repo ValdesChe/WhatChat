@@ -261,9 +261,6 @@
         ['getCurrentUser', 'conversations']
       )
     },
-    watch: {
-     
-    },
     updated: function() {
       optionListener.menuListener()
       optionListener.overlayListener()
@@ -313,7 +310,7 @@
       // Setting the user and init the socket
       this.$store.dispatch('loadAllContacts').then( (resp) => {
          
-          this.$store.dispatch('addAllContacts', { AllContacts: resp.data.users })
+        this.$store.dispatch('addAllContacts', { AllContacts: resp.data.users })
         },  (err) => {
           this.$router.push({name: 'logout'})
         })

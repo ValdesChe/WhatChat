@@ -201,24 +201,45 @@ const store = new Vuex.Store({
     ADD_DISCUSSION: function (state, { discussion }) {
       console.log("MUTATOR ADD_DISCUSSION")
       const index = getIndexes.getElementIndex(state.conversations, discussion.id)
+      console.log(discussion)
       // If not existing discussion 
       // Then we add 
       if (index === -1) {
         discussion.typing_user = null
         discussion.count = discussion.messages.length
         let latestMessage = {
-          content: "Default message",
+          content: "",
           inserted_at: moment(discussion.inserted_at)
         }
         
         // Setting count unread message to 0 by default
         discussion.unread = 0
+       
+
         // If there are mesages in discussion
         if(discussion.messages.length > 0){
           console.log("Discussion messages found")
           
           discussion.messages.forEach(message =>{
             message.inserted_at = moment(message.inserted_at)
+            message.readers = {}
+            discussion.users.forEach(user =>{
+              if(user.id != state.currentUser.id){
+                if(user.read_at){
+                  const reading_date = new Date(user.read_at)
+
+                  if(new Date(message.inserted_at) - reading_date < 0)
+                    message.readers[user.id] = {reader_id: user.id , reading_time: user.read_at }
+                  else{
+                    discussion.count +=0;
+                  }
+                }
+                else{
+                  discussion.count +=0;
+                }
+              }
+            })
+            
           })
           
           // Messages are sorted by date
@@ -226,7 +247,7 @@ const store = new Vuex.Store({
             // return moment.min(message1.inserted_at , message2.inserted_at ) === message1.inserted_at  ? true :false 
             return new Date(message1.inserted_at) - new Date(message2.inserted_at)
           })
-
+          
           // We get the last posted message of the discussion
           latestMessage = discussion.messages[discussion.count-1]
         }
@@ -280,24 +301,33 @@ const store = new Vuex.Store({
     SET_OPENED_DISCUSSION (state, {discussions_id}){
       // console.log(discussions_id);
       state.currentConversation = discussions_id
+
+      /* const discussionPosition = getIndexes.getElementIndex(state.conversations, discussions_id)
+      if(discussionPosition !== -1){
+        state.conversations[discussionPosition].unread = 0
+      } */
+    },
+
+
+    // Mark a conversation as readed
+    MARK_CONVERSATION_AS_READ (state, {discussion_index}){
+      
     },
 
     // Adding message to discussion 
-    ADD_MESSAGE_TO_DISCUSSION
-    (
+    ADD_MESSAGE_TO_DISCUSSION(
       state,  
       {
         discussion_id,
         message
-      }
-    ){
+      }){
 
       const discussionPosition = getIndexes.getElementIndex(state.conversations, discussion_id)
       if(discussionPosition !== -1){
         
         const discussion = state.conversations[discussionPosition]
         console.log("Discussion trouvéee juste avant l' insertion msg");
-        if(state.currentConversation !== message.discussion_id){
+        if(state.currentConversation !== message.discussion_id && state.currentUser.id != message.from_id){
           discussion.unread++;
         }
         message.inserted_at = moment(message.inserted_at)
@@ -311,8 +341,6 @@ const store = new Vuex.Store({
       }
 
     },
-
-
     // Adding typing user flag
     ADD_TYPING_USER(state, { discussion_id, user_id }){
 
@@ -406,6 +434,10 @@ const store = new Vuex.Store({
 
                 })
     
+                channelDiscussion.on("conversation:hey_someone_read_messages", async response =>{
+                  console.log(response)
+                })
+    
                 channelDiscussion.on("conversation:hey_someone_is_typing", async response =>{
                   
                   if(response.user_id !== context.getters.getCurrentUser.id)
@@ -439,7 +471,6 @@ const store = new Vuex.Store({
         return;
       }
       
-
     },
     
     loadOnlineUsers: async function  (context, OnlineUsers) {
@@ -466,6 +497,7 @@ const store = new Vuex.Store({
     setOpenedConversation: async function  (context, discussions_id ) {
        
       await context.commit('SET_OPENED_DISCUSSION', {discussions_id})
+      context.dispatch("markConversationAsReaded", {discussion_id: discussions_id} )
     },
 
     addMessageToDiscussion: async function(
@@ -501,6 +533,26 @@ const store = new Vuex.Store({
       context.commit('addAllContacts', { AllContacts: AllContacts })  
     },
 
+    markConversationAsReaded(context, {discussion_id}){
+      
+      const discussionPosition = getIndexes.getElementIndex(context.state.conversations, discussion_id)
+      if(discussionPosition !== -1){
+        
+        console.log('Marking as read ');
+        const discussion = context.state.conversations[discussionPosition]
+        // console.log(window.channelDiscussion[1]);
+        
+        if(discussion.unread > 0){
+
+          console.log('Marking as read Has UnREAD');
+          window.channelDiscussion[discussion.id].push('conversation:mark_read_messages', {discussion_id: discussion.id} )
+        }
+        else{
+          console.log("&& Didn't have unread")
+        }
+      }
+      
+    }
     
   }
 })
