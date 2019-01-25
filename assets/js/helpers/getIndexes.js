@@ -4,5 +4,7 @@ export default {
     return table.findIndex(element => {
       return element.id === searched_id
     });
-  }
+  },
+
+
 }

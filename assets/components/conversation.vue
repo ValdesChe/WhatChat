@@ -42,9 +42,9 @@
                         <p>
                             {{ message.content }}
                         </p>
-                        <span class="message--time right-side">{{message.inserted_at.hours() + ':' + message.inserted_at.minutes()}}</span>
+                        <span :class="current.id === message.from_id ? 'message--time right-side': 'message--time'">{{message.inserted_at.hours() + ':' + message.inserted_at.minutes()}}</span>
                         <span  v-if="current.id === message.from_id" >
-                            <span :class="message.count_readers === currentConversation.users.length-1 ? 'message--readStatus readed': 'message--readStatus '"></span>
+                            <span :class="message.count_readers === currentConversation.users.length ? 'message--readStatus readed': 'message--readStatus '"></span>
                         </span>
                     </div>
                     <div class="msg--menu"></div>
@@ -159,24 +159,23 @@ export default {
         sendMessage() {
             console.log("Enter pressed");
             window.channelDiscussion[this.currentConversation.id].push("conversation:send_new_message", {content: this.message_typed});   
-            this.$store.dispatch(
+            /* this.$store.dispatch(
                 "addMessageToDiscussion", {
                     discussion_id: this.currentConversation.id,
                     from_id: this.getCurrentUser.id,
                     content: this.message_typed
                 }
-            )
+            ) */
             this.scrollMessenger()
             this.message_typed = ''
         },
 
     },
-
     updated() {
       
         if(this.currentConversation.unread > 0){
             this.scrollMessenger()
-            this.$store.dispatch("markConversationAsReaded", {discussion_id: this.currentConversation.id})
+            // this.$store.dispatch("markConversationAsReaded", {discussion_id: this.currentConversation.id})
         }
     },
     computed: {

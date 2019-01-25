@@ -2,7 +2,27 @@ defmodule WhatChat.Discussions.ConversationUser do
   use Ecto.Schema
   import Ecto.Changeset
 
+  defimpl Jason.Encoder, for: WhatChat.Discussions.ConversationUser do
+    def encode(value, opts) do
 
+      cond  do
+        (Ecto.assoc_loaded?(value.conversation) && Ecto.assoc_loaded?(value.user) )->
+          Jason.Encode.map(Map.take(value, [:id, :read_at, :user,:user_id, :conversation, :conversation_id]), opts)
+        
+        (!Ecto.assoc_loaded?(value.conversation) && Ecto.assoc_loaded?(value.user)) ->
+          Jason.Encode.map(Map.take(value, [:id, :read_at, :user,:user_id]), opts)
+        
+        (Ecto.assoc_loaded?(value.conversation) && !Ecto.assoc_loaded?(value.user)) ->
+          Jason.Encode.map(Map.take(value, [:id, :read_at, :conversation, :conversation_id]), opts)
+        
+        (!Ecto.assoc_loaded?(value.conversation) && !Ecto.assoc_loaded?(value.user)) ->
+          Jason.Encode.map(Map.take(value, [:id, :read_at]), opts)
+        
+        
+      end
+
+    end
+  end
   schema "conversation_user" do
     field :read_at, :naive_datetime
     

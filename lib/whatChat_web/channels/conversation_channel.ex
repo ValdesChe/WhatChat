@@ -65,7 +65,7 @@ defmodule WhatChatWeb.ConversationChannel do
       conversation_user ->
         case conversation_user |> Discussions.update_conversation_user(%{read_at: DateTime.utc_now }) do
           {:ok, conversation_user_updated} ->
-            broadcast(socket, "conversation:hey_someone_read_messages", %{user_id: socket.assigns.user_id, read_at: conversation_user_updated.read_at })
+            broadcast(socket, "conversation:hey_someone_read_messages", %{discussion_id: discussion_id, user_id: socket.assigns.user_id, read_at: conversation_user_updated.read_at })
             {:reply, :ok, socket}
           {:error, conversation_user_updated}
             {:reply, {:error, %{errors: conversation_user_updated}}, socket}
