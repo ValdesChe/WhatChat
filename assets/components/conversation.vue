@@ -117,10 +117,8 @@ export default {
         scrollMessenger(){
             let listMsg = this.$el.querySelector(".messages-container");
             let lastMessage = listMsg.lastChild;
-           
-           this.$nextTick( () => {
-               listMsg.scrollTop = listMsg.scrollHeight
-           })
+            listMsg.scrollTop = listMsg.scrollHeight
+         
         },
         getToUserProfile(users) {
             return users.filter(us => {
@@ -166,13 +164,12 @@ export default {
                     content: this.message_typed
                 }
             ) */
-            this.scrollMessenger()
             this.message_typed = ''
         },
 
     },
     updated() {
-      
+        this.scrollMessenger()
         if(this.currentConversation.unread > 0){
             this.scrollMessenger()
             // this.$store.dispatch("markConversationAsReaded", {discussion_id: this.currentConversation.id})

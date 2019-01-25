@@ -91,7 +91,10 @@
               <div class="second-row">
                 <transition name="fade">
                   <div v-if="!conversation.typing_user" class="lastmessage" :title="conversation.latestMessage.content">
-                    <span>  {{ conversation.latestMessage.content }} </span>
+                    <span :style="getCurrentUser.id ==  conversation.latestMessage.from_id && conversation.latestMessage.content !== '' ? 'margin-left: 20px;':'' ">  {{ splitMessageContent(conversation.latestMessage.content) }} </span>
+                    <span  v-if='getCurrentUser.id ==  conversation.latestMessage.from_id && conversation.latestMessage.content !== ""' >
+                      <span :class="conversation.latestMessage.count_readers === conversation.users.length ? 'message--readStatus message--readStatus--latest readed': 'message--readStatus message--readStatus--latest  '"></span>
+                    </span>
                   </div>
                   <div v-else class="is_typing" :title="conversation.typing_user">
                     <span>{{conversation.typing_user}}</span>
@@ -266,6 +269,15 @@
       optionListener.overlayListener()
     },
     methods: {
+      // Puts ... if the msg content is too long
+      splitMessageContent(content){
+        if(content.length > 31){
+          return content.substring(0,31) + " ... "
+        }
+        else{
+          return content
+        }
+      },
       ago(lastMessageDate){
         const diff1 = moment().diff(new Date(lastMessageDate.format('l')), 'days')
         
@@ -353,7 +365,10 @@
      -ms-transform: rotate(40deg);
      transform: rotate(40deg);
     */
-     &:before,&:after{
+
+    
+
+    &:before,&:after{
       content:' ';
       position:absolute;
       bottom: 6px;
@@ -375,10 +390,23 @@
       right:15px;
       width: 5px;
     }
+
+    &.message--readStatus--latest{
+      
+      &:before{
+        bottom: 14px;
+        left:10px;
+      }
+      &:after{
+        bottom: 15px;
+        left:1px;
+      }
+    }
+
     &.readed{
       &:before,&:after{
         border-bottom:1px solid #4FC3F7;
-        border-right:1px solid #4FC3F7;
+        border-right:0.1em solid #4FC3F7;
       }
     }
   }
