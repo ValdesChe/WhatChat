@@ -220,6 +220,12 @@ const store = new Vuex.Store({
         if(discussion.messages.length > 0){
           console.log("Discussion messages found")
           
+/* 
+          otherUsers = discussion.users.filter(user => {
+            return user.id !== state.currentUser.id
+          })
+ */
+
           discussion.messages.forEach(message =>{
             message.inserted_at = moment(message.inserted_at)
             message.readers = {}
@@ -240,15 +246,14 @@ const store = new Vuex.Store({
               }
 
               // If it's someone message 
-              else{
+              if(user.id !== state.currentUser.id){
                 const userPos = getIndexes.getElementIndex( discussion.users, state.currentUser.id)
                 if(userPos !== -1){
                   const me = discussion.users[userPos]
                   me.read_at = moment(me.read_at)
-                  moment.min(message.inserted_at , me.read_at ) !== message.inserted_at ?
-                   discussion.unread +=1 : null
-                    
-                  
+                  if(moment.min(message.inserted_at , me.read_at ) !== message.inserted_at){
+                    discussion.unread +=1
+                  }
                 }
                
               }
