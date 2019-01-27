@@ -78,7 +78,6 @@
             <input id="input"
                 @keydown="inputHandler"
                 ref="typing"
-                @focus="sendStartTyping"
                 @blur="sendStopTyping"
                 placeholder="Type a message"
                 v-model="message_typed"
@@ -127,15 +126,16 @@ export default {
             })[0]
         },
         sendStartTyping() {
-            console.log("Typing started");
             window.channelDiscussion[this.currentConversation.id].push("conversation:user_is_typing", {
                 user_typing_id: this.currentConversation.id
             });
+           
         },
         sendStopTyping() {
             window.channelDiscussion[this.currentConversation.id].push("conversation:user_stop_typing", {
                 user_typing_id: this.currentConversation.id
             });
+            
         },
         inputHandler(e) {
             if (e.keyCode === 13 && !e.shiftKey) {
@@ -170,9 +170,17 @@ export default {
     },
     updated() {
         this.scrollMessenger()
+        
         if(this.currentConversation.unread > 0){
             this.scrollMessenger()
             // this.$store.dispatch("markConversationAsReaded", {discussion_id: this.currentConversation.id})
+        }
+
+        if(this.message_typed.split(" ").join("").length >0){
+            this.sendStartTyping()    
+        }
+        else{
+            this.sendStopTyping()
         }
     },
     computed: {
@@ -180,11 +188,7 @@ export default {
         current(){
             return this.$store.state.currentUser
         },
-        typed() {
-
-            this.message_typed = value.replace(/<br>/gi, '')
-            return value
-        },
+      
         ...mapGetters(['currentConversation', 'getCurrentUser'])
     },
     mounted: function () {
