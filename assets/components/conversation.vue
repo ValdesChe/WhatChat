@@ -7,7 +7,10 @@
                 </router-link>
                 <div class="info-conv-user">
                     <span class="conv-username"> {{ currentConversation.is_group ? currentConversation.name : getToUserProfile(currentConversation.users).username }} </span>
-                    <span class="conv-last-seen"> last seen today 21:0{{currentConversation.id}} </span>
+                    <span  class="conv-last-seen"> 
+                        {{ currentConversation.is_group ? showParticipants(currentConversation.users) : "last seen 15:16" }}   
+                    </span>
+                    
                 </div>
         </div>
         <div class="options-tools">
@@ -125,6 +128,9 @@ export default {
                 return us.id !== this.getCurrentUser.id
             })[0]
         },
+        showParticipants(users){
+            return "It s a group"
+        },
         sendStartTyping() {
             window.channelDiscussion[this.currentConversation.id].push("conversation:user_is_typing", {
                 user_typing_id: this.currentConversation.id
@@ -188,7 +194,6 @@ export default {
         current(){
             return this.$store.state.currentUser
         },
-      
         ...mapGetters(['currentConversation', 'getCurrentUser'])
     },
     mounted: function () {

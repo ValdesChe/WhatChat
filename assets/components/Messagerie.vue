@@ -211,7 +211,7 @@
             </div>
           </div>
         </router-link>
-        <div  class="convervation one-contact frequently_contacted" style="position:relative;height:65px;">
+        <div  class="convervation one-contact frequently_contacted" style="cursor:default;position:relative;height:65px;">
           <div class="conversation-image" >
               
           </div>
@@ -220,32 +220,56 @@
           </div>
           <h1 style="position:absolute; top:25px; left: 40px; color:#00BFA5; font-weigth:bold; font-size:17px;">FREQUENTLY CONTACTED</h1>
         </div>
-        <div class="convervation one-contact" v-for="conversation in allContacts" @click="createConversationWith(conversation.id)"  :key="conversation.id" :to="{ name: 'conversation', params: { id: conversation.id}}">
-          <div class="conversation-image" >
-            <img class="user" :src="conversation.image" :alt="conversation.id" />
-              <!-- <a href="" class="logo-icon" >
-                <img class="svg-icon" :src="conversation.image" :alt="conversation.id" />
-              </svg> -->
-          </div>
-          <div class="conversation-details">
-            <div class="first-row">
-              <div class="conversation--username">
-                <span>  {{ conversation.username }} </span>
-              </div>
-              <div class="conversation--date">
-                <span style="float: right; text-align: right;" class="span--datespan--date"></span>
-              </div> 
+        <div v-for="(conversation, index) in allContacts" @click="createConversationWith(conversation.id)"  :key="conversation.id" :to="{ name: 'conversation', params: { id: conversation.id}}">
+          
+          <div v-if="index == 0" class="convervation one-contact frequently_contacted" style="cursor:default;position:relative;height:65px;">
+            <div class="conversation-image" >
+                
             </div>
-            <div class="second-row">
-              <div class="lastmessage">
-                <span> Hey there ! I'm using WhatChat <i class="emoji_icon" style="color:red">❤️</i>  </span>
-              </div>
-              
+            <div class="conversation-details">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </div>
+            <h1 style="position:absolute; top:25px; left: 40px; color:#00BFA5; font-weigth:bold; font-size:17px;">{{allContacts[0].username[0].toUpperCase()}}</h1>
           </div>
-        </div>
-      </div>
+          
+          <div v-else-if="index !== 0 && index < allContacts.length && allContacts[index].username[0].toUpperCase() != allContacts[index - 1].username[0].toUpperCase()" class="convervation one-contact frequently_contacted" style="cursor:default;position:relative;height:65px;border-top:0px;s">
+            <div class="conversation-image" >
+                
+            </div>
+            <div class="conversation-details">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+            <h1 style="position:absolute; top:25px; left: 40px; color:#00BFA5; font-weigth:bold; font-size:17px;">{{allContacts[index].username[0].toUpperCase()}}</h1>
+          </div>
 
+          <!-- -->
+          <router-link href="#" class="convervation one-contact" @click="createConversationWith(conversation.id)"  :key="conversation.id" :to="{ name: 'conversation', params: { id: conversation.id}}">
+            <div class="conversation-image" >
+              <img class="user" :src="conversation.image" :alt="conversation.id" />
+                <!-- <a href="" class="logo-icon" >
+                  <img class="svg-icon" :src="conversation.image" :alt="conversation.id" />
+                </svg> -->
+            </div>
+            <div class="conversation-details">
+              <div class="first-row">
+                <div class="conversation--username">
+                  <span>  {{ conversation.username }} </span>
+                </div>
+                <div class="conversation--date">
+                  <span style="float: right; text-align: right;" class="span--datespan--date"></span>
+                </div> 
+              </div>
+              <div class="second-row">
+                <div class="lastmessage">
+                  <span> Hey there ! I'm using WhatChat <i class="emoji_icon" style="color:red">❤️</i>  </span>
+                </div>
+                
+              </div>
+            </div>
+          </router-link>
+        </div>
+        
+      </div>
     </div>
   </div>
 </template>
@@ -270,8 +294,11 @@
       allContacts(){
         return this.$store.getters.filteredAllContacts('ordered','asc')
       },
+      conversations(){
+        return this.$store.getters.conversations('all')
+      },
       ...mapGetters(
-        ['getCurrentUser', 'conversations']
+        ['getCurrentUser']
       )
     },
     updated: function() {

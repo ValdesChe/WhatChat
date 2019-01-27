@@ -43,6 +43,7 @@ defmodule WhatChatWeb.UsersChannel do
       socket.assigns.user
       |> Repo.preload(conversations: [:users, :messages])
     
+    IO.puts("asddddaakjkdalsdj")
       IO.inspect(discussions)
     some = Enum.map(
       discussions.conversations,

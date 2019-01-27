@@ -7,9 +7,7 @@ defmodule WhatChat.Discussions.Conversation do
 
   defimpl Jason.Encoder, for: WhatChat.Discussions.Conversation do
     def encode(value, opts) do
-      IO.puts("JASAON COnversation **********--------")
-      IO.inspect(value)
-
+      
       cond  do
         (Ecto.assoc_loaded?(value.messages) && Ecto.assoc_loaded?(value.users) )->
           Jason.Encode.map(Map.take(value, [:id, :is_group, :name, :profile, :users, :messages, :inserted_at, :updated_at]), opts)

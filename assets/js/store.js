@@ -94,12 +94,12 @@ const store = new Vuex.Store({
           switch (filterValue) {
             case 'asc':
               return state.OnlineUsers.sort((participantA, participantB) => {
-                return participantA.username > participantB.username
+                return participantA.username.toLowerCase() > participantB.username.toLowerCase() ? 1 : -1
               })
               break
             case 'desc':
               return state.OnlineUsers.sort((participantA, participantB) => {
-                return participantA.username.toLowerCase() < participantB.username.toLowerCase()
+                return participantA.username.toLowerCase() < participantB.username.toLowerCase() ? -1 : 1
               })
               break
             default :
@@ -133,17 +133,17 @@ const store = new Vuex.Store({
           switch (filterValue) {
             case 'asc':
               return list.sort((participantA, participantB) => {
-                return participantA.username[0].toLowerCase() > participantB.username[0].toLowerCase()
+                return participantA.username[0].toLowerCase() > participantB.username[0].toLowerCase() ? 1 : -1
               })
             break
             case 'desc':
               return list.sort((participantA, participantB) => {
-                return participantA.username[0].toLowerCase() < participantB.username[0].toLowerCase()
+                return participantA.username[0].toLowerCase() < participantB.username[0].toLowerCase() ? -1 : 1
               })
             break
             default :
               return list.sort((participantA, participantB) => {
-                return participantA.username[0].toLowerCase() > participantB.username[0].toLowerCase()
+                return participantA.username[0].toLowerCase() > participantB.username[0].toLowerCase() ? 1 : -1
               })
           }
         break
@@ -173,8 +173,29 @@ const store = new Vuex.Store({
       return state.conversationLoader
     },
 
-    conversations: function (state) {
-      return state.conversations
+    conversations: (state) => (filter) => {
+      // Having at l
+      let listConv = state.conversations
+      switch (filter) {
+        // Conversation having at least one message
+        case 'atLeastOneMessage':
+          return listConv.filter(conv => {
+            return conv.messages.length > 0
+          }).sort((convA, convB) => {
+            return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? 1 : -1
+          })
+        break
+        case 'all':
+          return listConv
+        break
+        default :
+          return listConv.filter(conv => {
+            return conv.messages.length > 0
+          }).sort((convA, convB) => {
+            return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? 1 : -1
+          })
+      }
+
     }
 
 
@@ -208,7 +229,9 @@ const store = new Vuex.Store({
         discussion.typing_user = null
         discussion.count = discussion.messages.length
         let latestMessage = {
+          id:1000,
           content: "",
+          from_id:null,
           inserted_at: moment(discussion.inserted_at)
         }
         
@@ -220,11 +243,11 @@ const store = new Vuex.Store({
         if(discussion.messages.length > 0){
           console.log("Discussion messages found")
           
-/* 
+          /* 
           otherUsers = discussion.users.filter(user => {
             return user.id !== state.currentUser.id
           })
- */
+          */
 
           discussion.messages.forEach(message =>{
             message.inserted_at = moment(message.inserted_at)
@@ -265,7 +288,7 @@ const store = new Vuex.Store({
           // Messages are sorted by date
           discussion.messages.sort( (message1, message2) => {
             // return moment.min(message1.inserted_at , message2.inserted_at ) === message1.inserted_at  ? true :false 
-            return new Date(message1.inserted_at) - new Date(message2.inserted_at)
+            return moment.min(message1.inserted_at , message2.inserted_at ) !== message1.inserted_at ? 1 : -1
           })
           
           // We get the last posted message of the discussion
@@ -273,20 +296,10 @@ const store = new Vuex.Store({
         }
         // Else : no msg
         discussion.latestMessage = latestMessage
-
-        const discussionPosition = -1;
-        state.conversations.forEach((conv , index) => {
-          if (moment.min(conv.latestMessage, discussion.latestMessage) === discussion.latestMessage) {
-            discussionPosition = index
-            return
-          }
-        })
-
-        if (discussionPosition !== -1) {
-          state.conversations.splice(index, 0 , discussion)
-        } else {
-          state.conversations.push(discussion)
-        }
+        
+        // Adding
+        state.conversations.push(discussion)
+        
 
       }
     },
