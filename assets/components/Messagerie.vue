@@ -69,8 +69,8 @@
       </div>
       <div class="list-conversation">
         <div v-if="conversations.length > 0" >
-          <div  v-for="conversation in conversations"  class="one-contact"  @click.prevent="ConversationSelected(conversation.id)" :key="conversation.id" >
-          <router-link  class="convervation" :to="{ name: 'conversation', params: { id: conversation.id}}">
+          <div  v-for="conversation in conversations"  class="convervation one-contact"  @click.prevent="ConversationSelected(conversation.id)" :key="conversation.id" >
+          
             <div class="conversation-image" >
               <img class="user" :src="conversation.is_group ? conversation.profile : getToUserProfile(conversation.users).image " :alt="conversation.id" />
               <!-- <a href="" class="logo-icon" >
@@ -118,7 +118,8 @@
 
               </div>
             </div>
-          </router-link>
+
+            
           </div>
         </div>
         <div v-else class="no_contact">
@@ -209,7 +210,7 @@
             </div>
           </div>
         </router-link>
-        <div  class="convervation one-contact frequently_contacted" style="cursor:default;position:relative;height:65px;">
+        <div v-if="!is_searching" class="convervation frequently_contacted" style="cursor:default;position:relative;height:65px;">
           <div class="conversation-image" >
               
           </div>
@@ -218,44 +219,49 @@
           </div>
           <h1 style="position:absolute; top:25px; left: 40px; color:#00BFA5; font-weigth:bold; font-size:17px;">FREQUENTLY CONTACTED</h1>
         </div>
-        <div v-for="(conversation, index) in allContacts" @click="createConversationWith(conversation.id)"  :key="conversation.id" :to="{ name: 'conversation', params: { id: conversation.id}}">
+        <div v-for="(conversation, index) in chats"  :key="conversation.id" :to="{ name: 'conversation', params: { id: conversation.id}}">
           
-          <div v-if="index == 0" class="convervation one-contact frequently_contacted" style="cursor:default;position:relative;height:65px;">
+          <div v-if="!is_searching && index == 0" class="convervation  frequently_contacted" style="cursor:default;position:relative;height:65px;">
             <div class="conversation-image" >
                 
             </div>
             <div class="conversation-details">
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </div>
-            <h1 style="position:absolute; top:25px; left: 40px; color:#00BFA5; font-weigth:bold; font-size:17px;">{{allContacts[0].username[0].toUpperCase()}}</h1>
+            <h1 style="position:absolute; top:25px; left: 40px; color:#00BFA5; font-weigth:bold; font-size:17px;">
+              {{ conversation.is_group ? conversation.name[0].toUpperCase() :
+               getToUserProfile(chats[0].users).username[0].toUpperCase() }}
+               </h1>
           </div>
           
-          <div v-else-if="index !== 0 && index < allContacts.length && allContacts[index].username[0].toUpperCase() != allContacts[index - 1].username[0].toUpperCase()" class="convervation one-contact frequently_contacted" style="cursor:default;position:relative;height:65px;border-top:0px;s">
+          <div v-else-if="!is_searching && index !== 0 && index < chats.length 
+          && chats[index].is_group ? 
+           ( chats[index-1].is_group ? chats[index].name[0].toUpperCase() != chats[index - 1].name[0].toUpperCase() : false )
+           : ( chats[index-1].is_group ? getToUserProfile(chats[index].users).username[0].toUpperCase() != chats[index-1].name[0].toUpperCase()
+            : getToUserProfile(chats[index].users).username[0].toUpperCase() != getToUserProfile(chats[index-1].users).username[0].toUpperCase())" class="convervation frequently_contacted" style="cursor:default;position:relative;height:65px;border-top:0px;s">
             <div class="conversation-image" >
                 
             </div>
             <div class="conversation-details">
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </div>
-            <h1 style="position:absolute; top:25px; left: 40px; color:#00BFA5; font-weigth:bold; font-size:17px;">{{allContacts[index].username[0].toUpperCase()}}</h1>
+            <h1 style="position:absolute; top:25px; left: 40px; color:#00BFA5; font-weigth:bold; font-size:17px;">{{ conversation.is_group ? conversation.name[0].toUpperCase() : getToUserProfile(chats[index].users).username[0].toUpperCase()}}</h1>
           </div>
 
           <!-- -->
-          <router-link href="#" class="convervation one-contact" @click="createConversationWith(conversation.id)"  :key="conversation.id" :to="{ name: 'conversation', params: { id: conversation.id}}">
-            <div class="conversation-image" >
-              <img class="user" :src="conversation.image" :alt="conversation.id" />
-                <!-- <a href="" class="logo-icon" >
-                  <img class="svg-icon" :src="conversation.image" :alt="conversation.id" />
-                </svg> -->
+          <a  class="convervation one-contact" @click.prevent="ConversationSelected(conversation.id)"  :key="conversation.id" >
+           <div class="conversation-image" >
+              <img class="user" :src="conversation.is_group ? conversation.profile : getToUserProfile(conversation.users).image " :alt="conversation.id" />
             </div>
             <div class="conversation-details">
               <div class="first-row">
-                <div class="conversation--username">
-                  <span>  {{ conversation.username }} </span>
-                </div>
-                <div class="conversation--date">
-                  <span style="float: right; text-align: right;" class="span--datespan--date"></span>
-                </div> 
+                  <div class="conversation--username" :title="conversation.is_group ? conversation.name : getToUserProfile(conversation.users).username ">
+                    <span>  {{ conversation.is_group ? conversation.name : getToUserProfile(conversation.users).username  }} </span>
+                  </div>
+                  <div class="conversation--date">
+                    
+                  </div>
+                 
               </div>
               <div class="second-row">
                 <div class="lastmessage">
@@ -264,7 +270,7 @@
                 
               </div>
             </div>
-          </router-link>
+          </a>
         </div>
         
       </div>
@@ -285,6 +291,7 @@
 
       return {
         seach_input: '',
+        search_chat: ''
       }
     },
     computed:{
@@ -292,6 +299,17 @@
       allContacts(){
         return this.$store.getters.filteredAllContacts('ordered','asc')
       },
+      is_searching(){
+        return this.search_chat.split(" ").join("").length > 0
+      },
+
+      chats(){
+        if(this.is_searching){
+          return this.$store.getters.conversations('search_chats_groups', this.search_chat.toUpperCase() )
+        }
+        return this.$store.getters.conversations('chats')
+      },
+
       conversations(){
         return this.$store.getters.conversations('atLeastOneMessage')
       },
@@ -343,6 +361,7 @@
       ConversationSelected(conversation_id){
         console.log("Call Conversation setter");
         this.$store.dispatch("setOpenedConversation", conversation_id)
+        this.$router.push({ name: 'conversation', params: { id: conversation_id}})
       },
       ShowConvMenu(does){
         // optionListener.menuListener()
@@ -961,7 +980,6 @@
       flex-direction: column;
       -webkit-justify-content: center;
       justify-content: center;
-      cursor: pointer;
       border-width: thin;
       border-bottom: thin solid #F2F2F2;
       &:hover .iconic-right{
@@ -1057,7 +1075,10 @@
 
     .list-conversation{
       height: 100%;
-      a.convervation:hover{
+      .one-contact{
+        cursor:pointer;
+      }
+      .one-contact:hover{
         transition: all 0.5s ease-out;
         background: #EEEEEE;
       }

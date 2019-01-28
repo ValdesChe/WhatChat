@@ -173,7 +173,7 @@ const store = new Vuex.Store({
       return state.conversationLoader
     },
 
-    conversations: (state) => (filter) => {
+    conversations: (state) => (filter, filterSearch) => {
       // Having at l
       let listConv = state.conversations
       switch (filter) {
@@ -182,12 +182,39 @@ const store = new Vuex.Store({
           return listConv.filter(conv => {
             return conv.messages.length > 0 || conv.is_group
           }).sort((convA, convB) => {
-            return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? -1 : 1
+            return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? 1 : -1
           })
         break
+
+        case 'chats':
+          return listConv.filter(conv => {
+            return !conv.is_group
+          }).sort((convA, convB) => {
+            const user1 = convA.users.filter(user => { return user.id !== state.currentUser.id })[0] 
+            const user2 = convB.users.filter(user => { return user.id !== state.currentUser.id })[0] 
+            return user1.username[0].toLowerCase() > user2.username[0].toLowerCase()  ? 1 : -1
+          })
+        break
+
+        case 'search_chats_groups':
+          return listConv.filter(conv => {
+            if(conv.is_group){
+              return conv.name.toUpperCase().indexOf(filterSearch) > -1
+            }
+            else{
+              const user = conv.users.filter(user => { return user.id !== state.currentUser.id })[0] 
+              return user.username.toUpperCase().indexOf(filterSearch) > -1
+            }
+          }).sort((convA, convB) => {
+            const user1 = convA.users.filter(user => { return user.id !== state.currentUser.id })[0] 
+            const user2 = convB.users.filter(user => { return user.id !== state.currentUser.id })[0] 
+            return user1.username[0].toLowerCase() > user2.username[0].toLowerCase()  ? -1 : 1
+          })
+        break
+
         case 'all':
           return listConv.sort((convA, convB) => {
-            return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? -1 : 1
+            return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? 1 : -1
           })
         break
         default :
