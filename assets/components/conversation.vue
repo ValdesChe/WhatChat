@@ -1,18 +1,18 @@
 <template>
 <div class="conversation-container" v-if="currentConversation">
     <div class="header-profile">
-        <div class="logo-container">
-            <router-link :to="{ name: 'home'}" href="" class="logo-icon">
+        <router-link  :to="{ name: 'home'}" style="color:black" class="logo-container">
+            <a  href="" class="logo-icon">
                 <img class="user" :src="currentConversation.is_group ? currentConversation.profile : getToUserProfile(currentConversation.users).image" />
-                </router-link>
-                <div class="info-conv-user">
-                    <span class="conv-username"> {{ currentConversation.is_group ? currentConversation.name : getToUserProfile(currentConversation.users).username }} </span>
-                    <span  class="conv-last-seen"> 
-                        {{ currentConversation.is_group ? showParticipants(currentConversation.users) : "last seen 15:16" }}   
-                    </span>
+            </a>
+            <div class="info-conv-user">
+                <span class="conv-username"> {{ currentConversation.is_group ? currentConversation.name : getToUserProfile(currentConversation.users).username }} </span>
+                <span  class="conv-last-seen"> 
+                    {{ currentConversation.is_group ? showParticipants(currentConversation.users) : "last seen 15:16" }}   
+                </span>
                     
-                </div>
-        </div>
+            </div>         
+        </router-link>
         <div class="options-tools">
             <ul class="options">
                 <li>
@@ -129,8 +129,13 @@ export default {
             })[0]
         },
         showParticipants(users){
-            return "It s a group"
+            const users_name = users.filter(user => {
+                return user.id != this.getCurrentUser.id
+            }).map(user=> user.username.split(" ")[0]).join(", ") + ", me "
+
+            return users_name.length > 50 ? users_name.substr(0,50)+' ...': users_name
         },
+        
         sendStartTyping() {
             window.channelDiscussion[this.currentConversation.id].push("conversation:user_is_typing", {
                 user_typing_id: this.currentConversation.id

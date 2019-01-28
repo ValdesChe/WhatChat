@@ -117,11 +117,9 @@
                 </transition>
 
               </div>
-
             </div>
           </router-link>
-
-        </div>
+          </div>
         </div>
         <div v-else class="no_contact">
           <a href="#"  class="start_btn overlayOpener" targetedoverlay=".search_conv_message" >Start a discussion</a>
@@ -295,7 +293,7 @@
         return this.$store.getters.filteredAllContacts('ordered','asc')
       },
       conversations(){
-        return this.$store.getters.conversations('all')
+        return this.$store.getters.conversations('atLeastOneMessage')
       },
       ...mapGetters(
         ['getCurrentUser']

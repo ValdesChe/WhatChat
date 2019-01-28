@@ -180,13 +180,15 @@ const store = new Vuex.Store({
         // Conversation having at least one message
         case 'atLeastOneMessage':
           return listConv.filter(conv => {
-            return conv.messages.length > 0
+            return conv.messages.length > 0 || conv.is_group
           }).sort((convA, convB) => {
-            return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? 1 : -1
+            return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? -1 : 1
           })
         break
         case 'all':
-          return listConv
+          return listConv.sort((convA, convB) => {
+            return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? -1 : 1
+          })
         break
         default :
           return listConv.filter(conv => {
