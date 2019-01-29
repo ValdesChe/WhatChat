@@ -5,6 +5,12 @@ export default {
       return element.id === searched_id
     });
   },
-
+  myMessageNotifer(s)
+  {
+    var e=document.createElement('audio');
+    e.setAttribute('src', s);
+    e.play();
+    e.loop = false
+  }
 
 }

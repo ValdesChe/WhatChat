@@ -304,8 +304,7 @@ const store = new Vuex.Store({
                 if(userPos !== -1){
                   const me = discussion.users[userPos]
                   me.read_at = moment(me.read_at).add(-(new Date().getTimezoneOffset())/60 , "hours")
-                  console.log(me.read_at);
-                  
+                
                   if(moment.min(message.inserted_at , me.read_at ) !== message.inserted_at){
                     discussion.unread +=1
                   }
@@ -397,8 +396,7 @@ const store = new Vuex.Store({
           conversation.messages[index].readers[reader_id] = {reader_id: reader_id, reading_time: reading_time}
           conversation.messages[index].count_readers += 1
          
-         
-          
+
         } 
       }
       conversation.latestMessage = conversation.messages[conversation.messages.length - 1]
@@ -417,9 +415,15 @@ const store = new Vuex.Store({
       if(discussionPosition !== -1){
         
         const discussion = state.conversations[discussionPosition]
-        if(state.currentConversation !== message.discussion_id && state.currentUser.id != message.from_id){
+        if(state.currentUser.id !== message.from_id && state.currentConversation !== message.discussion_id  ){
           discussion.unread++;
+          getIndexes.myMessageNotifer('https://notificationsounds.com/soundfiles/15de21c670ae7c3f6f3f1f37029303c9/file-sounds-1085-definite.wav')
         }
+        
+        /* else if(state.currentUser.id !== message.from_id && discussion.unread === 0 && state.currentConversation == message.discussion_id ){
+          getIndexes.myMessageNotifer('https://notificationsounds.com/soundfiles/c9892a989183de32e976c6f04e700201/file-sounds-1109-slow-spring-board-longer-tail.wav')
+        } */
+        
 
         message.readers = {}
         message.count_readers = 0
