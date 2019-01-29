@@ -417,12 +417,12 @@ const store = new Vuex.Store({
         const discussion = state.conversations[discussionPosition]
         if(state.currentUser.id !== message.from_id && state.currentConversation !== message.discussion_id  ){
           discussion.unread++;
-          getIndexes.myMessageNotifer('https://notificationsounds.com/soundfiles/15de21c670ae7c3f6f3f1f37029303c9/file-sounds-1085-definite.wav')
+          if(discussion.is_group){
+            getIndexes.myMessageNotifer('https://notificationsounds.com/soundfiles/c9892a989183de32e976c6f04e700201/file-sounds-1109-slow-spring-board-longer-tail.wav')
+          }else{
+            getIndexes.myMessageNotifer('https://notificationsounds.com/soundfiles/15de21c670ae7c3f6f3f1f37029303c9/file-sounds-1085-definite.wav')
+          }
         }
-        
-        /* else if(state.currentUser.id !== message.from_id && discussion.unread === 0 && state.currentConversation == message.discussion_id ){
-          getIndexes.myMessageNotifer('https://notificationsounds.com/soundfiles/c9892a989183de32e976c6f04e700201/file-sounds-1109-slow-spring-board-longer-tail.wav')
-        } */
         
 
         message.readers = {}
