@@ -45,7 +45,7 @@
                         <p>
                             {{ message.content }}
                         </p>
-                        <span :class="current.id === message.from_id ? 'message--time right-side': 'message--time'">{{message.inserted_at.hours() + ':' + message.inserted_at.minutes()}}</span>
+                        <span :class="current.id === message.from_id ? 'message--time right-side': 'message--time'">{{message.inserted_at.format('HH:mm')}}</span>
                         <span  v-if="current.id === message.from_id" >
                             <span :class="message.count_readers === currentConversation.users.length ? 'message--readStatus readed': 'message--readStatus '"></span>
                         </span>

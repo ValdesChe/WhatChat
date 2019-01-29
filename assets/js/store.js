@@ -179,10 +179,10 @@ const store = new Vuex.Store({
       switch (filter) {
         // Conversation having at least one message
         case 'atLeastOneMessage':
+          console.log("Filtering conversation !");
+          
           return listConv.filter(conv => {
-            return conv.messages.length > 0 || conv.is_group
-          }).sort((convA, convB) => {
-            return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? 1 : -1
+            return conv.is_group || ( !conv.is_group && conv.messages.length > 0)
           })
         break
 
@@ -250,8 +250,9 @@ const store = new Vuex.Store({
     // Add new discussion
     ADD_DISCUSSION: function (state, { discussion }) {
       console.log("MUTATOR ADD_DISCUSSION")
+
       const index = getIndexes.getElementIndex(state.conversations, discussion.id)
-      console.log(discussion)
+      // console.log(discussion)
       // If not existing discussion 
       // Then we add 
       if (index === -1) {
@@ -261,7 +262,7 @@ const store = new Vuex.Store({
           id:1000,
           content: "",
           from_id:null,
-          inserted_at: moment(discussion.inserted_at)
+          inserted_at: moment(discussion.inserted_at).add(-(new Date().getTimezoneOffset())/60 , "hours")
         }
         
         // Setting count unread message to 0 by default
@@ -279,14 +280,14 @@ const store = new Vuex.Store({
           */
 
           discussion.messages.forEach(message =>{
-            message.inserted_at = moment(message.inserted_at)
+            message.inserted_at = moment(message.inserted_at).add(-(new Date().getTimezoneOffset())/60 , "hours")
             message.readers = {}
             message.count_readers = 0
             discussion.users.forEach(user =>{
-              user.inserted_at = moment(user.inserted_at)
+              user.inserted_at = moment(user.inserted_at).add(-(new Date().getTimezoneOffset())/60 , "hours")
               if( message.from_id === state.currentUser.id  ){
                 if(user.read_at){
-                  user.read_at = moment(user.read_at)
+                  user.read_at = moment(user.read_at).add(-(new Date().getTimezoneOffset())/60 , "hours")
                   
                   
                   if(moment.min(message.inserted_at , user.read_at ) === message.inserted_at){
@@ -302,7 +303,9 @@ const store = new Vuex.Store({
                 const userPos = getIndexes.getElementIndex( discussion.users, state.currentUser.id)
                 if(userPos !== -1){
                   const me = discussion.users[userPos]
-                  me.read_at = moment(me.read_at)
+                  me.read_at = moment(me.read_at).add(-(new Date().getTimezoneOffset())/60 , "hours")
+                  console.log(me.read_at);
+                  
                   if(moment.min(message.inserted_at , me.read_at ) !== message.inserted_at){
                     discussion.unread +=1
                   }
@@ -329,9 +332,10 @@ const store = new Vuex.Store({
         // Adding
         state.conversations.push(discussion)
         
-
       }
     },
+
+
 
     SET_DISCUSSION: function (state, { participant }) {
       const index = state.participants.findIndex((element) => {
@@ -419,7 +423,7 @@ const store = new Vuex.Store({
 
         message.readers = {}
         message.count_readers = 0
-        message.inserted_at = moment(message.inserted_at)
+        message.inserted_at = moment(message.inserted_at).add(-(new Date().getTimezoneOffset())/60 , "hours")
         
         if(message.from_id === state.currentUser.id){
           message.readers[state.currentUser.id] = {user_id: message.inserted_at , read_at: message.inserted_at}
@@ -430,6 +434,13 @@ const store = new Vuex.Store({
         discussion.latestMessage = Object.assign({}, message)
         
         discussion.messages.push(message) 
+        
+        state.conversations.splice(discussionPosition , 1);
+        state.conversations.splice(0 , 0, discussion);
+        /*  state.conversations.sort((convA, convB) => {
+          return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? 1 : -1
+        }) */
+
       }
 
     },
@@ -510,7 +521,6 @@ const store = new Vuex.Store({
                 channelDiscussion.on("conversation:alert:new_messages", async response =>{
 
                   let message = response.message
-                  console.log(response)
                   await context.commit("ADD_MESSAGE_TO_DISCUSSION",
                   { discussion_id: message.conversation_id, message: message  });
 
@@ -598,7 +608,7 @@ const store = new Vuex.Store({
       await context.commit('SET_OPENED_DISCUSSION', {discussions_id})
       context.dispatch("markConversationAsReaded", {discussion_id: discussions_id} )
     },
-/* 
+    /* 
     addMessageToDiscussion: async function(
       context,  
       {

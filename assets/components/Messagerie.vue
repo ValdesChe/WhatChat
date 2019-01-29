@@ -69,7 +69,7 @@
       </div>
       <div class="list-conversation">
         <div v-if="conversations.length > 0" >
-          <div  v-for="conversation in conversations"  class="convervation one-contact"  @click.prevent="ConversationSelected(conversation.id)" :key="conversation.id" >
+          <router-link :to="{ name: 'conversation', params: { id: conversation.id}}" v-for="conversation in conversations"  class="convervation one-contact"  @click.native="ConversationSelected(conversation.id)" :key="conversation.id" >
           
             <div class="conversation-image" >
               <img class="user" :src="conversation.is_group ? conversation.profile : getToUserProfile(conversation.users).image " :alt="conversation.id" />
@@ -120,7 +120,7 @@
             </div>
 
             
-          </div>
+          </router-link>
         </div>
         <div v-else class="no_contact">
           <a href="#"  class="start_btn overlayOpener" targetedoverlay=".search_conv_message" >Start a discussion</a>
@@ -249,7 +249,7 @@
           </div>
 
           <!-- -->
-          <a  class="convervation one-contact" @click.prevent="ConversationSelected(conversation.id)"  :key="conversation.id" >
+          <a  @click.prevent="ConversationSelected(conversation.id)" class="convervation one-contact" :key="conversation.id" >
            <div class="conversation-image" >
               <img class="user" :src="conversation.is_group ? conversation.profile : getToUserProfile(conversation.users).image " :alt="conversation.id" />
             </div>
@@ -336,7 +336,8 @@
         
         if(diff1 < 7){
           if (diff1 == 0){
-            return lastMessageDate.hours() + ':' + lastMessageDate.minutes()
+            // return lastMessageDate.hours() + ':' + lastMessageDate.minutes()
+            return moment(lastMessageDate).format('HH:mm')
           }
           else if(diff1 == 1){
             return 'Yesterday'
@@ -1076,7 +1077,7 @@
     .list-conversation{
       height: 100%;
       .one-contact{
-        cursor:pointer;
+        cursor:pointer
       }
       .one-contact:hover{
         transition: all 0.5s ease-out;
