@@ -4,9 +4,9 @@
       <!-- v-loading="loading" -->
       <div class="header-user">
         <div class="logo-container">
-          <router-link :to="{ name: 'home'}"  href="" class="logo-icon" >
-            <img class="user" :src="this.getCurrentUser ? this.getCurrentUser.image:''" />
-          </router-link>
+          <a href="#" targetedoverlay=".profile_edition" style="height:2.5em !important; width:2.5em !important;"  class="logo-icon overlayOpener" >
+            <img class="user"  :src="this.getCurrentUser ? this.getCurrentUser.image:''" />
+          </a>
         </div>
         <div class="options-tools">
             <ul class="options">
@@ -273,6 +273,35 @@
           </a>
         </div>
         
+      </div>
+    </div>
+
+    <!-- My profile editing zone -->
+    <div class="overlay_box left profile_edition">
+      <div class="header--box" >
+        <span class="overlay_box--name">Profile</span>
+        <span class="back-btn">
+        </span>
+      </div>
+    
+      <div class="container--box">
+        <div class="profile--box">
+          <div class="photo-special"> 
+            <div class="profile">
+              <img :src="this.getCurrentUser ? this.getCurrentUser.image:''" alt="My profile image">
+            </div>
+            <div class="overlay-menu-profiler">
+                
+            </div>
+          </div>
+        </div>
+        <div class="bio--box">
+        
+        </div> 
+        <div class="about--box">
+
+        </div>
+
       </div>
     </div>
   </div>
@@ -738,7 +767,7 @@
     background:white;
     z-index:1000;
     -webkit-transition: all 0.3s ease-in;
-   // opacity: 0;
+    opacity: 0;
     
     -webkit-transition-delay: (random(11) + 4) * 50 + "ms";
     -moz-transition-delay: (random(11) + 4) * 50 + "ms";
@@ -1086,7 +1115,10 @@
     }
 
   .list-conversation .router-link-active{
-    background :#EEEEEE;
+    background: #DCDEDE;
+    &:hover{
+      background: #DCDEDE !important;
+    }
     .conversation--username{
       font-weight:bold;
     }
