@@ -283,12 +283,12 @@
         <span class="back-btn">
         </span>
       </div>
-    
-      <div class="container--box">
+     
+      <div class="container-box">
         <div class="profile--box">
           <div class="photo-special"> 
             <div class="profile">
-              <img :src="this.getCurrentUser ? this.getCurrentUser.image:''" alt="My profile image">
+              <img :src="this.getCurrentUser ? this.getCurrentUser.image:''"  class="user" alt="My profile image">
             </div>
             <div class="overlay-menu-profiler">
                 
@@ -296,10 +296,10 @@
           </div>
         </div>
         <div class="bio--box">
-        
+          My bio .....
         </div> 
         <div class="about--box">
-
+          What about me ? 
         </div>
 
       </div>
@@ -753,6 +753,68 @@
     object-fit: cover;
   }
 
+  .container-box{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+
+    background:#EEEEEE;
+
+    .profile--box{
+      .photo-special{
+        margin:0 auto;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        height: 10em;
+        width: 10em;  
+        padding:10px;
+        position: relative;
+
+        
+        .profile, .overlay-menu-profiler{
+          cursor: pointer;
+        }
+
+
+        .profile{
+
+        }
+
+        .overlay-menu-profiler{
+          width:9em;
+          height:9em;
+          position:absolute;
+          top: 8px;
+          left: 8px;
+          background:rgba(0,0,0,0.5);
+          transition: all 0.5s ease-in;
+          transition-delay: 40ms; 
+          border-radius: 50%;
+          opacity:0;
+          z-index:-500;
+        }
+
+        &:hover .overlay-menu-profiler{
+          opacity:1;
+          z-index:2000;
+        }
+
+      }
+
+    }
+
+    .bio--box{
+
+    }
+
+    .about--box{
+
+    }
+
+
+
+  }
+    
   $width_menu: 410px;
 
   .overlay_box{
