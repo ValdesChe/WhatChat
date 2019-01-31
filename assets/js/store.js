@@ -181,7 +181,7 @@ const store = new Vuex.Store({
         case 'atLeastOneMessage':
           console.log("Filtering conversation !");
           
-          return listConv.filter(conv => {
+          return state.conversations.filter(conv => {
             return conv.is_group || ( !conv.is_group && conv.messages.length > 0)
           })
         break
@@ -465,6 +465,12 @@ const store = new Vuex.Store({
       if(discussionPosition !== -1 && userPosition !== -1){
         state.conversations[discussionPosition].typing_user = null
       }
+    },
+
+    SORT_DISCUSSIONS(state){
+      state.conversations.sort((convA, convB) => {
+        return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? -1 : 1
+      })
     }
   },
   actions: {
@@ -572,6 +578,8 @@ const store = new Vuex.Store({
             }
 
           });
+
+          context.commit('SORT_DISCUSSIONS')
           
           
         }).receive('error', (response) => {
