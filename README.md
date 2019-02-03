@@ -1,7 +1,10 @@
+[![Build Status](https://travis-ci.com/ValdesChe/WhatChat.svg?branch=master)](https://travis-ci.com/ValdesChe/WhatChat) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # WhatChat
+ 
+A Whatsapp clone using Phoenix, VueJs and PostreSQL
 
 To start your Phoenix server:
-
   * Install dependencies with `mix deps.get`
   * Create and migrate your database with `mix ecto.setup`
   * Install Node.js dependencies with `cd assets && npm install`
