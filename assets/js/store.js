@@ -469,7 +469,7 @@ const store = new Vuex.Store({
 
     SORT_DISCUSSIONS(state){
       state.conversations.sort((convA, convB) => {
-        return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? -1 : 1
+        return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? 1 : -1
       })
     }
   },

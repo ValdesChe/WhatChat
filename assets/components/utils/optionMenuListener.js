@@ -98,8 +98,9 @@ export default {
           this.classList.add("actived")
           if(this.parentNode.parentNode.parentNode.querySelector(".ismessage") != null)
             this.parentNode.parentNode.parentNode.querySelector(".ismessage").style.transform = "translateX(-15px)"
-              
-            elementBtn.nextElementSibling.classList.add("active");              
+            elementBtn.nextElementSibling.classList.add("active");           
+           
+            // elementBtn.nextElementSibling.style.top = elementBtn.scrollHeight + 5 + 'px' ;              
           });
         });
     }
