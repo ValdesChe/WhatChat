@@ -10,7 +10,8 @@ defmodule WhatChat.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls]
     ]
   end
 
@@ -45,6 +46,7 @@ defmodule WhatChat.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:bcrypt_elixir, "~> 1.0"},
       {:ex_doc, "~> 0.12"},
+      {:excoveralls, github: "parroty/excoveralls"},
     ]
   end
 
