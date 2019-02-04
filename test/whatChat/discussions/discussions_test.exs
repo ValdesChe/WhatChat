@@ -1,6 +1,8 @@
 defmodule WhatChat.DiscussionsTest do
   use WhatChat.DataCase
 
+
+  alias WhatChat.Accounts
   alias WhatChat.Discussions
 
   describe "conversations" do
@@ -19,31 +21,26 @@ defmodule WhatChat.DiscussionsTest do
       conversation
     end
 
-    @tag :skip
     test "list_conversations/0 returns all conversations" do
       conversation = conversation_fixture()
       assert Discussions.list_conversations() == [conversation]
     end
 
-    @tag :skip
     test "get_conversation!/1 returns the conversation with given id" do
       conversation = conversation_fixture()
       assert Discussions.get_conversation!(conversation.id) == conversation
     end
 
-    @tag :skip
     test "create_conversation/1 with valid data creates a conversation" do
       assert {:ok, %Conversation{} = conversation} = Discussions.create_conversation(@valid_attrs)
       assert conversation.name == "some name"
       assert conversation.profile == "some profile"
     end
 
-    @tag :skip
     test "create_conversation/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Discussions.create_conversation(@invalid_attrs)
     end
 
-    @tag :skip
     test "update_conversation/2 with valid data updates the conversation" do
       conversation = conversation_fixture()
       assert {:ok, %Conversation{} = conversation} = Discussions.update_conversation(conversation, @update_attrs)
@@ -51,21 +48,18 @@ defmodule WhatChat.DiscussionsTest do
       assert conversation.profile == "some updated profile"
     end
 
-    @tag :skip
     test "update_conversation/2 with invalid data returns error changeset" do
       conversation = conversation_fixture()
       assert {:error, %Ecto.Changeset{}} = Discussions.update_conversation(conversation, @invalid_attrs)
       assert conversation == Discussions.get_conversation!(conversation.id)
     end
 
-    @tag :skip
     test "delete_conversation/1 deletes the conversation" do
       conversation = conversation_fixture()
       assert {:ok, %Conversation{}} = Discussions.delete_conversation(conversation)
       assert_raise Ecto.NoResultsError, fn -> Discussions.get_conversation!(conversation.id) end
     end
 
-    @tag :skip
     test "change_conversation/1 returns a conversation changeset" do
       conversation = conversation_fixture()
       assert %Ecto.Changeset{} = Discussions.change_conversation(conversation)
@@ -88,51 +82,43 @@ defmodule WhatChat.DiscussionsTest do
       conversation_user
     end
 
-    @tag :skip
     test "list_conversation_user/0 returns all conversation_user" do
       conversation_user = conversation_user_fixture()
       assert Discussions.list_conversation_user() == [conversation_user]
     end
 
-    @tag :skip
     test "get_conversation_user!/1 returns the conversation_user with given id" do
       conversation_user = conversation_user_fixture()
       assert Discussions.get_conversation_user!(conversation_user.id) == conversation_user
     end
 
-    @tag :skip
     test "create_conversation_user/1 with valid data creates a conversation_user" do
       assert {:ok, %ConversationUser{} = conversation_user} = Discussions.create_conversation_user(@valid_attrs)
       assert conversation_user.read_at == ~N[2010-04-17 14:00:00]
     end
 
-    @tag :skip
     test "create_conversation_user/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Discussions.create_conversation_user(@invalid_attrs)
     end
 
-    @tag :skip
     test "update_conversation_user/2 with valid data updates the conversation_user" do
       conversation_user = conversation_user_fixture()
       assert {:ok, %ConversationUser{} = conversation_user} = Discussions.update_conversation_user(conversation_user, @update_attrs)
       assert conversation_user.read_at == ~N[2011-05-18 15:01:01]
     end
 
-    @tag :skip
     test "update_conversation_user/2 with invalid data returns error changeset" do
       conversation_user = conversation_user_fixture()
       assert {:error, %Ecto.Changeset{}} = Discussions.update_conversation_user(conversation_user, @invalid_attrs)
       assert conversation_user == Discussions.get_conversation_user!(conversation_user.id)
     end
 
-    @tag :skip
     test "delete_conversation_user/1 deletes the conversation_user" do
       conversation_user = conversation_user_fixture()
       assert {:ok, %ConversationUser{}} = Discussions.delete_conversation_user(conversation_user)
       assert_raise Ecto.NoResultsError, fn -> Discussions.get_conversation_user!(conversation_user.id) end
     end
 
-    @tag :skip
     test "change_conversation_user/1 returns a conversation_user changeset" do
       conversation_user = conversation_user_fixture()
       assert %Ecto.Changeset{} = Discussions.change_conversation_user(conversation_user)
@@ -142,9 +128,17 @@ defmodule WhatChat.DiscussionsTest do
   describe "messages" do
     alias WhatChat.Discussions.Message
 
-    @valid_attrs %{content: "some content", is_deleted: true}
-    @update_attrs %{content: "some updated content", is_deleted: false}
-    @invalid_attrs %{content: nil, is_deleted: nil}
+    @valid_attrs %{content: "some content"}
+    @update_attrs %{content: "some updated content"}
+    @invalid_attrs %{content: nil, from_id: nil}
+
+    setup do
+      {:ok, user} = %{email: "some email", image: "some image", password: "some password", password_hash: "some password_hash", username: "some username"}
+      |> Accounts.create_user()
+      user |> Repo.insert
+      valid_attrs = Map.put(@valid_attrs, :from_id, user.id)
+      {:ok, %{user: user, valid_attrs: valid_attrs}}
+    end
 
     def message_fixture(attrs \\ %{}) do
       {:ok, message} =

@@ -4,13 +4,12 @@ defmodule WhatChatWeb.ErrorViewTest do
   # Bring render/3 and render_to_string/3 for testing custom views
   import Phoenix.View
 
-  @tag :skip
-  test "renders 404.html" do
-    assert render_to_string(WhatChatWeb.ErrorView, "404.html", []) == "Not Found"
+
+  test "renders 404.json" do
+    assert render(WhatChatWeb.ErrorView, "404.json", []) == %{errors: %{detail: "Endpoint not found!"}}
   end
 
-  @tag :skip
-  test "renders 500.html" do
-    assert render_to_string(WhatChatWeb.ErrorView, "500.html", []) == "Internal Server Error"
+  test "renders 500.json" do
+    assert render(WhatChatWeb.ErrorView, "500.json", []) == %{errors: %{detail: "Internal server error :("}}
   end
 end
