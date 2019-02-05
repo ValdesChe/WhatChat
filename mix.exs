@@ -11,7 +11,13 @@ defmodule WhatChat.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      test_coverage: [tool: ExCoveralls]
+      preferred_cli_env: [
+        "coveralls": :test,
+        "coveralls.html": :test,
+        "coveralls.json": :test,
+      ],
+     test_paths: test_paths(),
+     test_coverage: [tool: ExCoveralls],
     ]
   end
 
@@ -23,6 +29,11 @@ defmodule WhatChat.MixProject do
       mod: {WhatChat.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
+  end
+
+  # Tests paths
+  defp test_paths do
+    "test" |> Path.wildcard |> Enum.sort
   end
 
   # Specifies which paths to compile per environment.
@@ -46,7 +57,7 @@ defmodule WhatChat.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:bcrypt_elixir, "~> 1.0"},
       {:ex_doc, "~> 0.12"},
-      {:excoveralls, github: "parroty/excoveralls"},
+      {:excoveralls, "~> 0.7", only: :test}
     ]
   end
 
