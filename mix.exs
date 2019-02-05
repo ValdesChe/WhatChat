@@ -16,7 +16,6 @@ defmodule WhatChat.MixProject do
         "coveralls.html": :test,
         "coveralls.json": :test,
       ],
-     test_paths: test_paths(),
      test_coverage: [tool: ExCoveralls],
     ]
   end
@@ -31,10 +30,7 @@ defmodule WhatChat.MixProject do
     ]
   end
 
-  # Tests paths
-  defp test_paths do
-    "test" |> Path.wildcard |> Enum.sort
-  end
+ 
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
@@ -57,7 +53,7 @@ defmodule WhatChat.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:bcrypt_elixir, "~> 1.0"},
       {:ex_doc, "~> 0.12"},
-      {:excoveralls, "~> 0.7", only: :test}
+      {:excoveralls, "~> 0.10.5", only: :test}
     ]
   end
 
