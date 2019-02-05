@@ -49,6 +49,14 @@ module.exports = (env, options) => ({
             : MiniCssExtractPlugin.loader,
             'css-loader','sass-loader'
         ]
+      },
+      {
+        test: /\.(png|jpg|gif|svg)$/,
+        loader: 'url',
+        query: {
+          limit: 10000,
+          name: '[name].[ext]?[hash]'
+        }
       }
     ]
   },

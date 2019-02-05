@@ -27,7 +27,7 @@
               </li>
               <li>
                 <a class="opt-link overlayOpener" targetedoverlay=".boxed" href="#" >
-                  <svg id="new_message" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path opacity=".55" fill="#263238" d="M19.005 3.175H4.674C3.642 3.175 3 3.789 3 4.821V21.02l3.544-3.514h12.461c1.033 0 2.064-1.06 2.064-2.093V4.821c-.001-1.032-1.032-1.646-2.064-1.646zm-4.989 9.869H7.041V11.1h6.975v1.94"></path></svg>
+                  <svg id="new_message" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path opacity=".55" fill="#263238" d="M19.005 3.175H4.674C3.642 3.175 3 3.789 3 4.821V21.02l3.544-3.514h12.461c1.033 0 2.064-1.06 2.064-2.093V4.821c-.001-1.032-1.032-1.646-2.064-1.646zm-4.989"></path></svg>
                 </a>
               </li>
               <li>
@@ -68,6 +68,7 @@
         </el-input>
       </div>
       <div class="list-conversation">
+
         <div v-if="conversations.length > 0" >
           <router-link :to="{ name: 'conversation', params: { id: conversation.id}}" v-for="conversation in conversations"  class="convervation one-contact"  @click.native="ConversationSelected(conversation.id)" :key="conversation.id" >
           

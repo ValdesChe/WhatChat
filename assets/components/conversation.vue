@@ -35,7 +35,7 @@
         </div>
     </div>
 
-    <div class="messages-history">
+    <div class="messages-history" style="background: url(../images/yo.jpg);">
         <div class="overlay"></div>
         <div class="messages-container" v-if="current">
             <!-- :class="message.from_id === getCurrentUser.id ? 'one-message-container one-message-container--left' : 'one-message-container one-message-container--right'" -->
@@ -279,7 +279,6 @@ export default {
 
         &::after {
             content: "";
-            background: url(https://web.whatsapp.com/img/8a055527b27b887521a9f084497d8879.png);
             opacity: 0.1;
 
             top: 0px;
