@@ -198,43 +198,44 @@ defmodule WhatChat.DiscussionsTest do
       assert Discussions.get_message!(message.id) == message
     end
 
-    @tag :skip
-    test "create_message/1 with valid data creates a message" do
-      assert {:ok, %Message{} = message} = Discussions.create_message(@valid_attrs)
+    # @tag :skip
+    test "create_message/1 with valid data creates a message", state do
+      messageNew = state[:valid_attrs] |> Enum.into(@valid_attrs)
+      assert {:ok, %Message{} = message} = Discussions.create_message(messageNew)
       assert message.content == "some content"
-      assert message.is_deleted == true
+      assert message.is_deleted == false
     end
 
-    @tag :skip
+    # @tag :skip
     test "create_message/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Discussions.create_message(@invalid_attrs)
     end
 
-    @tag :skip
-    test "update_message/2 with valid data updates the message" do
-      message = message_fixture()
+    # @tag :skip
+    test "update_message/2 with valid data updates the message", state do
+      message = state[:valid_attrs] |>  message_fixture()
       assert {:ok, %Message{} = message} = Discussions.update_message(message, @update_attrs)
       assert message.content == "some updated content"
       assert message.is_deleted == false
     end
 
-    @tag :skip
-    test "update_message/2 with invalid data returns error changeset" do
-      message = message_fixture()
+    # @tag :skip
+    test "update_message/2 with invalid data returns error changeset", state do
+      message = state[:valid_attrs] |>  message_fixture()
       assert {:error, %Ecto.Changeset{}} = Discussions.update_message(message, @invalid_attrs)
       assert message == Discussions.get_message!(message.id)
     end
 
-    @tag :skip
-    test "delete_message/1 deletes the message" do
-      message = message_fixture()
+    # @tag :skip
+    test "delete_message/1 deletes the message", state do
+      message = state[:valid_attrs] |>  message_fixture()
       assert {:ok, %Message{}} = Discussions.delete_message(message)
       assert_raise Ecto.NoResultsError, fn -> Discussions.get_message!(message.id) end
     end
 
-    @tag :skip
-    test "change_message/1 returns a message changeset" do
-      message = message_fixture()
+    # @tag :skip
+    test "change_message/1 returns a message changeset", state do
+      message = state[:valid_attrs] |>  message_fixture()
       assert %Ecto.Changeset{} = Discussions.change_message(message)
     end
   end
