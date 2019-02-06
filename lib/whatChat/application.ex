@@ -6,7 +6,7 @@ defmodule WhatChat.Application do
   use Application
 
   def start(_type, _args) do
-    import Supervisor.Spec
+    
     # List all child processes to be supervised
     children = [
       # Start the Ecto repository
@@ -17,8 +17,7 @@ defmodule WhatChat.Application do
       # {WhatChat.Worker, arg},
 
       # Start UsersPresence 
-      WhatChatWeb.ChatPresence,
-      {WhatChatWeb.Utils.Monitors.Monitor, []}  
+      WhatChatWeb.ChatPresence
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

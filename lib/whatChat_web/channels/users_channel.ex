@@ -5,10 +5,6 @@ defmodule WhatChatWeb.UsersChannel do
   alias WhatChat.Repo
   alias WhatChat.Discussions
 
-  defp count_user do
-    nil
-  end
-
   defp filterd_user_info(
     %{id: id, email: email, username: username, image: image, inserted_at: inserted_at},
     discussion_id
@@ -76,7 +72,7 @@ defmodule WhatChatWeb.UsersChannel do
   end
 
   # The user want to add a new discussion/ conversation with someone
-  def handle_in("users:newConversation", %{"contact_id" => contact_id} , socket) do
+  def handle_in("users:newConversation", %{"contact_id" => _contact_id} , socket) do
    
     {:reply, :ok, socket}
   end
