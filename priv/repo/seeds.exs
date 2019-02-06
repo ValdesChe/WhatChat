@@ -53,7 +53,7 @@ end)
 }|> WhatChat.Accounts.create_user 
 
 %{
-  email: "test1@test.fr",
+  email: "test2@test.fr",
   image: "https://loremflickr.com/400/400/baby?lock=71",
   password: "test2",
   username: "Test 2"

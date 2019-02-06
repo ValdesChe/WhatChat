@@ -132,12 +132,48 @@ defmodule WhatChat.DiscussionsTest do
     @update_attrs %{content: "some updated content"}
     @invalid_attrs %{content: nil, from_id: nil}
 
+    @user1 %{
+      email: "test11@texst.fr",
+      image: "https://loremflickr.com/400/400/car?lock=81",
+      password: "test1111",
+      username: "Test 11"
+    }
+    
+    @user2 %{
+      email: "test22@texst.fr",
+      image: "https://loremflickr.com/400/400/baby?lock=71",
+      password: "test2222",
+      username: "Test 22"
+    }
+
+    @conv %{
+      name: "Testconv",
+      profile: "https://loremflickr.com/400/400/group?lock=515"
+    }
+
     setup do
-      {:ok, user} = %{email: "some email", image: "some image", password: "some password", password_hash: "some password_hash", username: "some username"}
-      |> Accounts.create_user()
-      user |> Repo.insert
-      valid_attrs = Map.put(@valid_attrs, :from_id, user.id)
-      {:ok, %{user: user, valid_attrs: valid_attrs}}
+      {:ok, user1} = @user1 |> Accounts.create_user()
+      {:ok, user2} = @user2 |> Accounts.create_user()
+
+      user1 = user1 |> Repo.preload(:conversations)
+      user2 = user2 |> Repo.preload(:conversations)
+
+      {:ok , conversation} = @conv |> Discussions.create_conversation()
+      conversation = conversation |> Repo.preload(:users)
+
+
+      changeset = Ecto.Changeset.change(conversation) |> Ecto.Changeset.put_assoc(:users, [user1])
+      Repo.update!(changeset)
+
+
+      changeset = Ecto.Changeset.change(conversation) |> Ecto.Changeset.put_assoc(:users, [user2])
+      Repo.update!(changeset)
+
+
+      valid_attrs = Map.put(@valid_attrs, :from_id, user1.id)
+      valid_attrs = Map.put(valid_attrs, :conversation_id, conversation.id)
+
+      {:ok, %{user: user1, valid_attrs: valid_attrs}}
     end
 
     def message_fixture(attrs \\ %{}) do
@@ -149,15 +185,16 @@ defmodule WhatChat.DiscussionsTest do
       message
     end
 
-    @tag :skip
-    test "list_messages/0 returns all messages" do
-      message = message_fixture()
+    # @tag :skip
+    test "list_messages/0 returns all messages", state do
+      message = state[:valid_attrs] |> message_fixture()
       assert Discussions.list_messages() == [message]
     end
 
-    @tag :skip
-    test "get_message!/1 returns the message with given id" do
-      message = message_fixture()
+    # @tag :skip
+    test "get_message!/1 returns the message with given id", state  do
+      message = state[:valid_attrs] |> message_fixture()
+
       assert Discussions.get_message!(message.id) == message
     end
 
