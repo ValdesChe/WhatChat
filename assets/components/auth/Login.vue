@@ -104,18 +104,10 @@
               localStorage.setItem('token',resp.data.user.token)
               location.reload(); 
 
-              // location.replace('http://localhost:4000')
-              // this.$router.push({name: 'home'})
-              // this.user.authenticated = true
-              // window.location.replace(`${API_URL}`);
-              
-
-            }, function (err) {
-              console.log("Error Block Login");
-              context.errorServer = err.response.data.errors.detail
+            },  (err) => {
+              this.errorServer = err.response.data.errors.detail
             });
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
