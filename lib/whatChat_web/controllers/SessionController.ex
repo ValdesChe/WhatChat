@@ -3,6 +3,10 @@ defmodule WhatChatWeb.SessionController do
 
   plug(WhatChatWeb.Plugs.RequireAuth when action in [:delete])
 
+  @doc """
+    Attemps to login the user into the chat
+    return {:ok, user} || {:error, message}
+  """
   def create(conn, %{"email" => email, "password" => password}) do
     case WhatChat.Accounts.authenticate_user(email, password) do
       {:ok, user} ->
@@ -21,20 +25,6 @@ defmodule WhatChatWeb.SessionController do
         |> render( "401.json", message: message)
     end
   end
-
-  # defp is_user_active(conn, user) do
-  #   if user.is_active do
-  #     conn
-  #     |> put_session(:current_user, user)
-  #     |> put_status(:ok)
-  #     |> render(WhatChatWeb.UserView, "sign_in.json", user: user)
-  #   else
-  #     conn
-  #     |> delete_session(:current_user)
-  #     |> put_status(:unauthorized)
-  #     |> render(WhatChatWeb.ErrorView, "401.json", message: "Your account is not yet activated")
-  #   end
-  # end
 
   def ping(conn, _params) do
     # IO.inspect conn

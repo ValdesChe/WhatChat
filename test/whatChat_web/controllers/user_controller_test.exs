@@ -30,34 +30,27 @@ defmodule WhatChatWeb.UserControllerTest do
   end
 
   describe "index" do
-    @tag :skip
-    test "lists all users", %{conn: conn} do
+    
+    test "lists all users when not authenticated", %{conn: conn} do
       conn = get(conn, Routes.user_path(conn, :index))
-      assert json_response(conn, 200)["data"] == []
+      assert conn.status == 401
+      assert json_response(conn, 401) == %{"errors" => %{"detail" => "Unauthenticated User"}}
     end
+
+
   end
 
   describe "create user" do
-    @tag :skip
+    #@tag :skip
     test "renders user when data is valid", %{conn: conn} do
-      conn = post(conn, Routes.user_path(conn, :create), user: @create_attrs)
-      assert %{"id" => id} = json_response(conn, 201)["data"]
-
-      conn = get(conn, Routes.user_path(conn, :show, id))
-
-      assert %{
-               "id" => id,
-               "email" => "some email",
-               "image" => "some image",
-               "password" => "some password",
-               "password_hash" => "some password_hash",
-               "username" => "some username"
-             } = json_response(conn, 200)["data"]
+      conn = post(conn, Routes.user_path(conn, :create),  @create_attrs)
+      assert  conn.status == 201
+      # assert json_response(conn, 201)["errors"] != %{}
     end
 
     @tag :skip
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, Routes.user_path(conn, :create), user: @invalid_attrs)
+      conn = post(conn, Routes.user_path(conn, :create),  @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -92,13 +85,11 @@ defmodule WhatChatWeb.UserControllerTest do
     setup [:create_user]
 
     @tag :skip
-    test "deletes chosen user", %{conn: conn, user: user} do
+    test "deletes chosen user when not not logged", %{conn: conn, user: user} do
       conn = delete(conn, Routes.user_path(conn, :delete, user))
-      assert response(conn, 204)
+      assert response(conn, 401)
 
-      assert_error_sent 404, fn ->
-        get(conn, Routes.user_path(conn, :show, user))
-      end
+      assert json_response(conn, 401)["errors"] != %{}
     end
   end
 
