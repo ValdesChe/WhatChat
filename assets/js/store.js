@@ -214,14 +214,14 @@ const store = new Vuex.Store({
 
         case 'all':
           return listConv.sort((convA, convB) => {
-            return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? 1 : -1
+            return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) < 0 ? 1 : -1
           })
         break
         default :
           return listConv.filter(conv => {
             return conv.messages.length > 0
           }).sort((convA, convB) => {
-            return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? 1 : -1
+            return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) < 0 ? 1 : -1
           })
       }
 
@@ -469,8 +469,10 @@ const store = new Vuex.Store({
 
     SORT_DISCUSSIONS(state){
       state.conversations.sort((convA, convB) => {
-        return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? 1 : -1
+        return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) < 0 ? 1 : -1
       })
+      console.log(state.conversations);
+      
     }
   },
   actions: {
