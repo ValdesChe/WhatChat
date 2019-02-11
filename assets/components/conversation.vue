@@ -8,7 +8,7 @@
             <div class="info-conv-user">
                 <span class="conv-username"> {{ currentConversation.is_group ? currentConversation.name : getToUserProfile(currentConversation.users).username }} </span>
                 <span  class="conv-last-seen"> 
-                    {{ currentConversation.is_group ? showParticipants(currentConversation.users) : "last seen 15:16" }}   
+                    {{ currentConversation.is_group ? showParticipants(currentConversation.users) : ( getParticipantLastSeen(getToUserProfile(currentConversation.users).id))  }}   
                 </span>
                     
             </div>         
@@ -106,9 +106,7 @@
 <script>
 import addEvent from './utils/resizeCapture'
 
-import {
-    mapGetters
-} from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
     data() {
         return {
@@ -116,6 +114,7 @@ export default {
         }
     },
     methods: {
+        
         scrollMessenger(){
             let listMsg = this.$el.querySelector(".messages-container");
             let lastMessage = listMsg.lastChild;
@@ -124,9 +123,12 @@ export default {
         },
         getToUserProfile(users) {
             return users.filter(us => {
-                console.log
                 return us.id !== this.getCurrentUser.id
             })[0]
+        },
+        getParticipantLastSeen(user_id) {
+            const isOnline = this.$store.getters.getOnlineUsers('one', user_id) 
+            return isOnline ? 'online ' : 'offline'
         },
         showParticipants(users){
             const users_name = users.filter(user => {
@@ -279,7 +281,7 @@ export default {
 
         &::after {
             content: "";
-            opacity: 0.1;
+            opacity: 0.85;
 
             top: 0px;
             left: 0;
@@ -293,7 +295,7 @@ export default {
             content: "";
             /* background: #E5DDD5; */
             background: #E5DDD5;
-            opacity: 0.7;
+            opacity: 0.95;
 
             top: 0px;
             left: 0;
