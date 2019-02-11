@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 
 const { SCHEME, HOSTNAME } =
-  process.env.NODE_ENV === 'production'
-    ? { SCHEME: 'http', HOSTNAME: window.location.hostname }
+  process.env.NODE_ENV == 'production'
+    ? { SCHEME: 'http', HOSTNAME: window.location.hostname+":4000" }
     : { SCHEME: 'http', HOSTNAME: 'localhost:4000' }
 
 const API_URL = `${SCHEME}://${HOSTNAME}`
