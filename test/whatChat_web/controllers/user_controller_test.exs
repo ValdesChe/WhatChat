@@ -33,10 +33,31 @@ defmodule WhatChatWeb.UserControllerTest do
 
   describe "index" do
     
+    setup [:create_user]
     test "lists all users when not authenticated", %{conn: conn} do
       conn = get(conn, Routes.user_path(conn, :index))
       assert conn.status == 401
       assert json_response(conn, 401) == %{"errors" => %{"detail" => "Unauthenticated User"}}
+    end
+
+    test "lists all users when authenticated", %{conn: conn,  user: %User{id: id} = user} do
+      conn = post(conn, Routes.session_path(conn, :create),  %{email: user.email , password: user.password})
+       
+      conn = get(conn, Routes.user_path(conn, :index))
+      assert conn.status == 200
+      assert json_response(conn, 200) != []
+      
+      assert [
+        %{
+          "email" => "some email", 
+          "id" => id, 
+          "image" => "some image",
+          "token" => token, 
+          "username" => "some username"
+        }
+      ] = json_response(conn, 200)["users"]
+      
+      
     end
 
 
@@ -66,7 +87,7 @@ defmodule WhatChatWeb.UserControllerTest do
 
   describe "update user" do
     setup [:create_user]
-    # @tag :skip
+
     test "renders user when data is invalid", %{conn: conn, user: %User{id: id} = user} do
       conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
 
@@ -77,14 +98,10 @@ defmodule WhatChatWeb.UserControllerTest do
       
     end
 
-    # @tag :skip
     test "renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
       conn = post(conn, Routes.session_path(conn, :create),  %{email: user.email , password: user.password})
             
       conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
-
-      IO.inspect(user)
-
 
       assert %{"id" => ^id} = json_response(conn, 200)["user"]
 
@@ -99,22 +116,33 @@ defmodule WhatChatWeb.UserControllerTest do
              } = json_response(conn, 200)["user"]
     end
 
-    @tag :skip
     test "renders errors when data is invalid", %{conn: conn, user: user} do
       conn = put(conn, Routes.user_path(conn, :update, user), user: @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
+      assert json_response(conn, 401)["errors"] != %{}
     end
   end
 
   describe "delete user" do
     setup [:create_user]
 
-    # @tag :skip
-    test "deletes chosen user when not not logged", %{conn: conn, user: user} do
+    test "deletes chosen user when not logged", %{conn: conn, user: user} do
       conn = delete(conn, Routes.user_path(conn, :delete, user))
-      assert response(conn, 401)
-
+      
       assert json_response(conn, 401)["errors"] != %{}
+      assert @unauthenticated_error_msg == json_response(conn, 401)
+      
+    end
+
+    test "deletes chosen user when logged", %{conn: conn, user: user} do
+      conn = post(conn, Routes.session_path(conn, :create),  %{email: user.email , password: user.password})
+       
+      conn = delete(conn, Routes.user_path(conn, :delete, user))
+     
+      assert response(conn, 204) == ""
+      
+      conn = get(conn, Routes.user_path(conn, :show, user.id))
+      assert @unauthenticated_error_msg == json_response(conn, 401)
+      
     end
   end
 
