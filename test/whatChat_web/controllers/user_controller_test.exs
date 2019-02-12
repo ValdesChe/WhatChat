@@ -20,6 +20,8 @@ defmodule WhatChatWeb.UserControllerTest do
   }
   @invalid_attrs %{email: nil, image: nil, password: nil, password_hash: nil, username: nil}
 
+  @unauthenticated_error_msg %{"errors" => %{"detail" => "Unauthenticated User"}}
+
   def fixture(:user) do
     {:ok, user} = Accounts.create_user(@create_attrs)
     user
@@ -41,11 +43,18 @@ defmodule WhatChatWeb.UserControllerTest do
   end
 
   describe "create user" do
-    #@tag :skip
+    # @tag :skip
     test "renders user when data is valid", %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create),  @create_attrs)
       assert  conn.status == 201
-      # assert json_response(conn, 201)["errors"] != %{}
+      # 
+      assert conn.resp_body =~ "{\"user\":{\"email\":\"some email\""
+      assert json_response(conn, 201)["errors"] == nil
+      
+      conn = post(conn, Routes.user_path(conn, :create),  @create_attrs)
+      assert  conn.status == 422
+      assert json_response(conn, 422)["errors"] == %{"email" => ["has already been taken"]}
+
     end
 
     @tag :skip
@@ -57,6 +66,16 @@ defmodule WhatChatWeb.UserControllerTest do
 
   describe "update user" do
     setup [:create_user]
+    # @tag :skip
+    test "renders user when data is invalid", %{conn: conn, user: %User{id: id} = user} do
+      conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
+
+      assert @unauthenticated_error_msg = json_response(conn, 401)
+
+      conn = get(conn, Routes.user_path(conn, :show, id))
+      
+    end
+
     @tag :skip
     test "renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
       conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
@@ -84,7 +103,7 @@ defmodule WhatChatWeb.UserControllerTest do
   describe "delete user" do
     setup [:create_user]
 
-    @tag :skip
+    # @tag :skip
     test "deletes chosen user when not not logged", %{conn: conn, user: user} do
       conn = delete(conn, Routes.user_path(conn, :delete, user))
       assert response(conn, 401)
