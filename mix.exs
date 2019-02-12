@@ -12,7 +12,7 @@ defmodule WhatChat.MixProject do
       aliases: aliases(),
       deps: deps(),
       preferred_cli_env: [
-        "coveralls": :test,
+        coveralls: :test,
         "coveralls.html": :test,
         "coveralls.json": :test,
       ],
