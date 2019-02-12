@@ -1,10 +1,7 @@
 defmodule WhatChatWeb.SessionControllerTest do
     use WhatChatWeb.ConnCase
     
-
     alias WhatChat.Accounts
-    alias WhatChat.Accounts.User
-
 
     @valid_login_attrs %{
       email: "someemail@whatchat.cm",

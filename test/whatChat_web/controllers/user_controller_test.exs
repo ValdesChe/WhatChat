@@ -57,7 +57,7 @@ defmodule WhatChatWeb.UserControllerTest do
 
     end
 
-    @tag :skip
+    # @tag :skip
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create),  @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
@@ -73,24 +73,30 @@ defmodule WhatChatWeb.UserControllerTest do
       assert @unauthenticated_error_msg = json_response(conn, 401)
 
       conn = get(conn, Routes.user_path(conn, :show, id))
+      assert @unauthenticated_error_msg = json_response(conn, 401)
       
     end
 
-    @tag :skip
+    # @tag :skip
     test "renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
+      conn = post(conn, Routes.session_path(conn, :create),  %{email: user.email , password: user.password})
+            
       conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+
+      IO.inspect(user)
+
+
+      assert %{"id" => ^id} = json_response(conn, 200)["user"]
 
       conn = get(conn, Routes.user_path(conn, :show, id))
 
       assert %{
-               "id" => id,
                "email" => "some updated email",
+               "id" => id,
                "image" => "some updated image",
-               "password" => "some updated password",
-               "password_hash" => "some updated password_hash",
+               "token" => token,
                "username" => "some updated username"
-             } = json_response(conn, 200)["data"]
+             } = json_response(conn, 200)["user"]
     end
 
     @tag :skip
