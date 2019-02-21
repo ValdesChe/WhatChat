@@ -103,5 +103,18 @@ export default {
             // elementBtn.nextElementSibling.style.top = elementBtn.scrollHeight + 5 + 'px' ;              
           });
         });
+    },
+
+    readURL(input , previewBox) {
+
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+    
+        reader.onload = function(e) {
+          previewBox.setAttribute('src', e.target.result);
+        }
+    
+        reader.readAsDataURL(input.files[0]);
+      }
     }
 }

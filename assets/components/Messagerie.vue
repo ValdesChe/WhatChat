@@ -1,4 +1,5 @@
 <template>
+  <div>
   <div class="messenger">
     <div class="el-asider" style="width:404px">
       <!-- v-loading="loading" -->
@@ -288,8 +289,8 @@
       <div class="container-box">
         <div class="profile--box">
           <div class="photo-special "> 
-            <div class="profile">
-              <img :src="this.getCurrentUser ? this.getCurrentUser.image:''"  class="user" alt="My profile image">
+            <div class="profile" style="height:11em !important; width:11em !important;">
+              <img :src="this.getCurrentUser ? this.getCurrentUser.image:''" id="profile_preview" class="user" alt="My profile image">
             </div>
             <div class="overlay-menu-profiler inline-dropdown-menu ">
               
@@ -318,15 +319,26 @@
                   <path d="M176.826,158.351h-31.67c-4.373,0-7.917,3.545-7.917,7.917c0,4.373,3.544,7.917,7.917,7.917h31.67    c4.373,0,7.917-3.545,7.917-7.917C184.743,161.895,181.199,158.351,176.826,158.351z" fill="#91DC5A"/>
               </g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
               </svg>
+              
               <div class="menu--options" style="position:relative;top:105px;right:80px;">
                 <ul>
-                  <li><a href="">View photo</a></li>
-                  <li><a href="">Random photo</a></li>
-                  <li><a href="">Remove photo</a></li>
+                  <li><a href="#">View photo</a></li>
+                  <li><a href="#" class="trigger-file-upload" @click="launchUpload" >Upload photo</a></li>
+                  <li><a href="#" >Random photo</a></li>
+                  <li><a href="#">Remove photo</a></li>
                 </ul>
+                <form enctype="multipart/form-data" action="/upload/image" style="display:none;" method="post">
+                  <input id="profile-image-file" type="file" />
+                </form>
               </div>
+
+
             </div>
              
+          </div>
+          <div  v-show="confirm_profile" class="confirm-photo">
+              <button @click="changeProfilePicture" id="valid_profile">Confirm</button>
+              <button  @click="IgnoreProfilePictureChanges" value="Annuler" id="cancel_profile">Cancel</button>
           </div>
         </div>
         <div class="bio--box">
@@ -344,6 +356,12 @@
       </div>
     </div>
   </div>
+
+  <!-- Preview box -->
+  <div >
+
+  </div>
+  </div>
 </template>
 <script>
 
@@ -359,11 +377,16 @@
 
       return {
         seach_input: '',
-        search_chat: ''
+        search_chat: '',
+
+        confirm_prof: false
       }
     },
     computed:{
       
+      confirm_profile(){
+        return this.confirm_prof
+      },
       allContacts(){
         return this.$store.getters.filteredAllContacts('ordered','asc')
       },
@@ -390,6 +413,15 @@
       optionListener.overlayListener()
     },
     methods: {
+
+      IgnoreProfilePictureChanges(){
+        this.confirm_prof = false
+      },
+      changeProfilePicture(){ 
+        
+        this.confirm_prof = false
+      },
+
       // Puts ... if the msg content is too long
       splitMessageContent(content){
         if(content.length > 31){
@@ -437,6 +469,12 @@
       },
       createConversationWith(user_id){
         this.$store.dispatch('createConversationWith', user_id )
+      },
+
+      launchUpload(){
+        let photo = document.querySelector("#profile-image-file");  // file from input
+        photo.click()
+        
       }
       
     },
@@ -452,6 +490,56 @@
 
       this.$store.dispatch('setCurrentUser', {
         currentUser: auth.user
+      });
+
+      window.addEventListener('load', () => {
+
+        let fileInput = document.querySelector("#profile-image-file");  // file from input
+        let profile_preview = document.querySelector("#profile_preview");  // file from input
+        
+        fileInput.addEventListener("change", () => {
+          // var fileList = this.files; /* Vous pouvez maintenant manipuler la liste de fichiers */
+          /* let req = new XMLHttpRequest();
+          let formData = new FormData();
+
+          formData.append("photo", photo);                                
+          req.open("POST", '/upload/image');
+          req.send(formData); */
+
+          let file = fileInput.files && fileInput.files[0];
+          if( file ) {
+            var img = new Image();
+
+            img.src = window.URL.createObjectURL( file );
+
+            img.onload = () =>  {
+                var width = img.naturalWidth,
+                    height = img.naturalHeight;
+
+                window.URL.revokeObjectURL( img.src );
+                console.log(this);
+                if( width >= 400 && height >= 400 ) {
+                  optionListener.readURL(fileInput, profile_preview )
+                  
+                  
+                  this.confirm_prof = true
+                }
+                else {
+                    //fail
+                  console.log("Error:");
+                  this.confirm_prof = false
+                  alert("Dimensions are not correct ... ")
+                }
+            };
+          }
+          else { //No file was input or browser doesn't support client side reading
+              optionListener.readURL(fileInput, profile_preview )
+              this.confirm_prof = true
+          }
+          
+        
+        }, false);
+
       });
 
       // this.$store.dispatch('loadConversations')
@@ -815,6 +903,15 @@
           cursor: pointer;
         }
 
+        .confirm-photo{
+          display:inline-block;
+          padding:4px;
+
+        }
+
+        .no-display{
+          display:none;
+        }
 
         
         .overlay-menu-profiler{
