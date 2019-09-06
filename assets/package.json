@@ -10,7 +10,7 @@
     "vue": "vue/dist/vue.common"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "babel-polyfill": "^6.26.0",
     "element-ui": "^2.4.11",
     "extract-text-webpack-plugin": "^4.0.0-alpha.0",
