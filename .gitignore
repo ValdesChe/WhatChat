@@ -44,3 +44,6 @@ npm-debug.log
 #DON'T Include elixir ls
 
 /.elixir_ls/
+
+# node_modules ignore
+/node_modules/
