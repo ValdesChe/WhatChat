@@ -40,7 +40,7 @@ defmodule WhatChatWeb.UserControllerTest do
       assert json_response(conn, 401) == %{"errors" => %{"detail" => "Unauthenticated User"}}
     end
 
-    test "lists all users when authenticated", %{conn: conn,  user: %User{id: id} = user} do
+    test "lists all users when authenticated", %{conn: conn,  user: %User{id: _id} = user} do
       conn = post(conn, Routes.session_path(conn, :create),  %{email: user.email , password: user.password})
        
       conn = get(conn, Routes.user_path(conn, :index))
