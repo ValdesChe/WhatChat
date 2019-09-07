@@ -92,7 +92,6 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            //alert('submit!');
             auth.login(this , this.ruleForm2).then((resp) =>{
               window.localStorage.setItem('id_token', resp.data.user.id);
               window.localStorage.setItem('v_username', resp.data.user.username);

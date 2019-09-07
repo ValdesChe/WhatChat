@@ -47,7 +47,9 @@
                       <li><a href="">Archived</a></li> 
                       <li><a href="">Starred</a></li>
                       <li><a href="">Settings</a></li>
-                      <li><a href="">Log out</a></li>
+                      <li>
+                        <router-link :to="{ name: 'logout'}">Logout</router-link>
+                      </li>
                     </ul>
                   </div>
                 </div>
