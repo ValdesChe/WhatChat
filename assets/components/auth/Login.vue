@@ -28,12 +28,15 @@
 
         <p class="message">
           Not registered? 
-          <router-link to="signup">Create an account</router-link>
+          <router-link :to="{ name: 'signup'}">Create an account</router-link>
         </p>
       </el-form-item>
 
     </el-form>
-    <h1 style="padding-top:25px; font-size:25px; text-align:center">By [ V@ldor Che ]  && [F@ymir] ! </h1>
+    <!-- 
+    <h1 style="padding-top:25px; font-size:25px; text-align:center">
+      By [ V@ldor Che ]  && [F@ymir] !
+    </h1> -->
 
   </el-row>
 </template>

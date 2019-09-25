@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 import Messagerie from "../components/Messagerie.vue"
 import Login from "../components/auth/Login.vue"
+import Signup from "../components/auth/Signup.vue"
 import Logout from "../components/auth/Logout.vue"
 import Conversation from "../components/conversation.vue"
 import Welcome from "../components/utils/welcome.vue"
@@ -60,8 +61,8 @@ const routes = [
   {
     path: '/signup',
     name: 'signup',
-    beforeEnter:afterAuth,
-    component: Messagerie
+    beforeEnter: afterAuth,
+    component: Signup
   },
 
   { path: '*', redirect: { name: 'home' } }
