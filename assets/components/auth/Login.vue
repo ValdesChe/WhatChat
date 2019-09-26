@@ -51,7 +51,7 @@
         setTimeout(() => {
           const pattern =/^[\w._-]+[+]?[\w._-]+@[\w.-]+\.[a-zA-Z]{2,10}$/;
           if (!value.match(pattern)) {
-            callback(new Error('Please enter valid digits.'));
+            callback(new Error('Please enter a valid email.'));
           } else {
             if (value.length < 5 ) {
               callback(new Error('Email must be greater than 5 characters.'));
