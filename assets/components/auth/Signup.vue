@@ -16,10 +16,10 @@
       </el-form-item>
       <el-form-item prop="confirm_password">
         <el-input type="password" placeholder="Confirm Password" v-model="signUpRuleForm.confirm_password" autocomplete="off"
-            @keyup.enter="submitForm('signUpRuleForm')"></el-input>
+            @keyup.enter="submitSignupForm('signUpRuleForm')"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('signUpRuleForm')">Create account</el-button>
+        <el-button type="primary" @click="submitSignupForm('signUpRuleForm')">Create account</el-button>
         <el-button @click="resetForm('signUpRuleForm')">Reset</el-button>
         <p class="message">
           Already registered? <router-link :to="{ name: 'login'}">Login</router-link>
@@ -34,13 +34,11 @@
   export default {
     data() {
       // Validate username function
-
       var checkUsername = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('Please input the email'));
+          return callback(new Error('Please input the username'));
         }
         setTimeout(() => {
-          const pattern =/^[\w._-]+[+]?[\w._-]+@[\w.-]+\.[a-zA-Z]{2,10}$/;
           if (value.trim().length < 5 || value.trim().length > 15 ) {
             callback(new Error('Username must be between [5 - 15] characters.'));
           } else {
@@ -115,23 +113,21 @@
       };
     },
     methods: {
-      submitForm(formName) {
+      submitSignupForm(formName) {
         this.$refs[formName].validate((valid) => {
+          // If the form is valid
           if (valid) {
-            auth.signup(this , this.signUpRuleForm).then((resp) =>{
+            auth.signup(this, this.signUpRuleForm).then((resp) =>{
               window.localStorage.setItem('id_token', resp.data.user.id);
               window.localStorage.setItem('v_username', resp.data.user.username);
               window.localStorage.setItem('v_email', resp.data.user.email);
               window.localStorage.setItem('v_image', resp.data.user.image);
 
-              window.userToken = resp.data.user.token
-              localStorage.setItem('token',resp.data.user.token)
-              location.reload(); 
-
+              window.userToken = resp.data.user.token;
+              localStorage.setItem('token',resp.data.user.token);
+              location.reload();
             },  (err) => {
-              console.warn("Error during login ! ");
-              console.log(err);
-              this.errorServer = err.response.data.errors.detail
+              this.errorServer = err.response.data.errors.detail;
             });
           } else {
             return false;
