@@ -24,11 +24,10 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 ## Contacts
 
-Get in touch with the author
+Get in touch with the authors
 
-- TWITTER : [`@Valdes_Che`](https://twitter.com/Valdes_Che)
-- LINKEDIN : [`@ValdesChe03`](https://www.linkedin.com/in/valdesche03/)
-- EMAIL: [`@ValdesChe03`](mailto:valdesche03@gmail.com/)
+- TWITTER : https://twitter.com/Valdes_Che && https://twitter.com/Faymir
+- EMAIL: valdesche03@gmail.com/
 
 ## Learn more
 
