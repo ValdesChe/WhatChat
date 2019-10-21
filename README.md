@@ -3,7 +3,8 @@
 # WhatChat
 
 A WhatsApp web simple clone using Phoenix, VueJs and PostgreSQL.
-DEMO: https://www.youtube.com/watch?v=Kha_Y7a4yrs
+
+DEMO VIDEO v0: https://www.youtube.com/watch?v=Kha_Y7a4yrs
 
 ## Installation
 
@@ -18,6 +19,8 @@ To start your Phoenix server:
 
 - User authentication
 - User registration
+- 'Friends'/Groups Chat messages
+- Profile picture update 
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
