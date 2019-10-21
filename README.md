@@ -3,7 +3,7 @@
 # WhatChat
 
 A WhatsApp web simple clone using Phoenix, VueJs and PostgreSQL.
-DEMO [HERE0]: https://www.youtube.com/watch?v=Kha_Y7a4yrs
+DEMO: https://www.youtube.com/watch?v=Kha_Y7a4yrs
 
 ## Installation
 
