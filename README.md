@@ -20,7 +20,7 @@ To start your Phoenix server:
 - User authentication
 - User registration
 - 'Friends'/Groups Chat messages
-- Profile picture update 
+- Profile settings 
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
