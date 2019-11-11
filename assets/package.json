@@ -10,22 +10,22 @@
     "vue": "vue/dist/vue.common"
   },
   "dependencies": {
-    "tar": ">=2.2.2",
-    "js-yaml": ">=3.13.1",
     "axios": ">=0.18.1",
     "babel-polyfill": "^6.26.0",
     "element-ui": "^2.4.11",
     "extract-text-webpack-plugin": "^4.0.0-alpha.0",
+    "js-yaml": ">=3.13.1",
     "moment": "^2.23.0",
-    "node-sass": "^4.10.0",
+    "node-sass": "^4.13.0",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "sass-loader": "^7.1.0",
+    "set-value": ">=2.0.1",
+    "tar": ">=2.2.2",
     "vue": "^2.5.17",
     "vue-axios": "^2.1.4",
     "vue-router": "^3.0.2",
     "vuejs": "^3.0.1",
-    "set-value": ">=2.0.1",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
