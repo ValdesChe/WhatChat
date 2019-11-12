@@ -2,7 +2,7 @@ defmodule WhatChatWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :whatChat
 
   socket "/socket", WhatChatWeb.UserSocket,
-    websocket: true,
+    websocket: [timeout: 45_000],
     longpoll: false
 
   # Serve at "/" the static files from "priv/static" directory.
