@@ -60,7 +60,7 @@ end)
 }|> WhatChat.Accounts.create_user
 
 %{
-  name: "SOme COnv",
+  name: "Our Test Conversation",
   profile: "https://loremflickr.com/400/400/profile?lock=15"
 } |> WhatChat.Discussions.create_conversation
 
