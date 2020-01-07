@@ -15,14 +15,19 @@
 
 <script>
   import addEvent from './utils/resizeCapture'
-
+	import { mapState } from "vuex";
   export default {
     name:"App",
     data() {
       return {
         message: ""
       }
-    },
+		},
+		computed: {
+      current(){
+        return this.$store.state.currentUser
+      }
+		},
    
 
   }
