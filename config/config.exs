@@ -13,7 +13,7 @@ config :whatChat,
 # Configures the endpoint
 config :whatChat, WhatChatWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "QEZmpD5ADELhmzjFZ6nAT642QK8uzadhez9UB9hObQ1Oxmr0tv2j5RaH5u43IvXG",
+  secret_key_base:  System.get_env("SECRET_KEY_BASE"),
   render_errors: [view: WhatChatWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: WhatChat.PubSub, pool_size: 10, adapter: Phoenix.PubSub.PG2]
 
