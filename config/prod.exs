@@ -12,8 +12,8 @@ use Mix.Config
 config :whatChat, WhatChatWeb.Endpoint,
   http: [:inet6, port: System.get_env("PORT") || 4000],
   # url: [host: "example.com", port: 80],
-  url: [scheme: "https", host: "mysterious-meadow-6277", port: 443],
-force_ssl: [rewrite_on: [:x_forwarded_proto]],
+  url: [scheme: "https", host: "whatchatapp", port: 443],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
@@ -70,4 +70,4 @@ config :logger, level: :info
 
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.
-# import_config "prod.secret.exs"
+import_config "prod.secret.exs"
