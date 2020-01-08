@@ -8,7 +8,6 @@ env:
 script:
   - mix test
 before_script:
-  - cp config/travis.exs config/test.exs
   - mix do ecto.create, ecto.migrate
 after_success:
   - bash <(curl -s https://codecov.io/bash)
