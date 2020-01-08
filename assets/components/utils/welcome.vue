@@ -1,8 +1,9 @@
 <template>
   <div class="welcome">
-    
+      <br>
+      <br>
       <center>
-          <h1>WELCOME TO WHATCHAT v1.0</h1>
+          <h1>WELCOME TO WHATCHAT</h1>
       </center>
       
   </div>

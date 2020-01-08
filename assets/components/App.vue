@@ -1,6 +1,6 @@
 
 <template>
-  <div class="my-app">
+  <div class="my-app " :class="loading ? 'my-app loading':'my-app'">
     <router-view> </router-view>
     <div class="loading-container noselect">
       <div class="whatchat-loader">
@@ -24,8 +24,8 @@
       }
 		},
 		computed: {
-      current(){
-        return this.$store.state.currentUser
+      loading(){
+        return this.$store.state.contactLoader
       }
 		},
    

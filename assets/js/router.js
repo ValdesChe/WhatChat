@@ -1,23 +1,22 @@
 import Vue from 'vue/dist/vue.js'
 import VueRouter from 'vue-router'
 
-import Messagerie from "../components/Messagerie.vue"
-import Login from "../components/auth/Login.vue"
-import Signup from "../components/auth/Signup.vue"
-import Logout from "../components/auth/Logout.vue"
-import Conversation from "../components/conversation.vue"
-import Welcome from "../components/utils/welcome.vue"
-Vue.use(VueRouter)
+import Messagerie from '../components/Messagerie.vue'
+import Login from '../components/auth/Login.vue'
+import Signup from '../components/auth/Signup.vue'
+import Logout from '../components/auth/Logout.vue'
+import Conversation from '../components/conversation.vue'
+import Welcome from '../components/utils/welcome.vue'
 
 import auth from '../auth'
-
+Vue.use(VueRouter)
 
 // Defining our guards
 const requireAuth = (to, _from, next) => {
   // console.log(auth.user.authenticated);
   if (!auth.user.authenticated) {
     next({
-      name: 'login',
+      name: 'login'
       // query: { redirect: to.fullPath }
     })
   } else {
@@ -33,15 +32,15 @@ const afterAuth = (_to, from, next) => {
   }
 }
 
-
 const routes = [
   {
     path: '/',
     component: Messagerie,
     beforeEnter: requireAuth,
     children: [
+      // eslint-disable-next-line no-useless-escape
       { path: '$\:id\$', name: 'conversation', component: Conversation },
-      { path: '/', name: 'home', component: Welcome  },
+      { path: '/', name: 'home', component: Welcome },
       { path: '*', redirect: { name: 'home' } }
     ]
   },
@@ -49,12 +48,12 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login,
-    beforeEnter:afterAuth
+    beforeEnter: afterAuth
   },
   {
     path: '/logout',
     name: 'logout',
-    component: Logout,
+    component: Logout
     // beforeEnter: afterAuth
   },
 

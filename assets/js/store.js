@@ -207,7 +207,7 @@ const store = new Vuex.Store({
   },
 
   mutations: {
-    SWITCH_CONTACT_LOADER (state) {
+    SWITCH_CONTACT_LOADER (state, value) {
       state.contactLoader = !state.contactLoader
     },
     SWITCH_CONVERSATION_LOADER (state) {
@@ -422,12 +422,11 @@ const store = new Vuex.Store({
       state.conversations.sort((convA, convB) => {
         return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) < 0 ? 1 : -1
       })
-      console.log(state.conversations)
     }
   },
   actions: {
-    switchContactLoader: async function ({ commit, dispatch, getter, rootGetter }, { payload }) {
-      commit('SWITCH_CONTACT_LOADER')
+    switchContactLoader: async function (context, action) {
+      await context.commit('SWITCH_CONTACT_LOADER')
     },
     switchConversationLoader: async function ({ commit, dispatch, getter, rootGetter }, { payload }) {
       commit('SWITCH_CONVERSATION_LOADER')
@@ -519,6 +518,7 @@ const store = new Vuex.Store({
           })
 
           context.commit('SORT_DISCUSSIONS')
+          context.commit('SWITCH_CONTACT_LOADER')
         }).receive('error', (response) => {
           console.log('Error USERSOCKET')
         })
@@ -529,7 +529,7 @@ const store = new Vuex.Store({
     },
 
     loadOnlineUsers: async function (context, OnlineUsers) {
-      context.commit('SET_ONLINE_USERS', { OnlineUsers })
+      await context.commit('SET_ONLINE_USERS', { OnlineUsers })
     },
 
     addDiscussion: async function (context, discussion) {
@@ -579,6 +579,7 @@ const store = new Vuex.Store({
     }, */
 
     loadAllContacts: async function (context) {
+      await context.commit('SWITCH_CONTACT_LOADER')
       return axios.get('/users')
     },
 
