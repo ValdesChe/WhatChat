@@ -6,7 +6,7 @@ services:
 env:
   - MIX_ENV=test
 script:
-  - mix cover
+  - MIX_ENV=test mix cover
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 addons:
