@@ -1,6 +1,6 @@
 language: elixir
 elixir: '1.8.1'
-otp_release: '21.0'
+otp_release: '22.0'
 script:
   - env MIX_ENV=test mix do compile, coveralls.json --umbrella
 
