@@ -53,7 +53,7 @@ defmodule WhatChat.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:bcrypt_elixir, "~> 1.0"},
       {:ex_doc, "~> 0.12"},
-      {:excoveralls, "~> 0.10.5", only: :test}
+      {:excoveralls, "~> 0.7.0", only: [:test, :dev]}
     ]
   end
 
