@@ -3,10 +3,10 @@ elixir: '1.8.1'
 otp_release: '22.0'
 services:
   - postgresql
+env:
+  - MIX_ENV=test
 script:
-  - env MIX_ENV=test mix do compile, coveralls.json --umbrella
-before_script:
-  - psql -c 'create database whatchat_test;' -U postgres
+  - mix do compile, coveralls.json --umbrella
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 addons:
