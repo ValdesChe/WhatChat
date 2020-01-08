@@ -12,7 +12,7 @@ config :logger, level: :warn
 # Configure your database
 config :whatChat, WhatChat.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "",
   database: "whatchat_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
