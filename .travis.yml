@@ -6,9 +6,7 @@ services:
 env:
   - MIX_ENV=test
 script:
-  - mix test
-before_script:
-  - mix do ecto.create, ecto.migrate
+  - mix cover
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 addons:
