@@ -6,8 +6,8 @@ services:
 env:
   - MIX_ENV=test
 script:
-  - MIX_ENV=test mix cover
+  - MIX_ENV=test mix coveralls.json
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 addons:
-  postgresql: "11.5"
+  postgresql: "9.4"
