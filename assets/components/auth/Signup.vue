@@ -30,7 +30,7 @@
   </div>
 </template>
 <script>
-  import auth from './../../auth'
+  import { Action, defineDefaultUser } from './../../auth'
   export default {
     data() {
       // Validate username function
@@ -117,17 +117,10 @@
         this.$refs[formName].validate((valid) => {
           // If the form is valid
           if (valid) {
-            auth.signup(this, this.signUpRuleForm).then((resp) =>{
-              window.localStorage.setItem('id_token', resp.data.user.id);
-              window.localStorage.setItem('v_username', resp.data.user.username);
-              window.localStorage.setItem('v_email', resp.data.user.email);
-              window.localStorage.setItem('v_image', resp.data.user.image);
-
-              window.userToken = resp.data.user.token;
-              localStorage.setItem('token',resp.data.user.token);
-              location.reload();
+            this.$store.dispatch(Action.AUTH_SIGNUP , defineDefaultUser(this.submitSignupForm)).then((resp) =>{
+              this.$router.push('/')
             },  (err) => {
-              this.errorServer = err.response.data.errors.detail;
+              this.errorServer = err.response.data.errors.detail
             });
           } else {
             return false;

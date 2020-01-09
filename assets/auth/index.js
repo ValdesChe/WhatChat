@@ -5,59 +5,60 @@ const { SCHEME, HOSTNAME } =
     ? { SCHEME: 'https', HOSTNAME: window.location.hostname }
     : { SCHEME: 'http', HOSTNAME: 'localhost:4000' }
 
-const API_URL = `${SCHEME}://${HOSTNAME}`
-// eslint-disable-next-line no-unused-vars
-const REGISTRATION_URL = `${API_URL}/users`
-const LOGIN_URL = `${API_URL}/accounts/sign_in`
-const SIGNOUT_URL = `${API_URL}/accounts/sign_out`
-const CURRENT_USER_URL = `${API_URL}/accounts/me`
+export const API_URL = `${SCHEME}://${HOSTNAME}`
 
-const DEFAULT_PROFILE_IMAGE = 'https://loremflickr.com/400/400/profile?lock=100'
+export const DEFAULT_PROFILE_IMAGE = 'https://loremflickr.com/400/400/profile?lock=100'
+export const TOKEN_KEY = 'token'
+export const Urls_ = {
+  REGISTRATION_URL: `${API_URL}/users`,
+  LOGIN_URL: `${API_URL}/accounts/sign_in`,
+  SIGNOUT_URL: `${API_URL}/accounts/sign_out`,
+  PING_CURRENT_USER_URL: `${API_URL}/accounts/me`
+}
 
-export default {
-  user: {
-    id: Number.parseInt(window.localStorage.getItem('id_token')),
-    name: window.localStorage.getItem('v_username'),
-    image: window.localStorage.getItem('v_image'),
-    email: window.localStorage.getItem('v_email'),
-    authenticated: !!window.localStorage.getItem('id_token')
-  },
-  /**
-   * Login function
-   * @param {*} context app context
-   * @param {*} creds {username, password}
-   * @param {*} redirect a callback
-   */
-  login (context, creds, redirect) {
-    return context.axios.post(LOGIN_URL, creds)
-  },
+export const Action = {
+  AUTH_REQUEST: 'AUTH_REQUEST',
+  AUTH_LOGOUT: 'AUTH_LOGOUT',
+  AUTH_SIGNUP: 'AUTH_SIGNUP',
+  AUTH_PING_CURRENT_USER_URL: 'AUTH_PING_CURRENT_USER_URL'
+}
 
-  /**
-   * Signup function
-   * @param {*} context app context
-   * @param {*} creds {username, password}
-   * @param {*} redirect a callback
-   */
-  signup (context, creds, redirect) {
-    // eslint-disable-next-line camelcase
-    const user_info = {
-      username: creds.username,
-      image: DEFAULT_PROFILE_IMAGE,
-      email: creds.email,
-      password: creds.password
-    }
-    return context.axios.post(REGISTRATION_URL, user_info)
-  },
+export const Mutation = {
+  SHOW_LOADER: 'SHOW_LOADER',
+  HIDE_LOADER: 'HIDE_LOADER',
 
-  signOut (context) {
-    window.localStorage.removeItem('id_token')
-    window.localStorage.removeItem('v_username')
-    window.localStorage.removeItem('v_email')
-    window.localStorage.removeItem('v_image')
-    window.localStorage.removeItem('token')
-    // context.dispatch('USER_SIGNED_OUT')
-    window.userToken = null
-    context.$router.push({ name: 'login' })
+  AUTH_SUCCESS: 'AUTH_SUCCESS',
+  USER_REQUEST: 'USER_REQUEST',
+  AUTH_ERROR: 'AUTH_ERROR',
+  CLEAR_AUTH: 'CLEAR_AUTH'
+}
+
+export function defineDefaultUser (creds) {
+  return {
+    username: creds.username,
+    image: DEFAULT_PROFILE_IMAGE,
+    email: creds.email,
+    password: creds.password
   }
+}
 
+export function clearStorage () {
+  window.localStorage.removeItem('id_token')
+  window.localStorage.removeItem('v_username')
+  window.localStorage.removeItem('v_email')
+  window.localStorage.removeItem('v_image')
+  window.localStorage.removeItem('token')
+  // context.dispatch('USER_SIGNED_OUT')
+  window.userToken = null
+  // context.$router.push({ name: 'login' })
+}
+
+export function setItemsStorage (user) {
+  window.localStorage.setItem('id_token', user.id)
+  window.localStorage.setItem('v_username', user.username)
+  window.localStorage.setItem('v_email', user.email)
+  window.localStorage.setItem('v_image', user.image)
+
+  window.userToken = user.token
+  localStorage.setItem('token', user.token)
 }
