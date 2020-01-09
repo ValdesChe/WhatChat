@@ -486,10 +486,6 @@
           this.$router.push({name: 'logout'})
         })
 
-      this.$store.dispatch('setCurrentUser', {
-        currentUser: auth.user
-      });
-
       window.addEventListener('load', () => {
 
         let fileInput = document.querySelector("#profile-image-file");  // file from input

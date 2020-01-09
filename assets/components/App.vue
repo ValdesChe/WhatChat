@@ -1,6 +1,6 @@
 
 <template>
-  <div class="my-app " :class="loading ? 'my-app loading':'my-app'">
+  <div class="my-app " :class="isProcessing ? 'my-app loading':'my-app'">
     <router-view> </router-view>
     <div class="loading-container noselect">
       <div class="whatchat-loader">
@@ -15,7 +15,7 @@
 
 <script>
   import addEvent from './utils/resizeCapture'
-	import { mapState } from "vuex";
+  import {mapGetters} from 'vuex'
   export default {
     name:"App",
     data() {
@@ -24,11 +24,10 @@
       }
 		},
 		computed: {
-      loading(){
-        return this.$store.state.contactLoader
-      }
-		},
-   
+      ...mapGetters(
+        ['isProcessing']
+      )
+		}
 
   }
 </script>

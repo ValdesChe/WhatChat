@@ -8,24 +8,26 @@ import Logout from '../components/auth/Logout.vue'
 import Conversation from '../components/conversation.vue'
 import Welcome from '../components/utils/welcome.vue'
 
-import auth from '../auth'
+import store from './store'
+import { Action } from '../auth/index'
 Vue.use(VueRouter)
 
 // Defining our guards
 const requireAuth = (to, _from, next) => {
-  // console.log(auth.user.authenticated);
-  if (!auth.user.authenticated) {
+  store.dispatch(Action.AUTH_PING_CURRENT_USER_URL).then(
+    (resp) => {
+      next()
+    }
+  ).catch((_err) => {
+    console.log(_err)
     next({
-      name: 'login'
-      // query: { redirect: to.fullPath }
+      name: 'logout'
     })
-  } else {
-    next()
-  }
+  })
 }
 
 const afterAuth = (_to, from, next) => {
-  if (auth.user.authenticated) {
+  if (store.getters.isAuthenticated) {
     next(from.path)
   } else {
     next()
@@ -33,17 +35,6 @@ const afterAuth = (_to, from, next) => {
 }
 
 const routes = [
-  {
-    path: '/',
-    component: Messagerie,
-    beforeEnter: requireAuth,
-    children: [
-      // eslint-disable-next-line no-useless-escape
-      { path: '$\:id\$', name: 'conversation', component: Conversation },
-      { path: '/', name: 'home', component: Welcome },
-      { path: '*', redirect: { name: 'home' } }
-    ]
-  },
   {
     path: '/login',
     name: 'login',
@@ -62,6 +53,17 @@ const routes = [
     name: 'signup',
     beforeEnter: afterAuth,
     component: Signup
+  },
+  {
+    path: '/',
+    component: Messagerie,
+    beforeEnter: requireAuth,
+    children: [
+      // eslint-disable-next-line no-useless-escape
+      { path: '$\:id\$', name: 'conversation', component: Conversation },
+      { path: '/', name: 'home', component: Welcome },
+      { path: '*', redirect: { name: 'home' } }
+    ]
   },
 
   { path: '*', redirect: { name: 'home' } }

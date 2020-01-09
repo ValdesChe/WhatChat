@@ -1,7 +1,7 @@
 <template>
 
   <el-row :gutter="10" >
-    <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="120px" class="demo-ruleForm">
+    <el-form :model="loginFormValues" status-icon :rules="rules2" ref="loginFormValues" label-width="120px" class="demo-ruleForm">
       <h1 style="padding-top:25px; font-size:25px; text-align:center">Welcome to WhatChat  ! </h1>
       
 
@@ -15,16 +15,16 @@
       </el-form-item>
 
       <el-form-item  prop="email">
-        <el-input type="email" placeholder="Email" v-model="ruleForm2.email" autocomplete="off"></el-input>
+        <el-input type="email" placeholder="Email" v-model="loginFormValues.email" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input type="password" placeholder="Password" v-model="ruleForm2.password" autocomplete="off"
-            @keyup.enter="submitForm('ruleForm2')"></el-input>
+        <el-input type="password" placeholder="Password" v-model="loginFormValues.password" autocomplete="off"
+            @keyup.enter="submitForm('loginFormValues')"></el-input>
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm2')">Submit</el-button>
-        <el-button @click="resetForm('ruleForm2')">Reset</el-button>
+        <el-button type="primary" @click="submitForm('loginFormValues')">Submit</el-button>
+        <el-button @click="resetForm('loginFormValues')">Reset</el-button>
 
         <p class="message">
           Not registered? 
@@ -41,7 +41,7 @@
   </el-row>
 </template>
 <script>
-  import auth from './../../auth'
+  import { Action } from './../../auth'
   export default {
     data() {
       var checkEmail = (rule, value, callback) => {
@@ -75,7 +75,7 @@
 
       return {
         errorServer: '',
-        ruleForm2: {
+        loginFormValues: {
           email: '',
           password: ''
         },
@@ -95,19 +95,9 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            auth.login(this , this.ruleForm2).then((resp) =>{
-              window.localStorage.setItem('id_token', resp.data.user.id);
-              window.localStorage.setItem('v_username', resp.data.user.username);
-              window.localStorage.setItem('v_email', resp.data.user.email);
-              window.localStorage.setItem('v_image', resp.data.user.image);
-
-              window.userToken = resp.data.user.token
-              localStorage.setItem('token',resp.data.user.token)
-              location.reload(); 
-
+            this.$store.dispatch(Action.AUTH_REQUEST , this.loginFormValues).then((resp) =>{
+              this.$router.push({ name: 'home'})
             },  (err) => {
-              console.warn("Error during login ! ");
-              console.log(err);
               this.errorServer = err.response.data.errors.detail
             });
           } else {

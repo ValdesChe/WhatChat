@@ -4,17 +4,18 @@
   </div>
 </template>
 <script>
-  
-  import auth from './../../auth'
-  
+  import { Action } from './../../auth'
   export default {
     data (){
       return {
       }
     },
-    created:function(){
-      auth.signOut(this);
-      this.$router.go('/login');
+    created: function() {
+      this.$store.dispatch(Action.AUTH_LOGOUT).then((resp) => {
+        this.$router.push({ name: 'login'})
+      },  (err) => {
+        this.$router.push({ name: 'login'})
+      })
     }
   }
 </script>

@@ -4,31 +4,12 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import optionListener from './../components/utils/optionMenuListener'
 import getIndexes from './helpers/getIndexes'
-
+import { Action, Mutation, Urls_, setItemsStorage, clearStorage, TOKEN_KEY } from '../auth/index'
 import 'babel-polyfill'
 
 import { Socket, Presence } from 'phoenix'
 import moment from 'moment'
 Vue.use(Vuex)
-/***
-*   {
-*     1:{
-        id:1,
-        username: "ValdoR"
-        unread: 2,
-        count:100
-        messages: [
-          {
-            id: 22,
-            from_id: 3
-            to_id:1
-          },
-        ]
-      },
-      ...
-
-*   }
-*/
 window.Presence = Presence
 
 const syncPresentUsers = (context, presences) => {
@@ -46,6 +27,12 @@ const syncPresentUsers = (context, presences) => {
 const store = new Vuex.Store({
   strict: true,
   state: {
+    // Loader
+    appLoaderVisible: false,
+    // Auth state
+    token: localStorage.getItem(TOKEN_KEY) || '',
+    status: '',
+
     currentUser: null,
     socket: null,
     channel: null,
@@ -59,6 +46,11 @@ const store = new Vuex.Store({
   },
 
   getters: {
+    // Auth getters
+    isAuthenticated: state => !!state.token,
+    authStatus: state => state.status,
+    isProcessing: state => state.appLoaderVisible,
+
     getCurrentUser: (state) => {
       return state.currentUser
     },
@@ -148,21 +140,12 @@ const store = new Vuex.Store({
       return null
     },
 
-    getContactLoader: (state) => {
-      return state.contactLoader
-    },
-
-    getConversationLoader: (state) => {
-      return state.conversationLoader
-    },
-
     conversations: (state) => (filter, filterSearch) => {
       // Having at l
       let listConv = state.conversations
       switch (filter) {
         // Conversation having at least one message
         case 'atLeastOneMessage':
-          console.log('Filtering conversation !')
 
           return state.conversations.filter(conv => {
             return conv.is_group || (!conv.is_group && conv.messages.length > 0)
@@ -207,24 +190,41 @@ const store = new Vuex.Store({
   },
 
   mutations: {
-    SWITCH_CONTACT_LOADER (state, value) {
-      state.contactLoader = !state.contactLoader
+    // Auth mutators
+    [Mutation.AUTH_SUCCESS]: (state, user) => {
+      state.token = user.token
+      state.currentUser = user
     },
-    SWITCH_CONVERSATION_LOADER (state) {
-      state.conversationLoader = !state.conversationLoader
+    [Mutation.CLEAR_AUTH]: (state) => {
+      state.token = null
+      state.currentUser = null
     },
+    [Mutation.AUTH_ERROR]: (state) => {
+      state.status = 'error'
+    },
+
+    [Mutation.HIDE_LOADER]: (state) => {
+      state.appLoaderVisible = false
+    },
+
+    [Mutation.SHOW_LOADER]: (state) => {
+      state.appLoaderVisible = true
+    },
+    // End of Auth mutators
+
     SET_ONLINE_USERS: function (state, { OnlineUsers }) {
       state.OnlineUsers = OnlineUsers
     },
     addAllContacts: function (state, { AllContacts }) {
-      state.AllContacts = AllContacts.filter(function (conversation) {
-        return (conversation.id !== state.currentUser.id)
-      })
+      if (state.currentUser) {
+        state.AllContacts = AllContacts.filter(function (conversation) {
+          return (conversation.id !== state.currentUser.id)
+        })
+      }
       // state.AllContacts = obj
     },
     // Add new discussion
     ADD_DISCUSSION: function (state, { discussion }) {
-      console.log('MUTATOR ADD_DISCUSSION')
 
       const index = getIndexes.getElementIndex(state.conversations, discussion.id)
       // console.log(discussion)
@@ -245,7 +245,6 @@ const store = new Vuex.Store({
 
         // If there are mesages in discussion
         if (discussion.messages.length > 0) {
-          console.log('Discussion messages found')
 
           /*
           otherUsers = discussion.users.filter(user => {
@@ -324,7 +323,7 @@ const store = new Vuex.Store({
         return (element.id !== participant.id)
       })
     },
-    SET_CURRENT_USER: function (state, { user }) {
+    SET_CURRENT_USER: function (state, user) {
       state.currentUser = user
     },
     // Current Conversing With
@@ -349,7 +348,6 @@ const store = new Vuex.Store({
     // Mark a conversation as readed
     MARK_CONVERSATION_AS_READ (state, { discussion_index, reader_id, reading_time }) {
       let conversation = state.conversations[discussion_index]
-      console.log('MARK_ Someone reads messages')
       let index = 0
 
       for (index; index < conversation.messages.length; index++) {
@@ -425,24 +423,98 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    switchContactLoader: async function (context, action) {
-      await context.commit('SWITCH_CONTACT_LOADER')
+    // Auth actions
+    /**
+     * Authenticate user
+     */
+    [Action.AUTH_REQUEST]: ({ commit, dispatch }, creds) => {
+      return new Promise((resolve, reject) => { // The Promise used for router redirect in login
+        commit(Mutation.SHOW_LOADER)
+        axios({ url: Urls_.LOGIN_URL, data: creds, method: 'POST' })
+          .then(resp => {
+            const user = resp.data.user
+            // store the token in localstorage
+            setItemsStorage(user)
+            commit(Mutation.AUTH_SUCCESS, user)
+            dispatch('loadingConversationsThreads')
+            commit(Mutation.HIDE_LOADER)
+            resolve(resp)
+          })
+          .catch(err => {
+            commit(Mutation.AUTH_ERROR, err)
+            commit(Mutation.HIDE_LOADER)
+            // if the request fails, remove any possible user token if possible
+            clearStorage()
+            reject(err)
+          })
+      })
     },
-    switchConversationLoader: async function ({ commit, dispatch, getter, rootGetter }, { payload }) {
-      commit('SWITCH_CONVERSATION_LOADER')
+    [Action.AUTH_LOGOUT]: ({ commit, dispatch }) => {
+      return new Promise((resolve, reject) => {
+        commit(Mutation.SHOW_LOADER)
+        axios({ url: Urls_.SIGNOUT_URL, data: null, method: 'DELETE' }).then(resp => {
+          clearStorage() // clear your user's token from localstorage
+          commit(Mutation.CLEAR_AUTH)
+          commit(Mutation.HIDE_LOADER)
+          resolve()
+        })
+          .catch(err => {
+            clearStorage() // clear your user's token from localstorage
+            commit(Mutation.HIDE_LOADER)
+            reject(err)
+          })
+      })
+    },
+    [Action.AUTH_SIGNUP]: ({ commit, dispatch }, user_info) => {
+      return new Promise((resolve, reject) => {
+        commit(Mutation.SHOW_LOADER)
+        axios({ url: Urls_.REGISTRATION_URL, data: user_info, method: 'POST' })
+          .then(resp => {
+            const user = resp.data.user
+            // store the token in localstorage
+            setItemsStorage(user)
+            commit(Mutation.HIDE_LOADER)
+            commit(Mutation.AUTH_SUCCESS, user.token)
+            resolve(resp)
+          })
+          .catch(err => {
+            commit(Mutation.AUTH_ERROR, err)
+            commit(Mutation.HIDE_LOADER)
+            // if the request fails, remove any possible user token if possible
+            clearStorage()
+            reject(err)
+          })
+      })
+    },
+    [Action.AUTH_PING_CURRENT_USER_URL]: ({ commit, dispatch }) => {
+      return new Promise((resolve, reject) => {
+        commit(Mutation.SHOW_LOADER)
+        axios({ url: Urls_.PING_CURRENT_USER_URL, method: 'GET' })
+          .then(resp => {
+            const user = resp.data.user
+            // store the token in localstorage
+            setItemsStorage(user)
+            commit(Mutation.AUTH_SUCCESS, user)
+            dispatch('loadingConversationsThreads')
+            commit(Mutation.HIDE_LOADER)
+            resolve(resp)
+          })
+          .catch(err => {
+            commit(Mutation.AUTH_ERROR, err)
+            commit(Mutation.HIDE_LOADER)
+            // if the request fails, remove any possible user token if possible
+            clearStorage()
+            reject(err)
+          })
+      })
     },
 
-    setCurrentUser: async function (context, action) {
-      // socket: action.socket, channel: action.channel, currentUser: action.currentUser
-      // console.log(context)
-      // context.commit('SET_MY_SOCKET', { socket: action.socket })
-      await context.commit('SET_CURRENT_USER', { user: action.currentUser })
-
+    loadingConversationsThreads: async function (context) {
       let presences = {}
 
       const socket = await new Socket('/socket', {
         params: {
-          token: localStorage.getItem('token')
+          token: context.state.token
         }
       })
 
@@ -485,7 +557,6 @@ const store = new Vuex.Store({
 
                 channelDiscussion.on('conversation:hey_someone_read_messages', async response => {
                   if (response.user_id !== context.getters.getCurrentUser.id) {
-                    console.log('Someone read')
 
                     const discussionPosition = getIndexes.getElementIndex(context.state.conversations, response.discussion_id)
                     if (discussionPosition !== -1) {
@@ -518,13 +589,10 @@ const store = new Vuex.Store({
           })
 
           context.commit('SORT_DISCUSSIONS')
-          context.commit('SWITCH_CONTACT_LOADER')
         }).receive('error', (response) => {
-          console.log('Error USERSOCKET')
         })
       } else {
         this.$router.push("{name: 'logout'}")
-        console.log('Something went wrong')
       }
     },
 
@@ -579,7 +647,6 @@ const store = new Vuex.Store({
     }, */
 
     loadAllContacts: async function (context) {
-      await context.commit('SWITCH_CONTACT_LOADER')
       return axios.get('/users')
     },
 
@@ -590,16 +657,12 @@ const store = new Vuex.Store({
     async markConversationAsReaded (context, { discussion_id }) {
       const discussionPosition = getIndexes.getElementIndex(context.state.conversations, discussion_id)
       if (discussionPosition !== -1) {
-        console.log('Marking as read ')
         const discussion = context.state.conversations[discussionPosition]
         // console.log(window.channelDiscussion[1]);
 
         if (discussion.unread > 0) {
-          console.log('Marking as read Has UnREAD')
           await window.channelDiscussion[discussion.id].push('conversation:mark_read_messages', { discussion_id: discussion.id })
           context.commit('REINIT_CONVERSATION_UNREAD', { discussion_id: discussion_id })
-        } else {
-          console.log("&& Didn't have unread")
         }
       }
     }
