@@ -419,8 +419,7 @@
       IgnoreProfilePictureChanges(){
         this.confirm_prof = false
       },
-      changeProfilePicture(){ 
-        
+      changeProfilePicture(){
         this.confirm_prof = false
       },
 
@@ -455,14 +454,12 @@
         }
       },
       getToUserProfile(users){
-        
         return users.filter(us => {
-          return us.id !== auth.user.id
+          return us.id !== this.getCurrentUser.id
         })[0]
 
       },
       ConversationSelected(conversation_id){
-        console.log("Call Conversation setter");
         this.$store.dispatch("setOpenedConversation", conversation_id)
         this.$router.push({ name: 'conversation', params: { id: conversation_id}})
       },
@@ -476,7 +473,6 @@
       launchUpload(){
         let photo = document.querySelector("#profile-image-file");  // file from input
         photo.click()
-        
       }
       
     },
@@ -484,15 +480,10 @@
 
       // Setting the user and init the socket
       this.$store.dispatch('loadAllContacts').then( (resp) => {
-         
         this.$store.dispatch('addAllContacts', { AllContacts: resp.data.users })
         },  (err) => {
           this.$router.push({name: 'logout'})
         })
-
-      this.$store.dispatch('setCurrentUser', {
-        currentUser: auth.user
-      });
 
       window.addEventListener('load', () => {
 
