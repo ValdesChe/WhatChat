@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.com/ValdesChe/WhatChat.svg?branch=master)](https://travis-ci.com/ValdesChe/WhatChat) [![codecov](https://codecov.io/gh/ValdesChe/WhatChat/branch/master/graph/badge.svg)](https://codecov.io/gh/ValdesChe/WhatChat) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
+[![Heroku](https://heroku-badge.herokuapp.com/?app=whatchatapp&style=flat)](https://whatchatapp.herokuapp.com/)
 # WhatChat
 
 A WhatsApp web simple clone using Elixir/Phoenix, VueJs and PostgreSQL.
