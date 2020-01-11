@@ -14,16 +14,22 @@ Vue.use(VueRouter)
 
 // Defining our guards
 const requireAuth = (to, _from, next) => {
-  store.dispatch(Action.AUTH_PING_CURRENT_USER_URL).then(
-    (resp) => {
-      next()
-    }
-  ).catch((_err) => {
-    console.log(_err)
+  if (!store.getters.isAuthenticated) {
     next({
       name: 'logout'
     })
-  })
+    // next(from.path)
+  } else {
+    store.dispatch(Action.AUTH_PING_CURRENT_USER_URL).then(
+      (resp) => {
+        next()
+      }
+    ).catch((_err) => {
+      next({
+        name: 'logout'
+      })
+    })
+  }
 }
 
 const afterAuth = (_to, from, next) => {
