@@ -2,14 +2,14 @@
 
   <el-row :gutter="10" >
     <el-form :model="loginFormValues" status-icon :rules="rules2" ref="loginFormValues" label-width="120px" class="demo-ruleForm">
-      <h1 style="padding-top:25px; font-size:25px; text-align:center">Welcome to WhatChat  ! </h1>
+      <h1 style="padding-top:30px; font-size:30px; text-align:center">Welcome to WhatChat  ! </h1>
       
 
       <el-form-item>
         <el-alert v-if="errorServer !=''"
           :title="errorServer"
           type="error"
-          description="Please trying again..."
+          description="Please try again..."
           show-icon>
         </el-alert>
       </el-form-item>
@@ -94,6 +94,7 @@
     methods: {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
+          this.errorServer = ''
           if (valid) {
             this.$store.dispatch(Action.AUTH_REQUEST , this.loginFormValues).then((resp) =>{
               this.$router.push({ name: 'home'})

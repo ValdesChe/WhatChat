@@ -42,6 +42,10 @@ export function defineDefaultUser (creds) {
   }
 }
 
+export function buildLoginErrorMessage (errors) {
+  return errors && errors.email ? 'Email ' + errors.email[0] : 'Unexpected error occured !'
+}
+
 export function clearStorage () {
   window.localStorage.removeItem('id_token')
   window.localStorage.removeItem('v_username')
