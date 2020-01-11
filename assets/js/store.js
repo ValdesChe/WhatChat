@@ -225,7 +225,6 @@ const store = new Vuex.Store({
     },
     // Add new discussion
     ADD_DISCUSSION: function (state, { discussion }) {
-
       const index = getIndexes.getElementIndex(state.conversations, discussion.id)
       // console.log(discussion)
       // If not existing discussion
@@ -245,13 +244,6 @@ const store = new Vuex.Store({
 
         // If there are mesages in discussion
         if (discussion.messages.length > 0) {
-
-          /*
-          otherUsers = discussion.users.filter(user => {
-            return user.id !== state.currentUser.id
-          })
-          */
-
           discussion.messages.forEach(message => {
             message.inserted_at = moment(message.inserted_at).add(-(new Date().getTimezoneOffset()) / 60, 'hours')
             message.readers = {}
@@ -368,36 +360,45 @@ const store = new Vuex.Store({
         message
       }) {
       const discussionPosition = getIndexes.getElementIndex(state.conversations, discussion_id)
-      if (discussionPosition !== -1) {
-        const discussion = state.conversations[discussionPosition]
-        if (state.currentUser.id !== message.from_id && state.currentConversation !== message.discussion_id) {
-          discussion.unread++
-          if (discussion.is_group) {
-            getIndexes.myMessageNotifer('https://notificationsounds.com/soundfiles/c9892a989183de32e976c6f04e700201/file-sounds-1109-slow-spring-board-longer-tail.wav')
-          } else {
-            getIndexes.myMessageNotifer('https://notificationsounds.com/soundfiles/15de21c670ae7c3f6f3f1f37029303c9/file-sounds-1085-definite.wav')
-          }
+      // If there is a problem with message discusion
+      if (!message || discussionPosition < 0) {
+        return
+      }
+      const messagePosition = getIndexes.getElementIndex(state.conversations[discussionPosition].messages, message.id)
+      console.log(messagePosition)
+      if (messagePosition > -1) {
+        console.log('Message already exist')
+        return
+      }
+
+      const discussion = state.conversations[discussionPosition]
+      if (state.currentUser.id !== message.from_id && state.currentConversation !== message.discussion_id) {
+        discussion.unread++
+        if (discussion.is_group) {
+          getIndexes.myMessageNotifer('https://notificationsounds.com/soundfiles/c9892a989183de32e976c6f04e700201/file-sounds-1109-slow-spring-board-longer-tail.wav')
+        } else {
+          getIndexes.myMessageNotifer('https://notificationsounds.com/soundfiles/15de21c670ae7c3f6f3f1f37029303c9/file-sounds-1085-definite.wav')
         }
-        message.readers = {}
-        message.count_readers = 0
-        message.inserted_at = moment(message.inserted_at).add(-(new Date().getTimezoneOffset()) / 60, 'hours')
+      }
+      message.readers = {}
+      message.count_readers = 0
+      message.inserted_at = moment(message.inserted_at).add(-(new Date().getTimezoneOffset()) / 60, 'hours')
 
-        if (message.from_id === state.currentUser.id) {
-          message.readers[state.currentUser.id] = { user_id: message.inserted_at, read_at: message.inserted_at }
-          message.count_readers += 1
-        }
+      if (message.from_id === state.currentUser.id) {
+        message.readers[state.currentUser.id] = { user_id: message.inserted_at, read_at: message.inserted_at }
+        message.count_readers += 1
+      }
 
-        discussion.count++
-        discussion.latestMessage = Object.assign({}, message)
+      discussion.count++
+      discussion.latestMessage = Object.assign({}, message)
 
-        discussion.messages.push(message)
+      discussion.messages.push(message)
 
-        state.conversations.splice(discussionPosition, 1)
-        state.conversations.splice(0, 0, discussion)
-        /*  state.conversations.sort((convA, convB) => {
+      state.conversations.splice(discussionPosition, 1)
+      state.conversations.splice(0, 0, discussion)
+      /*  state.conversations.sort((convA, convB) => {
           return new Date(convA.latestMessage.inserted_at) - new Date(convB.latestMessage.inserted_at) ? 1 : -1
         }) */
-      }
     },
     // Adding typing user flag
     ADD_TYPING_USER (state, { discussion_id, user_id }) {
@@ -455,6 +456,8 @@ const store = new Vuex.Store({
         axios({ url: Urls_.SIGNOUT_URL, data: null, method: 'DELETE' }).then(resp => {
           clearStorage() // clear your user's token from localstorage
           commit(Mutation.CLEAR_AUTH)
+
+          window.user_socket.disconnect()
           commit(Mutation.HIDE_LOADER)
           resolve()
         })
@@ -519,19 +522,22 @@ const store = new Vuex.Store({
       })
 
       socket.connect()
-
       // var channel = socket.channel("rooms:lobby", {})
       // const channel = socket.channel(`users:${localStorage.getItem('id_token')}`);
       const channel = socket.channel(`users:join`)
       channel.on('presence_diff', (response) => {
         presences = Presence.syncDiff(presences, response)
-        syncPresentUsers(this, presences)
+        if (this.getters.getCurrentUser) {
+          syncPresentUsers(this, presences)
+        }
       })
 
       channel.on('presence_state', (response) => {
         presences = Presence.syncState(presences, response)
-        syncPresentUsers(this, presences)
-        optionListener.menuListener()
+        if (this.getters.getCurrentUser) {
+          syncPresentUsers(this, presences)
+          optionListener.menuListener()
+        }
       })
       if (channel.state !== 'joined') {
         channel.join().receive('ok', (response) => {
@@ -543,12 +549,12 @@ const store = new Vuex.Store({
             const channelDiscussion = await socket.channel(`conversation:${discussion.id}`)
             if (channelDiscussion.state !== 'joined') {
               channelDiscussion.join().receive('ok', async (response) => {
-                // The user receive a new message
+                // The user receive a new message || When the user send a message
                 channelDiscussion.on('conversation:alert:new_messages', async response => {
                   let message = response.message
                   await context.commit('ADD_MESSAGE_TO_DISCUSSION',
                     { discussion_id: message.conversation_id, message: message })
-
+                  // Marked as read when the message discussion is opened
                   if (context.state.currentConversation === message.conversation_id) {
                     // channelDiscussion.push("conversation:mark_read_messages")
                     context.dispatch('markConversationAsReaded', { discussion_id: context.state.currentConversation })
@@ -557,7 +563,6 @@ const store = new Vuex.Store({
 
                 channelDiscussion.on('conversation:hey_someone_read_messages', async response => {
                   if (response.user_id !== context.getters.getCurrentUser.id) {
-
                     const discussionPosition = getIndexes.getElementIndex(context.state.conversations, response.discussion_id)
                     if (discussionPosition !== -1) {
                       response.discussion_index = discussionPosition
@@ -621,30 +626,6 @@ const store = new Vuex.Store({
       await context.commit('SET_OPENED_DISCUSSION', { discussions_id })
       context.dispatch('markConversationAsReaded', { discussion_id: discussions_id })
     },
-    /*
-    addMessageToDiscussion: async function(
-      context,
-      {
-        discussion_id,
-        from_id,
-        content,
-      }){
-        const message = {
-          id: null,
-          from_id: from_id,
-          conversation_id: discussion_id,
-          content: content,
-          created_at: moment(),
-          inserted_at: moment()
-        }
-        await context.commit(
-          'ADD_MESSAGE_TO_DISCUSSION',
-          {
-            discussion_id,
-            message
-          })
-
-    }, */
 
     loadAllContacts: async function (context) {
       return axios.get('/users')
