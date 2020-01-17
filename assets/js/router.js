@@ -1,15 +1,15 @@
 import Vue from 'vue/dist/vue.js'
 import VueRouter from 'vue-router'
 
-import Messagerie from '../components/Messagerie.vue'
-import Login from '../components/auth/Login.vue'
-import Signup from '../components/auth/Signup.vue'
-import Logout from '../components/auth/Logout.vue'
-import Conversation from '../components/conversation.vue'
-import Welcome from '../components/utils/welcome.vue'
-
 import store from './store'
 import { Action } from '../auth/index'
+
+const Messagerie = () => import(/* webpackChunkName: "messagerie" */ '../components/Messagerie.vue')
+const Login = () => import(/* webpackChunkName: "login" */ '../components/auth/Login.vue')
+const Signup = () => import(/* webpackChunkName: "signup" */ '../components/auth/Signup.vue')
+const Logout = () => import(/* webpackChunkName: "logout" */ '../components/auth/Logout.vue')
+const Conversation = () => import(/* webpackChunkName: "conversation" */ '../components/Conversation.vue')
+const Welcome = () => import(/* webpackChunkName: "welcome" */ '../components/utils/Welcome.vue')
 Vue.use(VueRouter)
 
 // Defining our guards

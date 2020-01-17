@@ -10,10 +10,11 @@
     "vue": "vue/dist/vue.common"
   },
   "dependencies": {
+    "@babel/plugin-syntax-dynamic-import": "^7.7.4",
     "axios": ">=0.18.1",
     "babel-polyfill": "^6.26.0",
     "element-ui": "^2.4.11",
-    "extract-text-webpack-plugin": "^4.0.0-alpha.0",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "js-yaml": ">=3.13.1",
     "moment": "^2.23.0",
     "node-sass": "^4.13.0",
@@ -49,7 +50,7 @@
     "vue-loader": "^15.4.2",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.5.17",
-    "webpack": "4.4.0",
+    "webpack": "^4.41.5",
     "webpack-cli": "^3.3.8"
   }
 }
