@@ -2,25 +2,35 @@
   <div class="login-page">
 
   <el-row :gutter="10" >
-    <el-form :model="signUpRuleForm" status-icon :rules="signUpRules" ref="signUpRuleForm" label-width="120px" class="demo-ruleForm">
-      <h1 style="padding-top:25px; font-size:25px; text-align:center">Welcome to WhatChat  ! </h1>
-      <span>It's free ..</span>
+    <el-form :model="signUpRuleValues" status-icon :rules="signUpRules" ref="signUpRuleValues" label-width="120px" class="demo-ruleForm">
+      <h1 style="padding-top:25px; font-size:25px; text-align:center">Welcome to WhatChat  ! It's free ..</h1>
+      <br>
+      <br>
+      <el-form-item>
+        <el-alert v-if="errorServer !=''"
+          :title="errorServer"
+          type="error"
+          description="Please try again..."
+          show-icon>
+        </el-alert>
+      </el-form-item>
+
       <el-form-item  prop="username">
-        <el-input type="text" placeholder="Username" v-model="signUpRuleForm.username" autocomplete="off"></el-input>
+        <el-input type="text" placeholder="Username" v-model="signUpRuleValues.username" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item  prop="email">
-        <el-input type="email" placeholder="Email" v-model="signUpRuleForm.email" autocomplete="off"></el-input>
+        <el-input type="email" placeholder="Email" v-model="signUpRuleValues.email" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input type="password" placeholder="Password" v-model="signUpRuleForm.password" autocomplete="off"></el-input>
+        <el-input type="password" placeholder="Password" v-model="signUpRuleValues.password" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item prop="confirm_password">
-        <el-input type="password" placeholder="Confirm Password" v-model="signUpRuleForm.confirm_password" autocomplete="off"
-            @keyup.enter="submitSignupForm('signUpRuleForm')"></el-input>
+        <el-input type="password" placeholder="Confirm Password" v-model="signUpRuleValues.confirm_password" autocomplete="off"
+            @keyup.enter="submitSignupForm('signUpRuleValues')"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitSignupForm('signUpRuleForm')">Create account</el-button>
-        <el-button @click="resetForm('signUpRuleForm')">Reset</el-button>
+        <el-button type="primary" @click="submitSignupForm('signUpRuleValues')">Create account</el-button>
+        <el-button @click="resetForm('signUpRuleValues')">Reset</el-button>
         <p class="message">
           Already registered? <router-link :to="{ name: 'login'}">Login</router-link>
         </p>
@@ -30,7 +40,7 @@
   </div>
 </template>
 <script>
-  import { Action, defineDefaultUser } from './../../auth'
+  import { Action, defineDefaultUser, buildLoginErrorMessage } from './../../auth'
   export default {
     data() {
       // Validate username function
@@ -80,7 +90,7 @@
 
       // Confirm password check
       var validateConfirmPass = (rule, value, callback) => {
-        if (this.signUpRuleForm.password.trim() !== value) {
+        if (this.signUpRuleValues.password.trim() !== value) {
           callback(new Error('Please fill confirm password input'));
         } else {
           callback();
@@ -89,7 +99,7 @@
 
       return {
         errorServer: '',
-        signUpRuleForm: {
+        signUpRuleValues: {
           username: '',
           email: '',
           password: '',
@@ -115,12 +125,13 @@
     methods: {
       submitSignupForm(formName) {
         this.$refs[formName].validate((valid) => {
+          this.errorServer = ''
           // If the form is valid
-          if (valid) {
-            this.$store.dispatch(Action.AUTH_SIGNUP , defineDefaultUser(this.submitSignupForm)).then((resp) =>{
-              this.$router.push('/')
+          if (valid) {          
+            this.$store.dispatch(Action.AUTH_SIGNUP , defineDefaultUser(this.signUpRuleValues)).then((resp) =>{
+              this.$router.push({ name: 'home'})
             },  (err) => {
-              this.errorServer = err.response.data.errors.detail
+              this.errorServer = buildLoginErrorMessage(err.response.data.errors)
             });
           } else {
             return false;

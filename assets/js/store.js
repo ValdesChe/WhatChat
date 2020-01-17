@@ -365,9 +365,8 @@ const store = new Vuex.Store({
         return
       }
       const messagePosition = getIndexes.getElementIndex(state.conversations[discussionPosition].messages, message.id)
-      console.log(messagePosition)
+      // Message already exist
       if (messagePosition > -1) {
-        console.log('Message already exist')
         return
       }
 
@@ -473,9 +472,11 @@ const store = new Vuex.Store({
         commit(Mutation.SHOW_LOADER)
         axios({ url: Urls_.REGISTRATION_URL, data: user_info, method: 'POST' })
           .then(resp => {
+            console.log(resp)
             const user = resp.data.user
             // store the token in localstorage
             setItemsStorage(user)
+            dispatch('loadingConversationsThreads')
             commit(Mutation.HIDE_LOADER)
             commit(Mutation.AUTH_SUCCESS, user.token)
             resolve(resp)
@@ -513,6 +514,7 @@ const store = new Vuex.Store({
     },
 
     loadingConversationsThreads: async function (context) {
+      context.commit(Mutation.SHOW_LOADER)
       let presences = {}
 
       const socket = await new Socket('/socket', {
@@ -599,6 +601,7 @@ const store = new Vuex.Store({
       } else {
         this.$router.push("{name: 'logout'}")
       }
+      context.commit(Mutation.HIDE_LOADER)
     },
 
     loadOnlineUsers: async function (context, OnlineUsers) {
