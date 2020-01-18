@@ -15,7 +15,7 @@
 
 <script>
   import addEvent from './utils/resizeCapture'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   export default {
     name:"App",
     data() {

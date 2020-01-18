@@ -4,8 +4,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
+const webpack = require('webpack')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 // Environment
 const Env = process.env.MIX_ENV || 'dev'
 const isProd = (Env === 'prod')
@@ -15,6 +16,9 @@ module.exports = (env, options) => {
   return {
     devtool: devtool,
     optimization: {
+      splitChunks: {
+        chunks: 'all'
+      },
       minimizer: [
         new UglifyJsPlugin({ cache: true, parallel: true, sourceMap: false }),
         new OptimizeCSSAssetsPlugin({})
@@ -30,7 +34,8 @@ module.exports = (env, options) => {
     resolve: {
       alias: {
         'vue$': 'vue/dist/vue.esm.js',
-        '@': path.resolve('src')
+        '@': path.resolve('src'),
+        'monent': 'moment/src/moment'
       },
       extensions: ['*', '.js', '.vue', '.json']
     },
@@ -88,10 +93,13 @@ module.exports = (env, options) => {
       ]
     },
     plugins: isProd ? [
+      // new BundleAnalyzerPlugin(),
+      new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /fr-ca|en-ca/),
+
       new VueLoaderPlugin(),
-      new ExtractTextPlugin({
+      new MiniCssExtractPlugin({
         filename: 'css/[name].css',
-        allChunks: true
+        chunkFilename: 'css/[id].css'
       }),
       new CopyWebpackPlugin([{
         from: './static',
@@ -104,7 +112,7 @@ module.exports = (env, options) => {
         uglifyOptions: {
           warnings: false,
           parse: {},
-          compress: {},
+          compress: true,
           mangle: true, // Note `mangle.properties` is `false` by default.
           output: null,
           toplevel: false,
@@ -115,10 +123,12 @@ module.exports = (env, options) => {
         }
       })
     ] : [
+      new BundleAnalyzerPlugin(),
+      new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /fr-ca|en-ca/),
       new VueLoaderPlugin(),
-      new ExtractTextPlugin({
+      new MiniCssExtractPlugin({
         filename: 'css/[name].css',
-        allChunks: true
+        chunkFilename: 'css/[id].css'
       }),
       new CopyWebpackPlugin([{
         from: './static',

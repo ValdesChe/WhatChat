@@ -3,8 +3,9 @@
   "license": "MIT",
   "scripts": {
     "deploy": "webpack --mode production",
-    "build": "webpack --mode production",
+    "build": "NODE_ENV=production webpack --mode production",
     "watch": "webpack --mode development --watch",
+    "report": "webpack --profile --json > stats.json",
     "lint": "eslint --ext .js,.vue src"
   },
   "browser": {
@@ -18,7 +19,7 @@
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "js-yaml": ">=3.13.1",
     "moment": "^2.23.0",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "sass-loader": "^7.1.0",
@@ -52,6 +53,7 @@
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.5.17",
     "webpack": "^4.41.5",
+    "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^3.3.8"
   }
 }
