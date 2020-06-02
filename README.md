@@ -35,7 +35,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 Get in touch with the authors
 
 - TWITTER : https://twitter.com/Valdes_Che && https://twitter.com/Faymir
-- EMAIL: valdesche03@gmail.com/
+- EMAIL: valdesche03@gmail.com
 
 ## Learn more
 
