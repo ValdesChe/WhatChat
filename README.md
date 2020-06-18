@@ -9,6 +9,7 @@ A WhatsApp web simple clone using Elixir/Phoenix, VueJs and PostgreSQL.
 ![Screenshot](whatchat_screen_1.png)
 
 LIVE DEMO : https://whatchatapp.herokuapp.com/
+
 VIDEO DEMO v0: https://www.youtube.com/watch?v=Kha_Y7a4yrs
 
 ## Installation
