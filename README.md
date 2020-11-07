@@ -6,6 +6,12 @@ A WhatsApp web simple clone using Elixir/Phoenix, VueJs and PostgreSQL.
 
 DEMO VIDEO v0: https://www.youtube.com/watch?v=Kha_Y7a4yrs
 
+## Requirements
+
+   -  Inotify-tools (see the following this [`guide`](https://github.com/inotify-tools/inotify-tools/wiki) )
+   -  Erlang 21.2.5
+   -  Elixir 1.8.1
+
 ## Installation
 
 To start your Phoenix server:
