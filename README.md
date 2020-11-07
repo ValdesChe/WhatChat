@@ -12,6 +12,13 @@ LIVE DEMO : https://whatchatapp.herokuapp.com/
 
 VIDEO DEMO v0: https://www.youtube.com/watch?v=Kha_Y7a4yrs
 
+## Requirements
+
+   -  Inotify-tools (see the following this [`guide`](https://github.com/inotify-tools/inotify-tools/wiki) )
+   -  Erlang 21.2.5
+   -  Elixir 1.8.1
+   -  Nodejs 12.12.0
+
 ## Installation
 
 To start your Phoenix server:
