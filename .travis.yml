@@ -1,6 +1,6 @@
 language: elixir
-elixir: '1.8.1'
-otp_release: '22.0'
+elixir: '1.11.3'
+otp_release: '24.0'
 services:
   - postgresql
 env:
@@ -10,4 +10,4 @@ script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 addons:
-  postgresql: "9.4"
+  postgresql: "11.9"

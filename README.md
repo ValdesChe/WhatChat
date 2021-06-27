@@ -15,9 +15,9 @@ VIDEO DEMO v0: https://www.youtube.com/watch?v=Kha_Y7a4yrs
 ## Requirements
 
    -  Inotify-tools (see the following this [`guide`](https://github.com/inotify-tools/inotify-tools/wiki) )
-   -  Erlang 21.2.5
-   -  Elixir 1.8.1
-   -  Nodejs 12.12.0
+   -  Erlang 24.0
+   -  Elixir 1.11.3
+   -  Nodejs 14.16.1
 
 ## Installation
 
