@@ -1,7 +1,5 @@
 defmodule WhatChatWeb.UserSocket do
   use Phoenix.Socket
-  transport :websocket, Phoenix.Transports.WebSocket,
-  timeout: 45_000
 
   ## Channels
    channel "conversation:*", WhatChatWeb.ConversationChannel
@@ -25,8 +23,8 @@ defmodule WhatChatWeb.UserSocket do
         user = WhatChat.Accounts.get_user!(user_id)
         |> WhatChat.Repo.preload(:conversations)
 
-        {:ok, 
-          assign(socket, :user_id, user_id) 
+        {:ok,
+          assign(socket, :user_id, user_id)
           |> assign( :user, user )
         }
 
