@@ -102,9 +102,8 @@ module.exports = (env, options) => {
         chunkFilename: 'css/[id].css'
       }),
       new CopyWebpackPlugin([{
-        from: './static',
-        to: path.resolve(__dirname, 'priv/static'),
-        ignore: ['.*']
+        from: 'static/',
+        to: './'
       }]),
       new UglifyJsPlugin({
         sourceMap: true,
@@ -131,9 +130,8 @@ module.exports = (env, options) => {
         chunkFilename: 'css/[id].css'
       }),
       new CopyWebpackPlugin([{
-        from: './static',
-        to: path.resolve(__dirname, 'priv/static'),
-        ignore: ['.*']
+        from: 'static/',
+        to: './'
       }])
     ]
   }

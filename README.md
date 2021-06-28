@@ -6,7 +6,7 @@ A WhatsApp web simple clone using Elixir/Phoenix, VueJs and PostgreSQL.
 
 
 ## Screenshots
-![Screenshot](whatchat_screen_1.png)
+![Screenshot](./documentation/screenshots/whatchat_screen_1.png)
 
 LIVE DEMO : https://whatchatapp.herokuapp.com/
 
@@ -14,10 +14,10 @@ VIDEO DEMO v0: https://www.youtube.com/watch?v=Kha_Y7a4yrs
 
 ## Requirements
 
-   -  Inotify-tools (see the following this [`guide`](https://github.com/inotify-tools/inotify-tools/wiki) )
-   -  Erlang 21.2.5
-   -  Elixir 1.8.1
-   -  Nodejs 12.12.0
+   -  Inotify-tools (see the following [`guide`](https://github.com/inotify-tools/inotify-tools/wiki) )
+   -  Erlang 24.0
+   -  Elixir 1.11.4
+   -  Nodejs 14.16.1
 
 ## Installation
 

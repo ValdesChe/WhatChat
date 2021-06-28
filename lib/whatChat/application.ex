@@ -6,17 +6,19 @@ defmodule WhatChat.Application do
   use Application
 
   def start(_type, _args) do
-    
+
     # List all child processes to be supervised
     children = [
       # Start the Ecto repository
       WhatChat.Repo,
+      # Start the PubSub system
+      {Phoenix.PubSub, [name: WhatChat.PubSub, pool_size: 10, adapter: Phoenix.PubSub.PG2]},
       # Start the endpoint when the application starts
       WhatChatWeb.Endpoint,
       # Starts a worker by calling: WhatChat.Worker.start_link(arg)
       # {WhatChat.Worker, arg},
 
-      # Start UsersPresence 
+      # Start UsersPresence
       WhatChatWeb.ChatPresence
     ]
 

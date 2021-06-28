@@ -15,7 +15,7 @@ config :whatChat, WhatChatWeb.Endpoint,
   url: [host: System.get_env("APP_ORIGIN") || "localhost"],
   secret_key_base:  System.get_env("SECRET_KEY_BASE")  || "sNSxERAOLPrAU2Qrha8UMWVomN762GKmsZUCYk0piTOjSMLPeIrFUzMSNVoAJ37Q",
   render_errors: [view: WhatChatWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: WhatChat.PubSub, pool_size: 10, adapter: Phoenix.PubSub.PG2]
+  pubsub_server: WhatChat.PubSub
 
 # Configures Elixir's Logger
 config :logger, :console,
