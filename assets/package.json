@@ -24,7 +24,7 @@
     "phoenix_html": "file:../deps/phoenix_html",
     "sass-loader": "^7.1.0",
     "set-value": "^4.0.0",
-    "tar": "^6.1.0",
+    "tar": "^6.1.9",
     "vue": "^2.6.14",
     "vue-axios": "^2.1.4",
     "vue-router": "^3.5.2",
